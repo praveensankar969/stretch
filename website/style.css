@@ -362,16 +362,19 @@ code {
   border: 1px solid var(--hairline-strong);
   aspect-ratio: 1;
   background:
-    linear-gradient(140deg, #23211E 0%, #1B1917 40%, #161412 100%);
-  box-shadow: 0 40px 80px -30px rgba(23, 19, 15, 0.35);
+    linear-gradient(140deg,
+      color-mix(in srgb, var(--bg-raised) 92%, var(--accent) 8%) 0%,
+      var(--bg-raised) 45%,
+      var(--bg-sunk) 100%);
+  box-shadow: 0 40px 80px -30px color-mix(in srgb, var(--ink-900) 35%, transparent);
 }
 
 .mock-wash {
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(600px 300px at 20% 0%, rgba(217, 115, 74, 0.08), transparent 60%),
-    radial-gradient(500px 280px at 90% 100%, rgba(110, 138, 166, 0.08), transparent 55%);
+    radial-gradient(600px 300px at 20% 0%, color-mix(in srgb, var(--accent) 10%, transparent), transparent 60%),
+    radial-gradient(500px 280px at 90% 100%, color-mix(in srgb, var(--exhale) 10%, transparent), transparent 55%);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -381,11 +384,12 @@ code {
   width: 72%;
   padding: 22px 24px 20px;
   border-radius: var(--radius-lg);
-  background: #1A1612;
-  border: 1px solid rgba(242, 234, 223, 0.16);
+  background: var(--bg);
+  border: 1px solid var(--hairline-strong);
   text-align: center;
-  color: var(--paper-100);
+  color: var(--fg);
   font-family: var(--font-sans);
+  box-shadow: 0 24px 48px -24px color-mix(in srgb, var(--ink-900) 30%, transparent);
 }
 
 .mock-eyebrow {
@@ -430,11 +434,12 @@ code {
   font-size: 1.4rem;
   margin-bottom: 6px;
   font-variation-settings: 'opsz' 60;
+  color: var(--fg);
 }
 
 .mock-desc {
   font-size: 0.78rem;
-  color: #B8A98F;
+  color: var(--fg-muted);
   line-height: 1.5;
   margin-bottom: 14px;
 }
@@ -453,11 +458,12 @@ code {
 
 .mock-btn.primary {
   background: var(--accent);
-  color: #17130F;
+  color: var(--paper-100);
 }
 
 .mock-btn.ghost {
-  border: 1px solid rgba(242, 234, 223, 0.25);
+  border: 1px solid var(--hairline-strong);
+  color: var(--fg);
 }
 
 /* ── Privacy ──────────────────────────────────────────── */
