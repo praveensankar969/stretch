@@ -1,5 +1,7 @@
 # Stretch
 
+(https://stretchapp.in)
+
 > A quiet Windows tray app that invites you to stretch for one minute, every so often. Local only. No account. No telemetry.
 
 ![Stretch overlay — breath ring with a seated line-art figure demonstrating a Sky Reach stretch](./logo.png)
@@ -8,7 +10,7 @@
 
 Download the latest signed installer:
 
-- [Stretch-x.y.z.exe](https://github.com/praveensankar969/stretch)
+- [Stretch-1.0.0.exe](https://github.com/praveensankar969/stretch/releases/download/latest/Stretch-1.0.0.exe)
 
 Windows 10 and 11 are supported. The installer is signed and the app updates itself every six hours via GitHub Releases.
 
@@ -71,17 +73,6 @@ PRIVACY.md, CHANGELOG.md, LICENSE
 2. Update `CHANGELOG.md`.
 3. Commit and tag: `git tag v1.0.0 && git push --tags`.
 4. Locally: `npm run release`. electron-builder signs the NSIS installer and uploads artefacts to the matching GitHub Release draft.
-
-### Signing
-
-The `package.json > build.win` block is ready for code-signing. Set these environment variables before `npm run release`:
-
-```
-CSC_LINK=<path or base64 of the .pfx file>
-CSC_KEY_PASSWORD=<pfx password>
-```
-
-Without a certificate the installer still builds but Windows SmartScreen will warn users that the publisher is unknown.
 
 ## Contributing
 
