@@ -610,6 +610,23 @@ code {
     grid-template-columns: 1fr;
     gap: 40px;
   }
+  .quiet-card {
+    max-width: 480px;
+    margin: 0 auto;
+    width: 100%;
+  }
+  .mock-frame {
+    aspect-ratio: auto;
+  }
+  .mock-wash {
+    position: relative;
+    inset: auto;
+    padding: 36px 20px;
+  }
+  .mock-dialog {
+    width: 100%;
+    max-width: 360px;
+  }
   .hero-title {
     max-width: none;
   }
@@ -628,5 +645,23 @@ code {
   }
   .btn {
     justify-content: center;
+  }
+  .mock-wash {
+    padding: 28px 14px;
+  }
+  .mock-dialog {
+    padding: 20px 18px 18px;
+  }
+  .mock-ring {
+    width: 76px;
+    height: 76px;
+  }
+  .mock-ctas {
+    flex-direction: column;
+    gap: 8px;
+  }
+  .mock-btn {
+    display: block;
+    text-align: center;
   }
 }
