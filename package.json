@@ -33,7 +33,7 @@
   "build": {
     "appId": "com.stretchapp.in",
     "productName": "Stretch",
-    "artifactName": "StretchSetup-${version}.${ext}",
+    "artifactName": "Stretch-${version}.${ext}",
     "directories": {
       "output": "dist",
       "buildResources": "build"

@@ -11,7 +11,7 @@ when Windows Focus Assist is on, when the user is presenting full-screen, and
 when the keyboard has been idle for more than ten minutes. Keyboard shortcuts
 (Enter to complete, Esc to snooze, S to skip) let users dismiss reminders
 without reaching for a mouse. The app ships as a signed NSIS installer,
-weighs roughly 5 MB, and self-updates every six hours via GitHub Releases.
+and self-updates every six hours via GitHub Releases.
 
 ## Key facts
 
@@ -20,7 +20,6 @@ weighs roughly 5 MB, and self-updates every six hours via GitHub Releases.
 - Price: free.
 - Tech: Electron 30, Lottie-web for line-art exercise loops, electron-updater.
 - Data: zero telemetry. The only network call is an update check to GitHub.
-- Install size: ~5 MB.
 - Default cadence: one 60-second stretch every 30 minutes, configurable.
 
 ## Pages
@@ -32,7 +31,7 @@ weighs roughly 5 MB, and self-updates every six hours via GitHub Releases.
 
 - [GitHub repository](https://github.com/praveensankar969/stretch): source code, issues, releases.
 - [Changelog](https://github.com/praveensankar969/stretch/blob/main/CHANGELOG.md): release history.
-- [Latest installer](https://github.com/praveensankar969/stretch/releases/latest/download/StretchSetup.exe): signed Windows installer.
+- [Latest installer](https://github.com/praveensankar969/stretch/releases/download/latest/Stretch-1.0.0.exe): signed Windows installer.
 - [PRIVACY.md](https://github.com/praveensankar969/stretch/blob/main/PRIVACY.md): privacy note, versioned with source.
 
 ## How reminders work

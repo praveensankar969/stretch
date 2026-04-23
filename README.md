@@ -8,7 +8,7 @@
 
 Download the latest signed installer:
 
-- [StretchSetup-x.y.z.exe](https://github.com/praveensankar969/stretch)
+- [Stretch-x.y.z.exe](https://github.com/praveensankar969/stretch)
 
 Windows 10 and 11 are supported. The installer is signed and the app updates itself every six hours via GitHub Releases.
 

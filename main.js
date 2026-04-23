@@ -104,11 +104,16 @@ let mainWindow = null;
 let overlayWindow = null;
 let tray = null;
 
-const iconPath = () => {
-  const ico = path.join(__dirname, 'build', 'icon.ico');
-  if (process.platform === 'win32' && fs.existsSync(ico)) return ico;
-  return path.join(__dirname, 'logo.png');
-};
+const APP_ICO = path.join(__dirname, 'src', 'assets', 'icon.ico');
+const APP_TRAY_PNG = path.join(__dirname, 'src', 'assets', 'tray.png');
+const LEGACY_LOGO = path.join(__dirname, 'logo.png');
+
+function iconPath() {
+  if (process.platform === 'win32' && fs.existsSync(APP_ICO)) return APP_ICO;
+  if (fs.existsSync(APP_TRAY_PNG)) return APP_TRAY_PNG;
+  if (fs.existsSync(LEGACY_LOGO)) return LEGACY_LOGO;
+  return APP_ICO;
+}
 
 const baseWebPreferences = {
   preload: path.join(__dirname, 'src', 'preload.js'),
@@ -351,12 +356,22 @@ function publicConfig() {
 }
 
 function trayImage() {
-  const p = iconPath();
-  const img = nativeImage.createFromPath(p);
-  if (process.platform === 'darwin') {
-    return img.resize({ width: 18, height: 18 });
+  const candidates =
+    process.platform === 'win32'
+      ? [APP_ICO, APP_TRAY_PNG, LEGACY_LOGO]
+      : [APP_TRAY_PNG, APP_ICO, LEGACY_LOGO];
+
+  for (const p of candidates) {
+    if (!fs.existsSync(p)) continue;
+    const img = nativeImage.createFromPath(p);
+    if (!img.isEmpty()) {
+      return process.platform === 'darwin' ? img.resize({ width: 18, height: 18 }) : img;
+    }
+    console.warn('tray icon decoded empty from', p);
   }
-  return img;
+
+  console.error('tray icon: no usable image found; tray will be invisible');
+  return nativeImage.createEmpty();
 }
 
 function humanNext() {
