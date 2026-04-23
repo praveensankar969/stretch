@@ -165,7 +165,7 @@ function createMainWindow({ show = true } = {}) {
   return mainWindow;
 }
 
-function createOverlayWindow(exerciseId) {
+function createOverlayWindow(exerciseId, { preview = false } = {}) {
   if (overlayWindow && !overlayWindow.isDestroyed()) {
     overlayWindow.focus();
     return;
@@ -205,7 +205,8 @@ function createOverlayWindow(exerciseId) {
       exerciseId,
       dailyGoal: config.dailyGoal,
       todayCount: config.history[todayKey()] || 0,
-      streak: config.streak
+      streak: config.streak,
+      preview
     });
   });
 
@@ -486,8 +487,11 @@ ipcMain.handle('onboarding:complete', (_e, patch) => {
   return publicConfig();
 });
 
-ipcMain.on('overlay:action', (_e, action) => {
+ipcMain.on('overlay:action', (_e, action, meta) => {
+  const isPreview = !!(meta && meta.preview);
   if (overlayWindow && !overlayWindow.isDestroyed()) overlayWindow.close();
+
+  if (isPreview) return;
 
   if (action === 'done') {
     recordStretchDone();
@@ -501,7 +505,7 @@ ipcMain.on('overlay:action', (_e, action) => {
 ipcMain.on('overlay:preview', () => {
   const { pickExercise } = require('./src/shared/exercises');
   const ex = pickExercise(config.lastExerciseId);
-  createOverlayWindow(ex.id);
+  createOverlayWindow(ex.id, { preview: true });
 });
 
 ipcMain.on('open:privacy', () => {

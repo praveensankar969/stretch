@@ -18,6 +18,7 @@ const els = {
 let currentExercise = null;
 let anim = null;
 let countdownTimer = null;
+let isPreview = false;
 
 async function loadAnimation(id) {
   if (anim) {
@@ -69,7 +70,7 @@ function setExercise(id, meta) {
 
 function action(which) {
   clearInterval(countdownTimer);
-  bridge.overlayAction(which);
+  bridge.overlayAction(which, { preview: isPreview });
 }
 
 els.done.addEventListener('click', () => action('done'));
@@ -91,6 +92,7 @@ document.addEventListener('keydown', (e) => {
 });
 
 bridge.onOverlayShow((payload) => {
+  isPreview = !!payload.preview;
   setExercise(payload.exerciseId, payload);
 });
 

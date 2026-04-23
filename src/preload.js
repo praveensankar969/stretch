@@ -4,7 +4,7 @@ contextBridge.exposeInMainWorld('stretch', {
   getConfig: () => ipcRenderer.invoke('config:get'),
   updateConfig: (patch) => ipcRenderer.invoke('config:update', patch),
   completeOnboarding: (patch) => ipcRenderer.invoke('onboarding:complete', patch),
-  overlayAction: (action) => ipcRenderer.send('overlay:action', action),
+  overlayAction: (action, meta) => ipcRenderer.send('overlay:action', action, meta),
   previewOverlay: () => ipcRenderer.send('overlay:preview'),
   openPrivacy: () => ipcRenderer.send('open:privacy'),
   copyDiagnostics: () => ipcRenderer.invoke('diagnostics:copy'),
