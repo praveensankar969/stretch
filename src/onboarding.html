@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="Content-Security-Policy"
+        content="default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self'; font-src 'self'; img-src 'self' data:;">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Welcome to Stretch</title>
+  <link rel="stylesheet" href="assets/tokens.css">
+  <link rel="stylesheet" href="assets/fonts.css">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="onboarding.css">
+</head>
+<body class="app onb">
+  <div class="grain" aria-hidden="true"></div>
+
+  <main class="onb-shell">
+    <div class="onb-progress" aria-hidden="true">
+      <span class="dot on"></span><span class="dot"></span><span class="dot"></span>
+    </div>
+
+    <section class="slide" data-slide="1">
+      <div class="breath-ring"><span class="ring"></span><span class="ring r2"></span></div>
+      <h1 class="h-display">Small movements, <em>often.</em></h1>
+      <p class="lede">
+        Stretch lives quietly in your system tray and invites you to unfold
+        for one minute every so often. No alarms. No streaks-to-protect.
+        Just a gentle reminder that you have a body.
+      </p>
+      <button class="btn primary" data-next>Begin</button>
+    </section>
+
+    <section class="slide hidden" data-slide="2">
+      <h1 class="h-display">How often?</h1>
+      <p class="lede">Pick a cadence that won't break your focus. You can change it anytime.</p>
+      <div class="choice-row" role="radiogroup" aria-label="Interval">
+        <button class="choice" data-interval="20" role="radio" aria-checked="false">
+          <span class="choice-num">20</span><span class="choice-unit">min</span>
+          <span class="choice-label">Restless</span>
+        </button>
+        <button class="choice is-selected" data-interval="30" role="radio" aria-checked="true">
+          <span class="choice-num">30</span><span class="choice-unit">min</span>
+          <span class="choice-label">Balanced</span>
+        </button>
+        <button class="choice" data-interval="45" role="radio" aria-checked="false">
+          <span class="choice-num">45</span><span class="choice-unit">min</span>
+          <span class="choice-label">Deep focus</span>
+        </button>
+        <button class="choice" data-interval="60" role="radio" aria-checked="false">
+          <span class="choice-num">60</span><span class="choice-unit">min</span>
+          <span class="choice-label">Hourly</span>
+        </button>
+      </div>
+      <div class="onb-actions">
+        <button class="btn ghost" data-back>Back</button>
+        <button class="btn primary" data-next>Continue</button>
+      </div>
+    </section>
+
+    <section class="slide hidden" data-slide="3">
+      <h1 class="h-display">Quiet hours</h1>
+      <p class="lede">
+        No reminders after hours or during Windows Focus Assist. This is on by default —
+        you can turn it off later.
+      </p>
+      <div class="row-quiet onb-quiet">
+        <div class="input-pair">
+          <label for="q-start" class="mini">From</label>
+          <input id="q-start" type="time" value="18:00">
+        </div>
+        <div class="input-pair">
+          <label for="q-end" class="mini">Until</label>
+          <input id="q-end" type="time" value="09:00">
+        </div>
+      </div>
+      <label class="pill-toggle">
+        <input id="q-autostart" type="checkbox" checked>
+        <span>Launch at login</span>
+      </label>
+      <div class="onb-actions">
+        <button class="btn ghost" data-back>Back</button>
+        <button class="btn primary" id="finish-btn">Finish</button>
+      </div>
+      <p class="tiny-note">
+        It will appear in the system tray — the small icons near your clock.
+      </p>
+    </section>
+  </main>
+
+  <script src="onboarding.js"></script>
+</body>
+</html>

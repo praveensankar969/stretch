@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="Content-Security-Policy"
+        content="default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self'; font-src 'self'; img-src 'self' data:;">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Stretch</title>
+  <link rel="stylesheet" href="assets/tokens.css">
+  <link rel="stylesheet" href="assets/fonts.css">
+  <link rel="stylesheet" href="overlay.css">
+</head>
+<body>
+  <div class="wash" id="wash" aria-hidden="true"></div>
+
+  <main class="dialog" role="dialog" aria-modal="true" aria-labelledby="ex-title">
+    <header class="eyebrow">
+      <span class="eyebrow-dot" aria-hidden="true"></span>
+      <span id="eyebrow-text">A moment for you</span>
+      <span class="eyebrow-meta" id="progress-chip">0 / 8 today</span>
+    </header>
+
+    <div class="stage">
+      <svg class="breath" viewBox="0 0 240 240" aria-hidden="true">
+        <circle class="breath-track" cx="120" cy="120" r="108" />
+        <circle class="breath-circle" cx="120" cy="120" r="108" />
+      </svg>
+      <div class="lottie-stage" id="lottie"></div>
+    </div>
+
+    <h1 id="ex-title" class="title">&nbsp;</h1>
+    <p id="ex-desc" class="desc">&nbsp;</p>
+
+    <div class="timer" id="timer" aria-live="polite"></div>
+
+    <div class="cta">
+      <button id="done-btn" class="btn primary" type="button">
+        I'm done
+        <kbd>Enter</kbd>
+      </button>
+      <button id="snooze-btn" class="btn ghost" type="button">
+        Snooze 5 min
+        <kbd>Esc</kbd>
+      </button>
+    </div>
+
+    <footer class="legal-row">
+      <button id="skip-btn" class="linklike" type="button">Skip this one <kbd>S</kbd></button>
+      <span class="dot-sep">·</span>
+      <span>Not medical advice. Stop if it hurts.</span>
+    </footer>
+  </main>
+
+  <script src="vendor/lottie.min.js"></script>
+  <script src="shared/exercises.js"></script>
+  <script src="overlay.js"></script>
+</body>
+</html>

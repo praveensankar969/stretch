@@ -1,0 +1,89 @@
+{
+  "name": "stretch",
+  "version": "1.0.0",
+  "description": "A calm, local-only stretch reminder that lives in your Windows tray.",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "postinstall": "node scripts/copy-vendor.mjs && node scripts/fetch-fonts.mjs && node scripts/build-lottie.mjs",
+    "fonts": "node scripts/fetch-fonts.mjs",
+    "lottie": "node scripts/build-lottie.mjs",
+    "vendor": "node scripts/copy-vendor.mjs",
+    "icons": "node scripts/build-icons.mjs",
+    "prebuild": "npm run vendor && npm run lottie && npm run icons",
+    "build": "electron-builder --win",
+    "prerelease": "npm run vendor && npm run lottie && npm run icons",
+    "release": "electron-builder --win --publish always"
+  },
+  "author": {
+    "name": "Stretch",
+    "email": "sankar_praveen@hotmail.com"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "electron": "^30.0.0",
+    "electron-builder": "^26.8.1",
+    "png-to-ico": "^2.1.8",
+    "sharp": "^0.34.5"
+  },
+  "dependencies": {
+    "electron-updater": "^6.3.9",
+    "lottie-web": "^5.12.2"
+  },
+  "build": {
+    "appId": "com.stretch.app",
+    "productName": "Stretch",
+    "artifactName": "StretchSetup-${version}.${ext}",
+    "directories": {
+      "output": "dist",
+      "buildResources": "build"
+    },
+    "files": [
+      "main.js",
+      "src/**/*",
+      "!src/**/*.map"
+    ],
+    "extraResources": [
+      {
+        "from": "LICENSE",
+        "to": "LICENSE"
+      }
+    ],
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "icon": "build/icon.ico",
+      "signtoolOptions": {
+        "publisherName": "Stretch",
+        "signingHashAlgorithms": [
+          "sha256"
+        ],
+        "rfc3161TimeStampServer": "http://timestamp.digicert.com"
+      }
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowElevation": true,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "runAfterFinish": true,
+      "include": "build/installer.nsh",
+      "shortcutName": "Stretch"
+    },
+    "publish": [
+      {
+        "provider": "github",
+        "owner": "your-github-username",
+        "repo": "stretch"
+      }
+    ]
+  }
+}

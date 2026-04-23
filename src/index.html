@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="Content-Security-Policy"
+        content="default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self'; font-src 'self'; img-src 'self' data:;">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Stretch</title>
+  <link rel="stylesheet" href="assets/tokens.css">
+  <link rel="stylesheet" href="assets/fonts.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="app">
+  <div class="grain" aria-hidden="true"></div>
+
+  <main class="shell">
+    <header class="top">
+      <div class="brand">
+        <span class="brand-mark" aria-hidden="true"></span>
+        <span class="brand-word">Stretch</span>
+      </div>
+      <div class="next-badge" id="next-badge" aria-live="polite">Next reminder in — min</div>
+    </header>
+
+    <section class="hero">
+      <h1 class="h-display">Today</h1>
+      <div class="count-row">
+        <div class="count">
+          <span id="today-count">0</span><span class="count-slash">/</span><span id="daily-goal">8</span>
+        </div>
+        <div class="streak" id="streak-pill" title="Consecutive days with at least one stretch">
+          <span class="streak-num" id="streak-num">0</span><span class="streak-word"> day streak</span>
+        </div>
+      </div>
+      <svg class="spark" id="spark" viewBox="0 0 280 48" preserveAspectRatio="none" aria-label="Last 7 days"></svg>
+    </section>
+
+    <section class="card">
+      <div class="row">
+        <label for="interval" class="row-label">
+          <span class="row-title">Remind me every</span>
+          <span class="row-help">We gently nudge, never alarm.</span>
+        </label>
+        <div class="input-pair">
+          <input id="interval" type="number" min="5" max="240" step="1" value="30" inputmode="numeric">
+          <span class="unit">min</span>
+        </div>
+      </div>
+
+      <div class="row">
+        <label for="daily-goal-input" class="row-label">
+          <span class="row-title">Daily goal</span>
+          <span class="row-help">Small, achievable. Default: 8.</span>
+        </label>
+        <div class="input-pair">
+          <input id="daily-goal-input" type="number" min="1" max="50" step="1" value="8">
+          <span class="unit">stretches</span>
+        </div>
+      </div>
+
+      <div class="row row-toggle">
+        <label for="auto-start" class="row-label">
+          <span class="row-title">Launch at login</span>
+          <span class="row-help">Stretch lives quietly in your tray.</span>
+        </label>
+        <label class="switch">
+          <input id="auto-start" type="checkbox">
+          <span class="dot" aria-hidden="true"></span>
+        </label>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="row row-toggle">
+        <label for="quiet-enabled" class="row-label">
+          <span class="row-title">Quiet hours</span>
+          <span class="row-help">No reminders while you sleep or rest.</span>
+        </label>
+        <label class="switch">
+          <input id="quiet-enabled" type="checkbox" checked>
+          <span class="dot" aria-hidden="true"></span>
+        </label>
+      </div>
+
+      <div class="row row-quiet">
+        <div class="input-pair">
+          <label for="quiet-start" class="mini">From</label>
+          <input id="quiet-start" type="time" value="18:00">
+        </div>
+        <div class="input-pair">
+          <label for="quiet-end" class="mini">Until</label>
+          <input id="quiet-end" type="time" value="09:00">
+        </div>
+      </div>
+
+      <div class="row row-toggle">
+        <label for="respect-focus" class="row-label">
+          <span class="row-title">Respect Focus Assist</span>
+          <span class="row-help">Skip reminders when Windows is in do-not-disturb.</span>
+        </label>
+        <label class="switch">
+          <input id="respect-focus" type="checkbox" checked>
+          <span class="dot" aria-hidden="true"></span>
+        </label>
+      </div>
+    </section>
+
+    <footer class="foot">
+      <button id="preview-btn" class="btn ghost" type="button">Preview a stretch</button>
+      <button id="save-btn" class="btn primary" type="button">Save</button>
+    </footer>
+
+    <p class="legal">
+      Not medical advice. Stop if it hurts.
+      <button id="privacy-link" class="linklike" type="button">Privacy</button>
+      <span class="dot-sep">·</span>
+      <button id="diagnostics-link" class="linklike" type="button">Copy diagnostics</button>
+      <span class="dot-sep">·</span>
+      <span id="version-line">v1.0.0</span>
+    </p>
+  </main>
+
+  <script src="renderer.js"></script>
+</body>
+</html>

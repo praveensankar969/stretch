@@ -1,0 +1,81 @@
+/*
+ * Morning Light — the only palette, type, and motion source for Stretch.
+ * Import this first from every stylesheet. Do not redeclare tokens.
+ */
+
+:root {
+  /* ── Palette ─────────────────────────────────────────────────────── */
+  --ink-900: #17130F;
+  --ink-800: #1F1A15;
+  --ink-700: #2A241E;
+  --ink-500: #4A4139;
+  --paper-50: #F6F0E6;
+  --paper-100: #F2EADF;
+  --paper-200: #E6DDCF;
+  --paper-500: #B8A98F;
+  --brass-500: #8A7458;
+  --brass-700: #6A5940;
+  --terracotta-500: #D9734A;
+  --terracotta-600: #B85D37;
+  --exhale-500: #6E8AA6;
+
+  /* Semantic aliases (dark — the app default) */
+  --bg: var(--ink-900);
+  --bg-raised: var(--ink-800);
+  --bg-sunk: #100C08;
+  --fg: var(--paper-100);
+  --fg-muted: #B8A98F;
+  --hairline: rgba(242, 234, 223, 0.08);
+  --hairline-strong: rgba(242, 234, 223, 0.16);
+  --accent: var(--terracotta-500);
+  --accent-hover: var(--terracotta-600);
+  --exhale: var(--exhale-500);
+
+  /* ── Type ────────────────────────────────────────────────────────── */
+  --font-display: 'Fraunces', 'Iowan Old Style', 'Palatino Linotype', Georgia, serif;
+  --font-sans: 'Instrument Sans', 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+
+  --tracking-tight: -0.02em;
+  --tracking-normal: 0em;
+  --tracking-loose: 0.12em;
+
+  /* ── Rhythm ──────────────────────────────────────────────────────── */
+  --s-1: 0.25rem;
+  --s-2: 0.5rem;
+  --s-3: 0.75rem;
+  --s-4: 1rem;
+  --s-5: 1.5rem;
+  --s-6: 2rem;
+  --s-7: 3rem;
+  --s-8: 4rem;
+
+  --radius-sm: 6px;
+  --radius-md: 12px;
+  --radius-lg: 20px;
+  --radius-pill: 999px;
+
+  /* ── Motion — breath cadence ─────────────────────────────────────── */
+  --inhale: 4s;
+  --exhale-dur: 6s;
+  --ease-breath: cubic-bezier(0.45, 0, 0.55, 1);
+  --ease-out-soft: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Light variant (marketing site) */
+.theme-paper {
+  --bg: var(--paper-100);
+  --bg-raised: var(--paper-50);
+  --bg-sunk: var(--paper-200);
+  --fg: var(--ink-900);
+  --fg-muted: var(--brass-700);
+  --hairline: rgba(23, 19, 15, 0.10);
+  --hairline-strong: rgba(23, 19, 15, 0.22);
+}
+
+/* Reduced motion honours the OS */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --inhale: 0.01s;
+    --exhale-dur: 0.01s;
+  }
+}
