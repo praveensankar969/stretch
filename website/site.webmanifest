@@ -1,0 +1,22 @@
+{
+  "name": "Stretch",
+  "short_name": "Stretch",
+  "description": "Quiet desk stretch reminders for Windows. Local-only, no telemetry.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "browser",
+  "orientation": "any",
+  "lang": "en",
+  "dir": "ltr",
+  "theme_color": "#17130F",
+  "background_color": "#F5EFE6",
+  "categories": ["health", "productivity", "lifestyle", "utilities"],
+  "icons": [
+    {
+      "src": "favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

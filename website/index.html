@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Stretch — Quiet Desk Stretch Reminders for Windows</title>
+  <meta name="description" content="Stretch is a calm, local-only Windows tray app that reminds you to stretch for one minute every 30. No accounts, no telemetry, no nagging — just a gentle nudge away from your desk.">
+  <meta name="application-name" content="Stretch">
+  <meta name="author" content="Stretch">
+  <meta name="generator" content="Hand-written · Electron 30">
+  <meta name="keywords" content="stretch reminder, desk stretches, posture app, break reminder, Windows tray app, RSI prevention, pomodoro stretch, movement reminder, local-only app, privacy-first app">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+  <meta name="color-scheme" content="light dark">
+  <meta name="theme-color" content="#F5EFE6" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#17130F" media="(prefers-color-scheme: dark)">
+  <meta name="format-detection" content="telephone=no">
+
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+  <meta name="googlebot" content="index, follow, max-image-preview:large, max-snippet:-1">
+  <meta name="bingbot" content="index, follow">
+
+  <link rel="canonical" href="https://stretchapp.in/">
+  <link rel="alternate" hreflang="en" href="https://stretchapp.in/">
+  <link rel="alternate" hreflang="x-default" href="https://stretchapp.in/">
+
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="alternate icon" href="favicon.svg">
+  <link rel="mask-icon" href="favicon.svg" color="#D9734A">
+  <link rel="apple-touch-icon" href="favicon.svg">
+  <link rel="manifest" href="site.webmanifest">
+  <meta name="msapplication-TileColor" content="#17130F">
+
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Stretch">
+  <meta property="og:title" content="Stretch — Quiet Desk Stretch Reminders for Windows">
+  <meta property="og:description" content="A calm, local-only Windows tray app that nudges you to stretch for one minute every 30. No accounts, no telemetry.">
+  <meta property="og:url" content="https://stretchapp.in/">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:image" content="https://stretchapp.in/assets/og.png">
+  <meta property="og:image:secure_url" content="https://stretchapp.in/assets/og.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="The Stretch overlay: a soft breathing ring and a seated-twist line-art figure on a warm paper background.">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Stretch — Quiet Desk Stretch Reminders for Windows">
+  <meta name="twitter:description" content="A calm, local-only Windows tray app that nudges you to stretch for one minute every 30. No accounts, no telemetry.">
+  <meta name="twitter:image" content="https://stretchapp.in/assets/og.png">
+  <meta name="twitter:image:alt" content="The Stretch overlay: a soft breathing ring and a seated-twist line-art figure.">
+
+  <link rel="sitemap" type="application/xml" href="sitemap.xml">
+  <link rel="preload" as="style" href="../src/assets/tokens.css">
+  <link rel="preload" as="style" href="../src/assets/fonts.css">
+
+  <link rel="stylesheet" href="../src/assets/tokens.css">
+  <link rel="stylesheet" href="../src/assets/fonts.css">
+  <link rel="stylesheet" href="style.css">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "Stretch",
+    "alternateName": "Stretch for Windows",
+    "description": "A quiet, local-only Windows tray app that invites you to stretch for one minute, every so often. No accounts, no telemetry.",
+    "url": "https://stretchapp.in/",
+    "image": "https://stretchapp.in/assets/og.png",
+    "applicationCategory": "HealthApplication",
+    "applicationSubCategory": "Wellness",
+    "operatingSystem": "Windows 10, Windows 11",
+    "softwareVersion": "1.0.0",
+    "fileSize": "5MB",
+    "downloadUrl": "https://github.com/praveensankar969/stretch/releases/latest/download/StretchSetup.exe",
+    "installUrl": "https://stretchapp.in/#download",
+    "releaseNotes": "https://github.com/praveensankar969/stretch/blob/main/CHANGELOG.md",
+    "license": "https://opensource.org/licenses/MIT",
+    "isAccessibleForFree": true,
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD",
+      "availability": "https://schema.org/InStock"
+    },
+    "featureList": [
+      "Sits in the system tray — no dock icon, no window",
+      "One-minute stretch reminder every 30 minutes (configurable)",
+      "Quiet hours, Focus Assist, full-screen and idle detection",
+      "Ten line-art exercises with keyboard-first controls",
+      "Zero telemetry, zero accounts, local JSON config",
+      "Self-updating via signed GitHub Releases"
+    ],
+    "author": {
+      "@type": "Organization",
+      "name": "Stretch",
+      "url": "https://stretchapp.in/"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "Stretch",
+      "url": "https://stretchapp.in/"
+    },
+    "screenshot": "https://stretchapp.in/assets/og.png"
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "Stretch",
+    "url": "https://stretchapp.in/",
+    "inLanguage": "en",
+    "description": "A calm, local-only Windows tray app that reminds you to stretch for one minute every 30.",
+    "publisher": {
+      "@type": "Organization",
+      "name": "Stretch",
+      "url": "https://stretchapp.in/"
+    }
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "Stretch",
+    "url": "https://stretchapp.in/",
+    "logo": "https://stretchapp.in/favicon.svg",
+    "sameAs": [
+      "https://github.com/praveensankar969/Stretch"
+    ]
+  }
+  </script>
+</head>
+<body class="theme-paper">
+  <div class="grain" aria-hidden="true"></div>
+
+  <header class="nav">
+    <a class="brand" href="#top">
+      <span class="brand-mark" aria-hidden="true"></span>
+      <span class="brand-word">Stretch</span>
+    </a>
+    <nav class="nav-links">
+      <a href="#how">How it works</a>
+      <a href="#quiet">Quiet by default</a>
+      <a href="#privacy">Privacy</a>
+      <a class="nav-cta" href="#download">Download</a>
+    </nav>
+  </header>
+
+  <main id="top">
+    <section class="hero">
+      <p class="eyebrow"><span class="eyebrow-dot"></span> For Windows · 5 MB · local only</p>
+      <h1 class="hero-title">
+        A small nudge,<br>
+        <em>every thirty minutes.</em>
+      </h1>
+      <p class="hero-lede">
+        Stretch lives in your system tray and invites you to unfold for one minute
+        every so often. It knows when you're presenting, idle, or off the clock —
+        and it stays quiet then. No accounts. No telemetry. Just you and your spine.
+      </p>
+      <div class="hero-ctas" id="download">
+        <a class="btn primary" href="https://github.com/praveensankar969/stretch/releases/latest/download/StretchSetup.exe">
+          Download for Windows
+          <span class="btn-meta">v1.0 · signed installer</span>
+        </a>
+        <a class="btn ghost" href="https://github.com/praveensankar969/stretch">View on GitHub</a>
+      </div>
+      <p class="hero-fineprint">
+        Works on Windows 10 and 11. macOS &amp; Linux builds on the roadmap.
+      </p>
+    </section>
+
+    <section class="breath-band" aria-hidden="true">
+      <svg viewBox="0 0 1200 320" preserveAspectRatio="none">
+        <defs>
+          <linearGradient id="stroke" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="#8A7458" stop-opacity="0"/>
+            <stop offset="50%" stop-color="#D9734A"/>
+            <stop offset="100%" stop-color="#8A7458" stop-opacity="0"/>
+          </linearGradient>
+        </defs>
+        <path id="breath-path" d="M0,160 C 200,40 400,280 600,160 C 800,40 1000,280 1200,160"
+              fill="none" stroke="url(#stroke)" stroke-width="1.5"/>
+      </svg>
+    </section>
+
+    <section class="how" id="how">
+      <div class="how-grid">
+        <article class="how-card">
+          <div class="numeral">I</div>
+          <h3>It waits.</h3>
+          <p>
+            The app sits in your system tray. No dock icon. No window on your
+            screen. It counts the minutes between reminders — nothing else.
+          </p>
+        </article>
+        <article class="how-card how-card-offset">
+          <div class="numeral">II</div>
+          <h3>It dims the room.</h3>
+          <p>
+            When it's time, your screen softens and a single card appears at
+            the center: one stretch, one minute, one line of instruction.
+            Line-art figure shows the movement.
+          </p>
+        </article>
+        <article class="how-card">
+          <div class="numeral">III</div>
+          <h3>It lets you go.</h3>
+          <p>
+            <kbd>Enter</kbd> to dismiss, <kbd>Esc</kbd> to snooze, <kbd>S</kbd> to skip.
+            Click outside the card — also a snooze. It never holds you hostage.
+          </p>
+        </article>
+      </div>
+    </section>
+
+    <section class="quiet" id="quiet">
+      <div class="quiet-text">
+        <p class="eyebrow">Not one more thing to manage</p>
+        <h2>Stretch is quiet by default.</h2>
+        <p class="body">
+          Reminders are paused during your quiet hours (6 PM to 9 AM, out of the box),
+          while Windows Focus Assist is on, when you're presenting full-screen,
+          and when you've stepped away from the keyboard. Nothing to configure —
+          though you can, if you want to.
+        </p>
+        <ul class="quiet-list">
+          <li>Quiet hours, set once.</li>
+          <li>Skips full-screen apps &amp; Focus Assist.</li>
+          <li>Auto-snoozes after 10 minutes idle.</li>
+          <li>No sound unless you turn it on.</li>
+        </ul>
+      </div>
+
+      <figure class="quiet-card" aria-label="A mock of the stretch overlay">
+        <div class="mock-frame">
+          <div class="mock-wash">
+            <div class="mock-dialog">
+              <div class="mock-eyebrow">A moment for you · 3 / 8 today</div>
+              <div class="mock-ring">
+                <span class="mock-r1"></span>
+                <span class="mock-r2"></span>
+              </div>
+              <div class="mock-title">Seated Twist</div>
+              <div class="mock-desc">
+                Place your right hand on the back of your chair, left hand on
+                the right knee. Rotate gently. Hold, then switch.
+              </div>
+              <div class="mock-ctas">
+                <span class="mock-btn primary">I'm done</span>
+                <span class="mock-btn ghost">Snooze 5 min</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </figure>
+    </section>
+
+    <section class="privacy" id="privacy">
+      <h2>Your data stays on your machine.</h2>
+      <p class="body">
+        Stretch has no server. It does not phone home, load remote scripts,
+        fetch fonts at runtime, collect anonymous analytics, or include a
+        crash reporter. Your settings and streak live in a single JSON file
+        inside <code>%APPDATA%/Stretch/</code>.
+      </p>
+      <p class="body">
+        <a href="privacy.html">Read the full privacy note →</a>
+      </p>
+    </section>
+
+    <section class="cta-band">
+      <h2>One minute. Every thirty.</h2>
+      <a class="btn primary" href="https://github.com/praveensankar969/stretch/releases/latest/download/StretchSetup.exe">
+        Download for Windows
+      </a>
+      <p class="tiny">
+        Not medical advice. Stop if it hurts.
+      </p>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <div class="foot-left">
+      <span class="brand-mark small" aria-hidden="true"></span>
+      <span>Stretch &nbsp;·&nbsp; Designed with intention. Distributed under MIT.</span>
+    </div>
+    <div class="foot-right">
+      <a href="privacy.html">Privacy</a>
+      <a href="https://github.com/praveensankar969/stretch">GitHub</a>
+      <a href="https://github.com/praveensankar969/stretch/blob/main/CHANGELOG.md">Changelog</a>
+    </div>
+  </footer>
+
+  <script>
+    (function () {
+      var path = document.getElementById('breath-path');
+      if (!path || !path.getTotalLength) return;
+      var len = path.getTotalLength();
+      path.style.strokeDasharray = len;
+      path.style.strokeDashoffset = len;
+      var start = performance.now();
+      var cycle = 10000;
+      function tick(t) {
+        var p = ((t - start) % cycle) / cycle;
+        var eased = 0.5 - 0.5 * Math.cos(p * Math.PI * 2);
+        path.style.strokeDashoffset = String(len * (1 - eased));
+        requestAnimationFrame(tick);
+      }
+      requestAnimationFrame(tick);
+    })();
+  </script>
+</body>
+</html>

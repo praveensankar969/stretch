@@ -31,7 +31,7 @@
     "lottie-web": "^5.12.2"
   },
   "build": {
-    "appId": "com.stretch.app",
+    "appId": "com.stretchapp.in",
     "productName": "Stretch",
     "artifactName": "StretchSetup-${version}.${ext}",
     "directories": {
@@ -81,8 +81,8 @@
     "publish": [
       {
         "provider": "github",
-        "owner": "your-github-username",
-        "repo": "stretch"
+        "owner": "praveensankar969",
+        "repo": "Stretch"
       }
     ]
   }

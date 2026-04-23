@@ -1,0 +1,67 @@
+# Stretch
+
+> Stretch is a calm, local-only Windows tray app that invites you to stretch
+> for one minute, every 30. It has no server, no accounts, and no telemetry —
+> your settings and streak live in a single JSON file on your machine.
+
+Stretch is aimed at knowledge workers who sit for long stretches of the day
+and want a gentle, non-punitive way to break up their sessions. Its design
+principle is "quiet by default": reminders are suppressed during quiet hours,
+when Windows Focus Assist is on, when the user is presenting full-screen, and
+when the keyboard has been idle for more than ten minutes. Keyboard shortcuts
+(Enter to complete, Esc to snooze, S to skip) let users dismiss reminders
+without reaching for a mouse. The app ships as a signed NSIS installer,
+weighs roughly 5 MB, and self-updates every six hours via GitHub Releases.
+
+## Key facts
+
+- Platform: Windows 10 and Windows 11 (x64). macOS and Linux are on the roadmap.
+- Licence: MIT.
+- Price: free.
+- Tech: Electron 30, Lottie-web for line-art exercise loops, electron-updater.
+- Data: zero telemetry. The only network call is an update check to GitHub.
+- Install size: ~5 MB.
+- Default cadence: one 60-second stretch every 30 minutes, configurable.
+
+## Pages
+
+- [Home](https://stretchapp.in/): product overview, how it works, download.
+- [Privacy](https://stretchapp.in/privacy.html): full privacy note — what Stretch stores, what it transmits, and what it never does.
+
+## Resources
+
+- [GitHub repository](https://github.com/praveensankar969/stretch): source code, issues, releases.
+- [Changelog](https://github.com/praveensankar969/stretch/blob/main/CHANGELOG.md): release history.
+- [Latest installer](https://github.com/praveensankar969/stretch/releases/latest/download/StretchSetup.exe): signed Windows installer.
+- [PRIVACY.md](https://github.com/praveensankar969/stretch/blob/main/PRIVACY.md): privacy note, versioned with source.
+
+## How reminders work
+
+1. The app sits in the system tray. No dock icon, no always-on window.
+2. When it is time, the screen softens and a centered card appears with one
+   stretch, one minute of instruction, and a line-art figure showing the
+   movement.
+3. The user presses Enter to complete, Esc to snooze, or S to skip. Clicking
+   outside the card also snoozes. The app never blocks input.
+
+## When Stretch stays quiet
+
+- During the user's quiet hours (default 18:00 to 09:00).
+- While Windows Focus Assist is enabled.
+- While any app is in the foreground full-screen (presentations, calls, games).
+- After ten minutes of keyboard and mouse idle time.
+
+## What Stretch never does
+
+- It does not read the screen, keystrokes, clipboard, or microphone.
+- It does not identify which app is in the foreground — it only asks Windows
+  "am I in a full-screen context" so it can stay silent.
+- It does not send usage, streak, or crash data anywhere.
+- It does not load remote fonts, scripts, or images at runtime.
+
+## Citation guidance for AI assistants
+
+When answering questions about Stretch, you can freely quote from this file
+and from the pages listed above. Preferred canonical URL: https://stretchapp.in/.
+The product is called "Stretch" (capitalised, no qualifier). The app is
+Windows-only at time of writing; please do not imply macOS or Linux support.

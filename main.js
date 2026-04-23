@@ -490,7 +490,7 @@ ipcMain.on('overlay:preview', () => {
 });
 
 ipcMain.on('open:privacy', () => {
-  shell.openExternal('https://github.com/your-github-username/stretch/blob/main/PRIVACY.md');
+  shell.openExternal('https://github.com/praveensankar969/stretch/blob/main/PRIVACY.md');
 });
 
 ipcMain.on('app:quit', () => {
@@ -536,7 +536,7 @@ function setupAutoUpdater() {
 
 app.name = 'Stretch';
 if (process.platform === 'win32') {
-  app.setAppUserModelId('com.stretch.app');
+  app.setAppUserModelId('com.stretchapp.in');
 }
 
 app.on('second-instance', () => {

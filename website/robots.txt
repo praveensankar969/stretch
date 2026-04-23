@@ -1,0 +1,125 @@
+# robots.txt for Stretch — https://stretchapp.in/
+# Policy: we want Stretch to be discoverable by both classic search engines
+# and modern AI assistants. Everyone is welcome, nothing is blocked.
+# If you ever want to opt out of AI training specifically, flip the relevant
+# User-agent group below from `Allow: /` to `Disallow: /`.
+
+# --- Everyone else ---------------------------------------------------------
+User-agent: *
+Allow: /
+Disallow: /assets/private/
+
+# --- Classic search crawlers ----------------------------------------------
+User-agent: Googlebot
+Allow: /
+
+User-agent: Googlebot-Image
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: DuckDuckBot
+Allow: /
+
+User-agent: Slurp
+Allow: /
+
+User-agent: Baiduspider
+Allow: /
+
+User-agent: YandexBot
+Allow: /
+
+User-agent: Applebot
+Allow: /
+
+# --- AI: on-demand / retrieval agents (fetch a page to answer a user) -----
+# These usually respect robots.txt and only fetch when a user asks a question.
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Perplexity-User
+Allow: /
+
+User-agent: Amazonbot
+Allow: /
+
+User-agent: DuckAssistBot
+Allow: /
+
+User-agent: YouBot
+Allow: /
+
+User-agent: MistralAI-User
+Allow: /
+
+# --- AI: training / dataset crawlers --------------------------------------
+# These feed foundation models. Set to `Disallow: /` if you'd rather not be
+# part of training corpora.
+User-agent: GPTBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: anthropic-ai
+Allow: /
+
+User-agent: Claude-Web
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
+
+User-agent: Meta-ExternalAgent
+Allow: /
+
+User-agent: FacebookBot
+Allow: /
+
+User-agent: Bytespider
+Allow: /
+
+User-agent: PanguBot
+Allow: /
+
+User-agent: cohere-ai
+Allow: /
+
+User-agent: Diffbot
+Allow: /
+
+User-agent: ImagesiftBot
+Allow: /
+
+User-agent: Timpibot
+Allow: /
+
+User-agent: Omgilibot
+Allow: /
+
+User-agent: Omgili
+Allow: /
+
+User-agent: CCBot
+Allow: /
+
+# --- Archive crawlers -----------------------------------------------------
+User-agent: ia_archiver
+Allow: /
+
+User-agent: archive.org_bot
+Allow: /
+
+# --- Sitemap --------------------------------------------------------------
+Sitemap: https://stretchapp.in/sitemap.xml

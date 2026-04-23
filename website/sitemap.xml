@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  <url>
+    <loc>https://stretchapp.in/</loc>
+    <lastmod>2026-04-23</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>1.0</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://stretchapp.in/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://stretchapp.in/"/>
+  </url>
+  <url>
+    <loc>https://stretchapp.in/privacy.html</loc>
+    <lastmod>2026-04-23</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.5</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://stretchapp.in/privacy.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://stretchapp.in/privacy.html"/>
+  </url>
+</urlset>
