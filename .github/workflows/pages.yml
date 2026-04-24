@@ -5,6 +5,9 @@ on:
     branches: [master]
     paths:
       - "website/**"
+      - "src/assets/**"
+      - "src/shared/**"
+      - "src/vendor/**"
       - ".github/workflows/pages.yml"
   workflow_dispatch:
 
@@ -26,8 +29,16 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: actions/configure-pages@v5
+      - name: Stage site (website + referenced src assets)
+        run: |
+          mkdir -p _site/src
+          cp -r website/. _site/
+          cp -r src/assets _site/src/assets
+          cp -r src/shared _site/src/shared
+          cp -r src/vendor _site/src/vendor
+          touch _site/.nojekyll
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: ./website
+          path: ./_site
       - id: deploy
         uses: actions/deploy-pages@v4

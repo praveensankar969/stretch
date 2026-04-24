@@ -5,11 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <title>Stretch — Quiet Desk Stretch Reminders for Windows</title>
-  <meta name="description" content="Stretch is a calm, local-only Windows tray app that reminds you to stretch for one minute every 30. No accounts, no telemetry, no nagging — just a gentle nudge away from your desk.">
+  <meta name="description" content="Stretch is a quiet Windows tray app that walks you through ten line-art desk stretches, one minute every 30. Tray-only footprint, breath-paced overlay, quiet hours, Focus Assist and full-screen aware, idle-detecting, streak-tracking. No accounts. No telemetry. No nagging.">
   <meta name="application-name" content="Stretch">
   <meta name="author" content="Stretch">
   <meta name="generator" content="Hand-written · Electron 30">
-  <meta name="keywords" content="stretch reminder, desk stretches, posture app, break reminder, Windows tray app, RSI prevention, pomodoro stretch, movement reminder, local-only app, privacy-first app">
+  <meta name="keywords" content="stretch reminder, desk stretches, posture app, break reminder, Windows tray app, RSI prevention, pomodoro stretch, movement reminder, local-only app, privacy-first app, breath ring, line-art exercise, streak tracker">
   <meta name="referrer" content="strict-origin-when-cross-origin">
   <meta name="color-scheme" content="light dark">
   <meta name="theme-color" content="#F5EFE6" media="(prefers-color-scheme: light)">
@@ -34,7 +34,7 @@
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Stretch">
   <meta property="og:title" content="Stretch — Quiet Desk Stretch Reminders for Windows">
-  <meta property="og:description" content="A calm, local-only Windows tray app that nudges you to stretch for one minute every 30. No accounts, no telemetry.">
+  <meta property="og:description" content="A quiet Windows tray app with ten breath-paced desk stretches, one minute every 30. Quiet hours, Focus Assist aware, streak tracker. No accounts. No telemetry. Local only.">
   <meta property="og:url" content="https://stretchapp.in/">
   <meta property="og:locale" content="en_US">
   <meta property="og:image" content="https://stretchapp.in/assets/og.png">
@@ -46,17 +46,27 @@
 
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Stretch — Quiet Desk Stretch Reminders for Windows">
-  <meta name="twitter:description" content="A calm, local-only Windows tray app that nudges you to stretch for one minute every 30. No accounts, no telemetry.">
+  <meta name="twitter:description" content="A quiet Windows tray app with ten breath-paced desk stretches, one minute every 30. Quiet hours, Focus Assist aware, streak tracker. No accounts. No telemetry. Local only.">
   <meta name="twitter:image" content="https://stretchapp.in/assets/og.png">
   <meta name="twitter:image:alt" content="The Stretch overlay: a soft breathing ring and a seated-twist line-art figure.">
 
   <link rel="sitemap" type="application/xml" href="sitemap.xml">
   <link rel="preload" as="style" href="../src/assets/tokens.css">
   <link rel="preload" as="style" href="../src/assets/fonts.css">
+  <link rel="prefetch" as="fetch" href="../src/assets/lottie/sky-reach.json" crossorigin media="(min-width: 720px)">
 
   <link rel="stylesheet" href="../src/assets/tokens.css">
   <link rel="stylesheet" href="../src/assets/fonts.css">
   <link rel="stylesheet" href="style.css">
+
+  <noscript>
+    <style>
+      .reveal,
+      .reveal.is-in { opacity: 1 !important; transform: none !important; transition: none !important; }
+      #overlay-preview .overlay-timer { content: normal; }
+      .ex-strip { pointer-events: none; }
+    </style>
+  </noscript>
 
   <script type="application/ld+json">
   {
@@ -64,7 +74,7 @@
     "@type": "SoftwareApplication",
     "name": "Stretch",
     "alternateName": "Stretch for Windows",
-    "description": "A quiet, local-only Windows tray app that invites you to stretch for one minute, every so often. No accounts, no telemetry.",
+    "description": "Stretch is a quiet Windows tray app that walks you through ten line-art desk stretches, one minute every 30. Tray-only footprint, breath-paced overlay, quiet hours, Focus Assist and full-screen aware, idle-detecting, streak-tracking. No accounts. No telemetry. No nagging.",
     "url": "https://stretchapp.in/",
     "image": "https://stretchapp.in/assets/og.png",
     "applicationCategory": "HealthApplication",
@@ -85,11 +95,17 @@
     },
     "featureList": [
       "Sits in the system tray — no dock icon, no window",
-      "One-minute stretch reminder every 30 minutes (configurable)",
-      "Quiet hours, Focus Assist, full-screen and idle detection",
-      "Ten line-art exercises with keyboard-first controls",
-      "Zero telemetry, zero accounts, local JSON config",
-      "Self-updating via signed GitHub Releases"
+      "One-minute stretch reminder every 30 minutes (configurable 5-240 min)",
+      "Ten line-art desk exercises with 20-40 second holds, breath-paced overlay",
+      "Keyboard-first controls: Enter to log, Esc to snooze 5 min, S to skip",
+      "Daily goal tracking with a seven-day sparkline and streak counter",
+      "Quiet hours by default (18:00-09:00), fully configurable",
+      "Respects Windows Focus Assist, skips full-screen apps, auto-pauses after 10 min idle",
+      "Right-click tray menu: snooze 15 min / 1 hour, stretch now, pause reminders",
+      "First-run onboarding chooses cadence, quiet hours, and launch-at-login",
+      "Zero telemetry, zero accounts, no crash reporter, no remote scripts, no CDN fonts",
+      "Single JSON config at %APPDATA%/Stretch/, history trimmed to 365 days",
+      "Self-updating every 6 hours via signed GitHub Releases"
     ],
     "author": {
       "@type": "Organization",
@@ -112,7 +128,7 @@
     "name": "Stretch",
     "url": "https://stretchapp.in/",
     "inLanguage": "en",
-    "description": "A calm, local-only Windows tray app that reminds you to stretch for one minute every 30.",
+    "description": "Marketing site for Stretch, a quiet Windows tray app that reminds you to stretch for one minute every 30 — ten line-art exercises, local-only, no accounts or telemetry.",
     "publisher": {
       "@type": "Organization",
       "name": "Stretch",
@@ -133,6 +149,71 @@
     ]
   }
   </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "How often will Stretch interrupt me?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Every 30 minutes by default. You can pick 20, 30, 45, 60 minutes during onboarding, or set any cadence between 5 and 240 minutes afterwards. The reminder lasts one minute — then it gets out of your way."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Does it track me or send data anywhere?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "No. Stretch has no server, no account, and no telemetry. It does not load remote scripts, does not fetch fonts at runtime, and does not include a crash reporter. Your settings and streak live in a single JSON file inside %APPDATA%/Stretch/config.json."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What stretches does it show?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Ten desk-friendly movements drawn from public references (NHS, ACE Fitness, Mayo Clinic): Sky Reach, Chest Opener, Shoulder Roll, Neck Crescent, Seated Twist, Seated Cat-Cow, Wrist Stretch, Ankle Stretch, Ankle Orbits, and Reset Breath. Each has a line-art figure, a one-line instruction, and a 20 to 40 second hold."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Will it interrupt me during a meeting or presentation?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "No. Stretch pauses when a full-screen application is focused, when Windows Focus Assist is set to Alarms-Only or Priority-Only, during your configured quiet hours, and after ten minutes of keyboard or mouse idle. None of that requires setup."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Can I snooze or skip a reminder?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. Press Enter to log the minute as done, Esc to snooze five minutes, or S to skip this one. Clicking outside the card also snoozes. The tray menu offers a 15-minute and a 1-hour snooze, plus a toggle that pauses reminders completely."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Where are my settings and streak stored?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "In a single human-readable JSON file at %APPDATA%/Stretch/config.json on your machine. History is trimmed automatically to the last 365 days. Uninstalling the app removes the app; the config directory is kept so you can delete it yourself."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Is Stretch really free?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. Stretch is open source under the MIT license, distributed as a signed NSIS installer from GitHub Releases, and auto-updates every six hours. No ads, no upsells, no paid tier."
+        }
+      }
+    ]
+  }
+  </script>
 </head>
 <body class="theme-paper">
   <div class="grain" aria-hidden="true"></div>
@@ -142,9 +223,10 @@
       <span class="brand-mark" aria-hidden="true"></span>
       <span class="brand-word">Stretch</span>
     </a>
-    <nav class="nav-links">
-      <a href="#how">How it works</a>
-      <a href="#quiet">Quiet by default</a>
+    <nav class="nav-links" aria-label="Primary">
+      <a href="#reminder">The reminder</a>
+      <a href="#quiet">Quiet</a>
+      <a href="#dashboard">Dashboard</a>
       <a href="#privacy">Privacy</a>
       <a class="nav-cta" href="#download">Download</a>
     </nav>
@@ -152,25 +234,27 @@
 
   <main id="top">
     <section class="hero">
-      <p class="eyebrow"><span class="eyebrow-dot"></span> For Windows · local only</p>
+      <p class="eyebrow"><span class="eyebrow-dot"></span> For Windows · Local only · MIT</p>
       <h1 class="hero-title">
         A small nudge,<br>
         <em>every thirty minutes.</em>
       </h1>
       <p class="hero-lede">
-        Stretch lives in your system tray and invites you to unfold for one minute
-        every so often. It knows when you're presenting, idle, or off the clock —
-        and it stays quiet then. No accounts. No telemetry. Just you and your spine.
+        Stretch lives quietly in your system tray and walks you through a
+        one-minute movement &mdash; ten desk-friendly stretches, one
+        breath-paced overlay, one line of instruction. It knows when you're
+        presenting, idle, or off the clock, and it stays quiet then.
       </p>
       <div class="hero-ctas" id="download">
         <a class="btn primary" href="https://github.com/praveensankar969/stretch/releases/download/latest/Stretch-1.0.0.exe">
           Download for Windows
-          <span class="btn-meta">v1.0 · signed installer</span>
+          <span class="btn-meta">v1.0 &middot; signed installer &middot; ~75 MB</span>
         </a>
         <a class="btn ghost" href="https://github.com/praveensankar969/stretch">View on GitHub</a>
       </div>
       <p class="hero-fineprint">
-        Works on Windows 10 and 11. macOS &amp; Linux builds on the roadmap.
+        Windows 10 &amp; 11. Open source. No accounts, no telemetry, no ads.
+        macOS &amp; Linux on the roadmap.
       </p>
     </section>
 
@@ -188,95 +272,367 @@
       </svg>
     </section>
 
+    <section class="reminder" id="reminder">
+      <div class="reminder-head reveal">
+        <p class="eyebrow"><span class="eyebrow-dot"></span> This is what a reminder looks like</p>
+        <h2>One minute.<br><em>One breath ring.</em><br>One stretch.</h2>
+        <p class="body">
+          When the thirty minutes are up, your screen softens and a single
+          card appears at the center. A breathing ring paces your inhale
+          and exhale; a line-art figure shows the shape of the movement.
+          You log it with <kbd>Enter</kbd>, snooze with <kbd>Esc</kbd>, or skip with <kbd>S</kbd>.
+          Then you're gone.
+        </p>
+      </div>
+
+      <p class="demo-pill reveal" aria-hidden="true">
+        <span class="demo-pill-dot"></span>
+        Demo &mdash; this is how it looks on your screen.
+      </p>
+
+      <div class="device-frame reveal" role="img" aria-label="Live replica of the Stretch overlay: breath ring, line-art figure, title, one-line instruction, keyboard shortcuts">
+        <div class="device-chrome" aria-hidden="true">
+          <div class="device-desk"></div>
+          <div class="device-taskbar">
+            <span class="device-start"></span>
+            <span class="device-search">Type here to search</span>
+            <span class="device-tray-icons">
+              <span class="device-stretch-dot" title="Stretch tray icon"></span>
+              <span class="device-tray-dot"></span>
+              <span class="device-tray-dot"></span>
+            </span>
+            <span class="device-clock">2:34 PM<br><small>Fri, Apr 24</small></span>
+          </div>
+        </div>
+
+        <div class="overlay-preview" id="overlay-preview">
+          <div class="overlay-wash" aria-hidden="true"></div>
+          <article class="overlay-dialog">
+            <header class="overlay-eyebrow">
+              <span class="eyebrow-dot" aria-hidden="true"></span>
+              <span>A moment for you</span>
+              <span class="overlay-chip">3 / 8 today</span>
+            </header>
+
+            <div class="overlay-stage">
+              <svg class="overlay-breath" viewBox="0 0 240 240" aria-hidden="true">
+                <circle class="overlay-breath-track" cx="120" cy="120" r="108"/>
+                <circle class="overlay-breath-circle" cx="120" cy="120" r="108"/>
+              </svg>
+              <svg class="overlay-silhouette" viewBox="0 0 240 240" aria-hidden="true">
+                <circle cx="120" cy="82" r="16" fill="none" stroke="currentColor" stroke-width="4"/>
+                <line x1="120" y1="98" x2="120" y2="160" stroke="currentColor" stroke-width="5" stroke-linecap="round"/>
+                <line x1="120" y1="118" x2="82" y2="142" stroke="currentColor" stroke-width="4" stroke-linecap="round"/>
+                <line x1="120" y1="118" x2="158" y2="142" stroke="currentColor" stroke-width="4" stroke-linecap="round"/>
+                <line x1="120" y1="160" x2="98" y2="198" stroke="currentColor" stroke-width="4" stroke-linecap="round"/>
+                <line x1="120" y1="160" x2="142" y2="198" stroke="currentColor" stroke-width="4" stroke-linecap="round"/>
+              </svg>
+              <div class="overlay-lottie" id="overlay-lottie" aria-hidden="true"></div>
+            </div>
+
+            <h3 class="overlay-title" id="overlay-title">Sky Reach</h3>
+            <p class="overlay-desc" id="overlay-desc">Interlace your fingers, press your palms upward, and lengthen through your ribs. Breathe in for four, out for six.</p>
+
+            <div class="overlay-timer" id="overlay-timer">30s</div>
+
+            <div class="overlay-cta">
+              <span class="overlay-btn primary">I'm done <kbd>Enter</kbd></span>
+              <span class="overlay-btn ghost">Snooze 5 min <kbd>Esc</kbd></span>
+            </div>
+
+            <footer class="overlay-legal">
+              <span class="overlay-skip">Skip this one <kbd>S</kbd></span>
+              <span class="overlay-sep" aria-hidden="true">&middot;</span>
+              <span>Not medical advice. Stop if it hurts.</span>
+            </footer>
+          </article>
+        </div>
+      </div>
+
+      <div class="ex-strip reveal" id="ex-strip" role="group" aria-label="Preview any of the ten stretches">
+        <button class="ex-pill is-active" data-id="sky-reach" type="button" aria-pressed="true">Sky Reach</button>
+        <button class="ex-pill" data-id="chest-opener" type="button" aria-pressed="false">Chest Opener</button>
+        <button class="ex-pill" data-id="shoulder-roll" type="button" aria-pressed="false">Shoulder Roll</button>
+        <button class="ex-pill" data-id="neck-crescent" type="button" aria-pressed="false">Neck Crescent</button>
+        <button class="ex-pill" data-id="seated-twist" type="button" aria-pressed="false">Seated Twist</button>
+        <button class="ex-pill" data-id="cat-cow" type="button" aria-pressed="false">Seated Cat-Cow</button>
+        <button class="ex-pill" data-id="wrist-extensor" type="button" aria-pressed="false">Wrist Stretch</button>
+        <button class="ex-pill" data-id="ankle-stretch" type="button" aria-pressed="false">Ankle Stretch</button>
+        <button class="ex-pill" data-id="ankle-orbit" type="button" aria-pressed="false">Ankle Orbits</button>
+        <button class="ex-pill" data-id="reset-breath" type="button" aria-pressed="false">Reset Breath</button>
+      </div>
+      <p class="reminder-tiny">
+        Tap a name to preview it. Auto-rotates every twelve seconds on desktop;
+        stays still on mobile and reduced-motion settings.
+      </p>
+    </section>
+
     <section class="how" id="how">
+      <div class="how-head reveal">
+        <p class="eyebrow">How it works</p>
+        <h2>Four things, in order.</h2>
+      </div>
       <div class="how-grid">
-        <article class="how-card">
+        <article class="how-card reveal">
           <div class="numeral">I</div>
           <h3>It waits.</h3>
-          <p>
-            The app sits in your system tray. No dock icon. No window on your
-            screen. It counts the minutes between reminders — nothing else.
-          </p>
+          <p>The app lives in your system tray. No dock icon, no window. It counts the minutes between reminders &mdash; nothing else.</p>
         </article>
-        <article class="how-card how-card-offset">
+        <article class="how-card how-card-offset reveal">
           <div class="numeral">II</div>
           <h3>It dims the room.</h3>
-          <p>
-            When it's time, your screen softens and a single card appears at
-            the center: one stretch, one minute, one line of instruction.
-            Line-art figure shows the movement.
-          </p>
+          <p>When the thirty minutes are up, the screen softens and one card appears at the center. One stretch, one minute, one line of instruction.</p>
         </article>
-        <article class="how-card">
+        <article class="how-card reveal">
           <div class="numeral">III</div>
           <h3>It lets you go.</h3>
-          <p>
-            <kbd>Enter</kbd> to dismiss, <kbd>Esc</kbd> to snooze, <kbd>S</kbd> to skip.
-            Click outside the card — also a snooze. It never holds you hostage.
-          </p>
+          <p><kbd>Enter</kbd> to log. <kbd>Esc</kbd> to snooze five minutes. <kbd>S</kbd> to skip. Click outside &mdash; also a snooze. It never holds you hostage.</p>
+        </article>
+        <article class="how-card how-card-offset reveal">
+          <div class="numeral">IV</div>
+          <h3>It logs your minute.</h3>
+          <p>One tick toward today's goal. A warm sparkline for the last seven days. A streak that only asks for one stretch a day to keep.</p>
         </article>
       </div>
     </section>
 
     <section class="quiet" id="quiet">
-      <div class="quiet-text">
+      <div class="quiet-text reveal">
         <p class="eyebrow">Not one more thing to manage</p>
-        <h2>Stretch is quiet by default.</h2>
+        <h2>Stretch is <em>quiet</em> by default.</h2>
         <p class="body">
-          Reminders are paused during your quiet hours (6 PM to 9 AM, out of the box),
-          while Windows Focus Assist is on, when you're presenting full-screen,
-          and when you've stepped away from the keyboard. Nothing to configure —
-          though you can, if you want to.
+          Reminders are paused during your quiet hours, while Windows
+          Focus Assist is set to Alarms-Only or Priority-Only, when a
+          full-screen application is focused, and when you've stepped
+          away from the keyboard for ten minutes. Nothing to configure
+          &mdash; though you can, if you want to.
         </p>
         <ul class="quiet-list">
-          <li>Quiet hours, set once.</li>
-          <li>Skips full-screen apps &amp; Focus Assist.</li>
-          <li>Auto-snoozes after 10 minutes idle.</li>
-          <li>No sound unless you turn it on.</li>
+          <li>Default quiet hours <strong>18:00 &rarr; 09:00</strong>, editable to the minute.</li>
+          <li>Skips Focus Assist via Windows' own do-not-disturb signal.</li>
+          <li>Skips full-screen apps &mdash; games, Zoom, Keynote, anything.</li>
+          <li>Auto-pauses after <strong>10 minutes</strong> of keyboard or mouse idle.</li>
+          <li>Silent by default. Sound is strictly opt-in.</li>
         </ul>
       </div>
 
-      <figure class="quiet-card" aria-label="A mock of the stretch overlay">
-        <div class="mock-frame">
-          <div class="mock-wash">
-            <div class="mock-dialog">
-              <div class="mock-eyebrow">A moment for you · 3 / 8 today</div>
-              <div class="mock-ring">
-                <span class="mock-r1"></span>
-                <span class="mock-r2"></span>
-              </div>
-              <div class="mock-title">Seated Twist</div>
-              <div class="mock-desc">
-                Place your right hand on the back of your chair, left hand on
-                the right knee. Rotate gently. Hold, then switch.
-              </div>
-              <div class="mock-ctas">
-                <span class="mock-btn primary">I'm done</span>
-                <span class="mock-btn ghost">Snooze 5 min</span>
-              </div>
-            </div>
+      <figure class="quiet-figure reveal" aria-label="What triggers a pause">
+        <div class="rules-card">
+          <div class="rules-row">
+            <span class="rules-when">Tonight, after 18:00</span>
+            <span class="rules-state">Quiet</span>
+          </div>
+          <div class="rules-row">
+            <span class="rules-when">Full-screen Zoom call</span>
+            <span class="rules-state">Paused</span>
+          </div>
+          <div class="rules-row">
+            <span class="rules-when">Focus Assist on</span>
+            <span class="rules-state">Paused</span>
+          </div>
+          <div class="rules-row">
+            <span class="rules-when">Idle for 10 min</span>
+            <span class="rules-state">Paused</span>
+          </div>
+          <div class="rules-row is-active">
+            <span class="rules-when">Back at your desk</span>
+            <span class="rules-state rules-state-on">Next in 24 min</span>
           </div>
         </div>
       </figure>
     </section>
 
+    <section class="dashboard" id="dashboard">
+      <div class="dashboard-text reveal">
+        <p class="eyebrow">Your day at a glance</p>
+        <h2>A tiny dashboard.<br><em>No guilt.</em></h2>
+        <p class="body">
+          Open Stretch from the tray and you'll see today's progress, a
+          seven-day sparkline, and your current streak. A streak asks for
+          one stretch a day to keep &mdash; it's here to encourage, not to
+          shame.
+        </p>
+      </div>
+
+      <figure class="dashboard-mock reveal" aria-label="Replica of the Stretch dashboard: three of eight today, five-day streak">
+        <div class="dash-frame">
+          <header class="dash-top">
+            <div class="dash-brand">
+              <span class="brand-mark" aria-hidden="true"></span>
+              <span>Stretch</span>
+            </div>
+            <span class="dash-next">Next reminder in 24 min</span>
+          </header>
+
+          <div class="dash-hero">
+            <h3 class="dash-h">Today</h3>
+            <div class="dash-row">
+              <div class="dash-count">
+                <span class="dash-big">3</span><span class="dash-slash">/</span><span class="dash-goal">8</span>
+              </div>
+              <div class="dash-streak" title="Consecutive days with at least one stretch">
+                <span class="dash-streak-num">5</span><span class="dash-streak-word">&nbsp;day streak</span>
+              </div>
+            </div>
+            <svg class="dash-spark" viewBox="0 0 280 48" preserveAspectRatio="none" aria-label="Last seven days: 6, 8, 7, 5, 8, 4, 3 stretches">
+              <polyline points="10,30 55,12 100,18 145,28 190,10 235,34 270,38"
+                        fill="none" stroke="currentColor" stroke-width="1.5"
+                        stroke-linecap="round" stroke-linejoin="round"/>
+              <circle cx="10" cy="30" r="3"/>
+              <circle cx="55" cy="12" r="3"/>
+              <circle cx="100" cy="18" r="3"/>
+              <circle cx="145" cy="28" r="3"/>
+              <circle cx="190" cy="10" r="3"/>
+              <circle cx="235" cy="34" r="3"/>
+              <circle cx="270" cy="38" r="4" class="dash-today"/>
+            </svg>
+          </div>
+
+          <div class="dash-row-small">
+            <span>Goal 8 &middot; Cadence 30 min</span>
+            <span>v1.0.0</span>
+          </div>
+        </div>
+      </figure>
+    </section>
+
+    <section class="tray" id="tray">
+      <div class="tray-text reveal">
+        <p class="eyebrow">Everything, one right-click away</p>
+        <h2>The tray menu.</h2>
+        <p class="body">
+          Stretch has no dock icon, no floating window, no browser tab.
+          It lives next to your clock. Right-click the icon and you have
+          every control the app exposes.
+        </p>
+      </div>
+
+      <figure class="tray-mock reveal" aria-label="Right-click menu on the Stretch tray icon">
+        <div class="tray-bar" aria-hidden="true">
+          <span class="tray-ic"></span>
+          <span class="tray-ic"></span>
+          <span class="tray-ic is-stretch" title="Stretch"></span>
+          <span class="tray-ic"></span>
+          <span class="tray-clock-sm">2:34 PM<br><small>Fri, Apr 24</small></span>
+        </div>
+        <ul class="tray-menu">
+          <li class="tray-item is-info">Next in 24 min</li>
+          <li class="tray-sep" role="separator"></li>
+          <li class="tray-item">Open Stretch</li>
+          <li class="tray-item is-check"><span class="tray-check" aria-hidden="true">&#10003;</span>Reminders</li>
+          <li class="tray-item">Snooze 15 min</li>
+          <li class="tray-item">Snooze 1 hour</li>
+          <li class="tray-sep" role="separator"></li>
+          <li class="tray-item">Stretch now</li>
+          <li class="tray-sep" role="separator"></li>
+          <li class="tray-item">Quit Stretch</li>
+        </ul>
+      </figure>
+    </section>
+
+    <section class="onboarding" id="onboarding">
+      <div class="onb-head reveal">
+        <p class="eyebrow">First run, then forgotten</p>
+        <h2>Set it once. <em>We mean it.</em></h2>
+        <p class="body">
+          Three screens on first launch. Pick a cadence. Set your quiet
+          hours. Decide whether it launches with Windows. That's the whole
+          setup &mdash; you never have to open settings again.
+        </p>
+      </div>
+
+      <ol class="onb-strip" aria-label="Three-step onboarding">
+        <li class="onb-card reveal">
+          <span class="onb-step">Step one</span>
+          <h3>How often?</h3>
+          <div class="onb-choice-row" aria-hidden="true">
+            <span class="onb-choice"><span class="onb-num">20</span><span class="onb-unit">min</span></span>
+            <span class="onb-choice is-selected"><span class="onb-num">30</span><span class="onb-unit">min</span></span>
+            <span class="onb-choice"><span class="onb-num">45</span><span class="onb-unit">min</span></span>
+            <span class="onb-choice"><span class="onb-num">60</span><span class="onb-unit">min</span></span>
+          </div>
+          <p class="onb-note">Restless, balanced, deep focus, hourly &mdash; pick a cadence that won't break your flow.</p>
+        </li>
+        <li class="onb-card reveal">
+          <span class="onb-step">Step two</span>
+          <h3>Quiet hours.</h3>
+          <div class="onb-quiet-row" aria-hidden="true">
+            <div class="onb-time"><span class="onb-time-label">From</span><span class="onb-time-val">18:00</span></div>
+            <div class="onb-time"><span class="onb-time-label">Until</span><span class="onb-time-val">09:00</span></div>
+          </div>
+          <p class="onb-note">No reminders after hours or during Focus Assist. On by default &mdash; off with one click.</p>
+        </li>
+        <li class="onb-card reveal">
+          <span class="onb-step">Step three</span>
+          <h3>Launch at login.</h3>
+          <div class="onb-toggle-row" aria-hidden="true">
+            <span class="onb-pill">
+              <span class="onb-toggle is-on"><span class="onb-dot"></span></span>
+              Launch at login
+            </span>
+          </div>
+          <p class="onb-note">Starts hidden in the tray &mdash; appears only when you open it. No dock clutter.</p>
+        </li>
+      </ol>
+    </section>
+
     <section class="privacy" id="privacy">
-      <h2>Your data stays on your machine.</h2>
-      <p class="body">
-        Stretch has no server. It does not phone home, load remote scripts,
-        fetch fonts at runtime, collect anonymous analytics, or include a
-        crash reporter. Your settings and streak live in a single JSON file
-        inside <code>%APPDATA%/Stretch/</code>.
-      </p>
-      <p class="body">
-        <a href="privacy.html">Read the full privacy note →</a>
+      <div class="privacy-head reveal">
+        <p class="eyebrow">Local only</p>
+        <h2>Your data stays on your machine.</h2>
+        <p class="body">
+          Stretch has no server. It does not phone home, load remote scripts,
+          fetch fonts at runtime, collect anonymous analytics, or include a
+          crash reporter. Your settings and streak live in one JSON file at
+          <code>%APPDATA%/Stretch/config.json</code>, trimmed automatically to
+          the last 365 days. You can open it in Notepad.
+        </p>
+      </div>
+      <ul class="privacy-grid reveal">
+        <li class="priv-card">
+          <span class="priv-icon" aria-hidden="true">&times;</span>
+          <h3>No account</h3>
+          <p>Nothing to sign up for. Nothing to sign in to.</p>
+        </li>
+        <li class="priv-card">
+          <span class="priv-icon" aria-hidden="true">&times;</span>
+          <h3>No server</h3>
+          <p>There is no backend. The app never opens a socket on your behalf.</p>
+        </li>
+        <li class="priv-card">
+          <span class="priv-icon" aria-hidden="true">&times;</span>
+          <h3>No telemetry</h3>
+          <p>No analytics SDK. No crash reporter. No error beacon.</p>
+        </li>
+        <li class="priv-card">
+          <span class="priv-icon" aria-hidden="true">&times;</span>
+          <h3>No remote scripts</h3>
+          <p>Fonts, Lottie, everything &mdash; self-hosted and shipped inside the installer.</p>
+        </li>
+      </ul>
+      <p class="body privacy-link-row">
+        <a href="privacy.html">Read the full privacy note &rarr;</a>
       </p>
     </section>
 
-    <section class="cta-band">
+    <section class="hood reveal" id="hood">
+      <p class="eyebrow">Under the hood</p>
+      <h2>A small, honest Windows app.</h2>
+      <ul class="hood-grid">
+        <li><span class="hood-num">~75 MB</span><span class="hood-lbl">Installed size</span></li>
+        <li><span class="hood-num">Electron 30</span><span class="hood-lbl">Runtime</span></li>
+        <li><span class="hood-num">MIT</span><span class="hood-lbl">Licence</span></li>
+        <li><span class="hood-num">NSIS &middot; signed</span><span class="hood-lbl">Installer</span></li>
+        <li><span class="hood-num">Every 6 hrs</span><span class="hood-lbl">Auto-update</span></li>
+        <li><span class="hood-num">Win 10 &amp; 11</span><span class="hood-lbl">Support</span></li>
+      </ul>
+    </section>
+
+    <section class="cta-band reveal">
       <h2>One minute. Every thirty.</h2>
       <a class="btn primary" href="https://github.com/praveensankar969/stretch/releases/download/latest/Stretch-1.0.0.exe">
         Download for Windows
+        <span class="btn-meta">Free &middot; MIT &middot; no accounts</span>
       </a>
       <p class="tiny">
         Not medical advice. Stop if it hurts.
@@ -287,7 +643,7 @@
   <footer class="foot">
     <div class="foot-left">
       <span class="brand-mark small" aria-hidden="true"></span>
-      <span>Stretch &nbsp;·&nbsp; Designed with intention. Distributed under MIT.</span>
+      <span>Stretch &nbsp;&middot;&nbsp; Designed with intention. Distributed under MIT.</span>
     </div>
     <div class="foot-right">
       <a href="privacy.html">Privacy</a>
@@ -296,22 +652,277 @@
     </div>
   </footer>
 
+  <aside class="sticky-dl" id="sticky-dl" hidden aria-label="Download Stretch for Windows">
+    <div class="sticky-dl-inner">
+      <span class="sticky-dl-text">
+        <span class="brand-mark small" aria-hidden="true"></span>
+        Stretch for Windows
+      </span>
+      <a class="sticky-dl-cta" href="https://github.com/praveensankar969/stretch/releases/download/latest/Stretch-1.0.0.exe">
+        Get it
+      </a>
+      <button class="sticky-dl-close" type="button" id="sticky-dl-close" aria-label="Dismiss download bar">&times;</button>
+    </div>
+  </aside>
+
+  <script src="../src/shared/exercises.js"></script>
+
   <script>
     (function () {
-      var path = document.getElementById('breath-path');
-      if (!path || !path.getTotalLength) return;
-      var len = path.getTotalLength();
-      path.style.strokeDasharray = len;
-      path.style.strokeDashoffset = len;
-      var start = performance.now();
-      var cycle = 10000;
-      function tick(t) {
-        var p = ((t - start) % cycle) / cycle;
-        var eased = 0.5 - 0.5 * Math.cos(p * Math.PI * 2);
-        path.style.strokeDashoffset = String(len * (1 - eased));
+      'use strict';
+
+      var prefersReduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+      var saveData = !!(navigator.connection && navigator.connection.saveData);
+      var narrowMq = matchMedia('(max-width: 519px)');
+      var mobileMq = matchMedia('(max-width: 720px)');
+      var lowMo = prefersReduced || saveData;
+
+      (function () {
+        var path = document.getElementById('breath-path');
+        if (!path || typeof path.getTotalLength !== 'function') return;
+        var len = path.getTotalLength();
+        path.style.strokeDasharray = len;
+        path.style.strokeDashoffset = len;
+        if (prefersReduced) { path.style.strokeDashoffset = '0'; return; }
+        var start = performance.now();
+        var cycle = 10000;
+        function tick(t) {
+          var p = ((t - start) % cycle) / cycle;
+          var eased = 0.5 - 0.5 * Math.cos(p * Math.PI * 2);
+          path.style.strokeDashoffset = String(len * (1 - eased));
+          requestAnimationFrame(tick);
+        }
         requestAnimationFrame(tick);
-      }
-      requestAnimationFrame(tick);
+      })();
+
+      (function () {
+        var targets = document.querySelectorAll('.reveal');
+        if (!('IntersectionObserver' in window) || prefersReduced) {
+          targets.forEach(function (el) { el.classList.add('is-in'); });
+          return;
+        }
+        var io = new IntersectionObserver(function (entries) {
+          entries.forEach(function (e) {
+            if (e.isIntersecting) {
+              e.target.classList.add('is-in');
+              io.unobserve(e.target);
+            }
+          });
+        }, { threshold: 0.12, rootMargin: '0px 0px -6% 0px' });
+        targets.forEach(function (el) { io.observe(el); });
+      })();
+
+      (function () {
+        var bar = document.getElementById('sticky-dl');
+        var closeBtn = document.getElementById('sticky-dl-close');
+        var hero = document.querySelector('.hero');
+        if (!bar || !closeBtn || !hero) return;
+        try {
+          if (sessionStorage.getItem('stretchDismissedDownloadBar') === '1') return;
+        } catch (_) { /* private mode — best effort */ }
+        if (!('IntersectionObserver' in window)) return;
+        var io = new IntersectionObserver(function (entries) {
+          var e = entries[0];
+          if (!e) return;
+          if (e.isIntersecting) bar.hidden = true;
+          else if (mobileMq.matches) bar.hidden = false;
+        }, { threshold: 0 });
+        io.observe(hero);
+        closeBtn.addEventListener('click', function () {
+          bar.hidden = true;
+          try { sessionStorage.setItem('stretchDismissedDownloadBar', '1'); } catch (_) {}
+        });
+        mobileMq.addEventListener && mobileMq.addEventListener('change', function () {
+          if (!mobileMq.matches) bar.hidden = true;
+        });
+      })();
+
+      (function () {
+        var preview = document.getElementById('overlay-preview');
+        var titleEl = document.getElementById('overlay-title');
+        var descEl = document.getElementById('overlay-desc');
+        var timerEl = document.getElementById('overlay-timer');
+        var lottieEl = document.getElementById('overlay-lottie');
+        var stageEl = lottieEl && lottieEl.parentElement;
+        var strip = document.getElementById('ex-strip');
+        var section = document.getElementById('reminder');
+        if (!preview || !titleEl || !descEl || !timerEl || !lottieEl || !stageEl || !section) return;
+
+        var EX = (window.StretchExercises && window.StretchExercises.EXERCISES) || null;
+        var lottieScriptInjected = false;
+        var lottieReady = false;
+        var anim = null;
+        var rotateTimer = null;
+        var countdownTimer = null;
+        var currentId = 'sky-reach';
+        var visible = false;
+
+        function narrow() { return narrowMq.matches; }
+        function canRotate() { return !lowMo && !narrow(); }
+        function shouldAutoplay() { return !prefersReduced; }
+
+        function exById(id) {
+          if (EX) {
+            for (var i = 0; i < EX.length; i++) if (EX[i].id === id) return EX[i];
+            return EX[0];
+          }
+          return { id: id, title: titleEl.textContent, desc: descEl.textContent, seconds: 30 };
+        }
+
+        function pickNext(lastId) {
+          if (!EX || EX.length < 2) return lastId;
+          var pool = [];
+          for (var i = 0; i < EX.length; i++) if (EX[i].id !== lastId) pool.push(EX[i]);
+          return pool[Math.floor(Math.random() * pool.length)].id;
+        }
+
+        function setButtons(id) {
+          if (!strip) return;
+          var pills = strip.querySelectorAll('.ex-pill');
+          for (var i = 0; i < pills.length; i++) {
+            if (pills[i].dataset.id === id) {
+              pills[i].classList.add('is-active');
+              pills[i].setAttribute('aria-pressed', 'true');
+            } else {
+              pills[i].classList.remove('is-active');
+              pills[i].setAttribute('aria-pressed', 'false');
+            }
+          }
+        }
+
+        function setText(ex) {
+          titleEl.textContent = ex.title;
+          descEl.textContent = ex.desc;
+        }
+
+        function startCountdown(seconds) {
+          clearInterval(countdownTimer);
+          if (lowMo || narrow()) { timerEl.textContent = seconds + 's'; return; }
+          var end = Date.now() + seconds * 1000;
+          function render() {
+            var left = Math.max(0, Math.round((end - Date.now()) / 1000));
+            timerEl.textContent = left > 0 ? left + 's' : 'take your time';
+            if (left === 0) clearInterval(countdownTimer);
+          }
+          render();
+          countdownTimer = setInterval(render, 500);
+        }
+
+        function fadeSwap(fn) {
+          if (lowMo || prefersReduced) { fn(); return; }
+          preview.classList.add('is-swapping');
+          setTimeout(function () {
+            fn();
+            preview.classList.remove('is-swapping');
+          }, 220);
+        }
+
+        function loadAnim(id) {
+          if (!lottieReady || typeof window.lottie === 'undefined') return;
+          if (anim) { try { anim.destroy(); } catch (_) {} anim = null; }
+          lottieEl.innerHTML = '';
+          stageEl.classList.remove('has-lottie');
+          fetch('../src/assets/lottie/' + id + '.json')
+            .then(function (r) { if (!r.ok) throw new Error('lottie ' + id + ': ' + r.status); return r.json(); })
+            .then(function (data) {
+              if (currentId !== id) return;
+              anim = window.lottie.loadAnimation({
+                container: lottieEl,
+                renderer: 'svg',
+                loop: true,
+                autoplay: shouldAutoplay(),
+                animationData: data,
+                rendererSettings: { preserveAspectRatio: 'xMidYMid meet', progressiveLoad: true }
+              });
+              if (anim && shouldAutoplay()) { try { anim.play(); } catch (_) {} }
+              stageEl.classList.add('has-lottie');
+            })
+            .catch(function (err) { console.warn('lottie fetch failed', err); });
+        }
+
+        function showExercise(id) {
+          currentId = id;
+          var ex = exById(id);
+          fadeSwap(function () {
+            setText(ex);
+            setButtons(id);
+            startCountdown(ex.seconds || 30);
+            loadAnim(id);
+          });
+        }
+
+        function startRotation() {
+          if (!canRotate()) return;
+          clearInterval(rotateTimer);
+          rotateTimer = setInterval(function () {
+            if (!visible) return;
+            showExercise(pickNext(currentId));
+          }, 12000);
+        }
+
+        function stopRotation() {
+          clearInterval(rotateTimer);
+          rotateTimer = null;
+          clearInterval(countdownTimer);
+          if (anim) { try { anim.pause(); } catch (_) {} }
+        }
+
+        function loadLottieLibrary() {
+          if (lottieScriptInjected) return;
+          if (prefersReduced || saveData) return;
+          lottieScriptInjected = true;
+          var s = document.createElement('script');
+          s.src = '../src/vendor/lottie.min.js';
+          s.async = true;
+          s.onload = function () {
+            lottieReady = true;
+            loadAnim(currentId);
+          };
+          s.onerror = function () { console.warn('lottie-web failed to load'); };
+          document.head.appendChild(s);
+        }
+
+        if (strip) {
+          strip.addEventListener('click', function (e) {
+            var btn = e.target.closest && e.target.closest('.ex-pill');
+            if (!btn) return;
+            var id = btn.dataset.id;
+            if (!id || id === currentId) return;
+            clearInterval(rotateTimer);
+            showExercise(id);
+            if (canRotate()) setTimeout(startRotation, 20000);
+          });
+        }
+
+        if (EX) {
+          var initial = exById(currentId);
+          setText(initial);
+          setButtons(currentId);
+          startCountdown(initial.seconds || 30);
+        }
+
+        if ('IntersectionObserver' in window) {
+          var io = new IntersectionObserver(function (entries) {
+            entries.forEach(function (e) {
+              visible = e.isIntersecting;
+              if (e.isIntersecting) {
+                loadLottieLibrary();
+                if (anim) { try { anim.play(); } catch (_) {} }
+                if (canRotate()) startRotation();
+                if (!lowMo) {
+                  var ex = exById(currentId);
+                  startCountdown(ex.seconds || 30);
+                }
+              } else {
+                stopRotation();
+              }
+            });
+          }, { rootMargin: '200px 0px', threshold: 0.1 });
+          io.observe(section);
+        } else {
+          loadLottieLibrary();
+        }
+      })();
     })();
   </script>
 </body>

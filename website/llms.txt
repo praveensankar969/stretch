@@ -32,7 +32,7 @@ and self-updates every six hours via GitHub Releases.
 - [GitHub repository](https://github.com/praveensankar969/stretch): source code, issues, releases.
 - [Changelog](https://github.com/praveensankar969/stretch/blob/main/CHANGELOG.md): release history.
 - [Latest installer](https://github.com/praveensankar969/stretch/releases/download/latest/Stretch-1.0.0.exe): signed Windows installer.
-- [PRIVACY.md](https://github.com/praveensankar969/stretch/blob/main/PRIVACY.md): privacy note, versioned with source.
+- [PRIVACY.md](https://github.com/praveensankar969/stretch/blob/master/PRIVACY.md): privacy note, versioned with source.
 
 ## How reminders work
 

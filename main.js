@@ -509,7 +509,7 @@ ipcMain.on('overlay:preview', () => {
 });
 
 ipcMain.on('open:privacy', () => {
-  shell.openExternal('https://github.com/praveensankar969/stretch/blob/main/PRIVACY.md');
+  shell.openExternal('https://github.com/praveensankar969/stretch/blob/master/PRIVACY.md');
 });
 
 ipcMain.on('app:quit', () => {
