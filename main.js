@@ -87,6 +87,19 @@ function saveConfig() {
   }
 }
 
+const LEGACY_LOGIN_ITEM_NAMES = ['electron.app.Electron', 'com.antigravity.stretch'];
+
+function cleanupLegacyLoginItems() {
+  if (process.platform !== 'win32') return;
+  for (const name of LEGACY_LOGIN_ITEM_NAMES) {
+    try {
+      app.setLoginItemSettings({ openAtLogin: false, name });
+    } catch (err) {
+      console.warn('cleanupLegacyLoginItems failed for', name, err?.message);
+    }
+  }
+}
+
 function applyAutoStart() {
   if (!app.isPackaged) return;
   try {
@@ -564,6 +577,7 @@ app.on('second-instance', () => {
 
 app.whenReady().then(() => {
   loadConfig();
+  cleanupLegacyLoginItems();
   Menu.setApplicationMenu(null);
   createTray();
 
