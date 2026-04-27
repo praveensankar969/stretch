@@ -8,6 +8,7 @@ on:
       - "src/assets/**"
       - "src/shared/**"
       - "src/vendor/**"
+      - "Stretch-1.0.0.exe"
       - ".github/workflows/pages.yml"
   workflow_dispatch:
 
@@ -36,6 +37,7 @@ jobs:
           cp -r src/assets _site/src/assets
           cp -r src/shared _site/src/shared
           cp -r src/vendor _site/src/vendor
+          cp Stretch-1.0.0.exe _site/Stretch-1.0.0.exe
           touch _site/.nojekyll
       - uses: actions/upload-pages-artifact@v3
         with:
