@@ -15,7 +15,7 @@
     "build:mac": "CSC_IDENTITY_AUTO_DISCOVERY=false electron-builder --mac",
     "prerelease": "npm run vendor && npm run lottie && npm run icons",
     "release": "electron-builder --win --publish always",
-    "release:mac": "CSC_IDENTITY_AUTO_DISCOVERY=false electron-builder --mac --publish always"
+    "release:mac": "CSC_IDENTITY_AUTO_DISCOVERY=false electron-builder --mac"
   },
   "author": {
     "name": "Stretch",
@@ -36,7 +36,7 @@
   "build": {
     "appId": "com.stretchapp.in",
     "productName": "Stretch",
-    "artifactName": "Stretch-${version}.${ext}",
+    "artifactName": "Stretch-${version}-${arch}.${ext}",
     "directories": {
       "output": "dist",
       "buildResources": "build"
@@ -90,8 +90,20 @@
     ],
     "mac": {
       "target": [
-        { "target": "dmg", "arch": ["arm64", "x64"] },
-        { "target": "zip", "arch": ["arm64", "x64"] }
+        {
+          "target": "dmg",
+          "arch": [
+            "arm64",
+            "x64"
+          ]
+        },
+        {
+          "target": "zip",
+          "arch": [
+            "arm64",
+            "x64"
+          ]
+        }
       ],
       "icon": "build/icon.icns",
       "category": "public.app-category.healthcare-fitness",
@@ -105,11 +117,20 @@
       }
     },
     "dmg": {
-      "title": "Stretch ${version}",
+      "title": "Stretch",
       "icon": "build/icon.icns",
       "contents": [
-        { "x": 130, "y": 220, "type": "file" },
-        { "x": 410, "y": 220, "type": "link", "path": "/Applications" }
+        {
+          "x": 130,
+          "y": 220,
+          "type": "file"
+        },
+        {
+          "x": 410,
+          "y": 220,
+          "type": "link",
+          "path": "/Applications"
+        }
       ]
     }
   }

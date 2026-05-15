@@ -8,10 +8,21 @@
 
 ## Install
 
-Download the latest release:
+**macOS (Homebrew):**
+```bash
+brew tap praveensankar969/stretch
+brew install --cask stretch
+```
 
-- **macOS:** [Stretch-1.0.0.dmg](https://github.com/praveensankar969/stretch/releases/download/latest/Stretch-1.0.0.dmg) — ad-hoc signed, universal (arm64 + x64). Right-click → Open on first launch.
-- **Windows:** [Stretch-1.0.0.exe](https://github.com/praveensankar969/stretch/releases/download/latest/Stretch-1.0.0.exe) — signed NSIS installer, auto-updates via GitHub Releases.
+**macOS (Manual Download):**
+- [Stretch-1.0.0-arm64.dmg](https://github.com/praveensankar969/stretch/releases/download/latest/Stretch-1.0.0-arm64.dmg)
+- [Stretch-1.0.0-x64.dmg](https://github.com/praveensankar969/stretch/releases/download/latest/Stretch-1.0.0-x64.dmg)
+
+> **macOS Security Note:** Stretch is ad-hoc signed to keep it free. Whether installed via Homebrew or DMG, Gatekeeper may show an "Unidentified Developer" or "Damaged App / Move to Trash" warning.
+> To fix this, run `xattr -cr /Applications/Stretch.app` in Terminal to remove the macOS quarantine flag, or go to System Settings > Privacy & Security and scroll down to "Security" and click "Open Anyway".
+
+**Windows:** 
+- [Stretch-1.0.0.exe](https://github.com/praveensankar969/stretch/releases/download/latest/Stretch-1.0.0.exe) — signed NSIS installer, auto-updates via GitHub Releases.
 
 macOS 12+ (Monterey and later) and Windows 10/11 are supported.
 

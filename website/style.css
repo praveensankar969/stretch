@@ -833,7 +833,139 @@ kbd {
 }
 
 /* ══════════════════════════════════════════════════════ *
- * 5. Quiet by default                                    *
+ * 5. Install                                             *
+ * ══════════════════════════════════════════════════════ */
+
+.install {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 6vh 5%;
+  position: relative;
+  z-index: 1;
+}
+
+.install-head {
+  text-align: center;
+  margin-bottom: 28px;
+}
+
+.install-head h2 {
+  font-size: clamp(1.8rem, 3.4vw, 2.6rem);
+  font-variation-settings: 'opsz' 72;
+  margin-top: 10px;
+}
+
+.install-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+
+.install-card {
+  padding: 26px 24px 28px;
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-lg);
+  background: var(--bg-raised);
+}
+
+.install-card h3 {
+  font-size: 1.45rem;
+  margin-bottom: 8px;
+  font-variation-settings: 'opsz' 48;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.install-card p {
+  color: var(--fg-muted);
+  font-size: 0.94rem;
+  line-height: 1.6;
+}
+
+.install-card a {
+  color: var(--accent);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(217, 115, 74, 0.4);
+}
+
+.install-card a:hover {
+  border-bottom-color: var(--accent);
+}
+
+.install-badge {
+  font-family: var(--font-sans);
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  background: color-mix(in srgb, var(--accent) 15%, transparent);
+  color: var(--accent);
+  padding: 4px 8px;
+  border-radius: var(--radius-pill);
+  vertical-align: middle;
+}
+
+.terminal-block {
+  margin-top: 16px;
+  background: var(--ink-900);
+  padding: 16px;
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(242, 234, 223, 0.1);
+  box-shadow: 0 4px 12px color-mix(in srgb, var(--ink-900) 20%, transparent) inset;
+}
+
+.terminal-block code {
+  color: var(--paper-100);
+  background: transparent;
+  padding: 0;
+  font-size: 0.85rem;
+  line-height: 1.6;
+  white-space: pre;
+}
+
+.terminal-block.has-copy {
+  position: relative;
+  padding-right: 64px;
+}
+
+.terminal-copy {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--paper-100);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 4px;
+  padding: 4px 8px;
+  font-size: 0.7rem;
+  cursor: pointer;
+  font-family: var(--font-sans);
+  transition: background 0.2s, border-color 0.2s;
+}
+
+.terminal-copy:hover {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.inline-terminal {
+  margin-top: 8px;
+  padding: 12px;
+}
+
+.install-warn {
+  margin-top: 20px;
+  padding: 16px;
+  background: color-mix(in srgb, var(--brass-500) 10%, var(--bg-raised));
+  border: 1px solid color-mix(in srgb, var(--brass-500) 30%, transparent);
+  border-radius: var(--radius-md);
+  font-size: 0.88rem;
+  color: var(--fg);
+  line-height: 1.5;
+}
+
+/* ══════════════════════════════════════════════════════ *
+ * 6. Quiet by default                                    *
  * ══════════════════════════════════════════════════════ */
 
 .quiet {
@@ -1772,7 +1904,8 @@ kbd {
   }
   .quiet,
   .dashboard,
-  .tray {
+  .tray,
+  .install-grid {
     grid-template-columns: 1fr;
     gap: 36px;
   }
@@ -1865,6 +1998,14 @@ kbd {
     justify-content: center;
     min-height: 44px;
     padding: 10px 14px;
+  }
+
+  .install {
+    padding: 4vh 5% 6vh;
+  }
+
+  .install-grid {
+    gap: 20px;
   }
 
   /* Exercise strip → swipeable scroll-snap row */

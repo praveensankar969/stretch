@@ -225,7 +225,7 @@
         "name": "Is Stretch really free?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "Yes. Stretch is open source under the MIT license, distributed as a DMG for macOS and a signed NSIS installer for Windows from GitHub Releases. No ads, no upsells, no paid tier."
+          "text": "Yes. Stretch is open source under the MIT license, distributed via Homebrew or DMG for macOS, and as a signed NSIS installer for Windows from GitHub Releases. No ads, no upsells, no paid tier."
         }
       }
     ]
@@ -243,6 +243,7 @@
     </a>
     <nav class="nav-links" aria-label="Primary">
       <a href="#reminder">The reminder</a>
+      <a href="#install">Install</a>
       <a href="#quiet">Quiet</a>
       <a href="#dashboard">Dashboard</a>
       <a href="#privacy">Privacy</a>
@@ -264,10 +265,15 @@
         presenting, idle, or off the clock, and it stays quiet then.
       </p>
       <div class="hero-ctas" id="download">
-        <a class="btn primary" id="dl-mac"
-          href="https://github.com/praveensankar969/stretch/releases/download/latest/Stretch-1.0.0.dmg">
-          Download for macOS
-          <span class="btn-meta">v1.1 &middot; universal &middot; ~85 MB</span>
+        <a class="btn primary" id="dl-mac-arm"
+          href="https://github.com/praveensankar969/stretch/releases/download/latest/Stretch-1.0.0-arm64.dmg">
+          Mac (Apple Silicon)
+          <span class="btn-meta">v1.0 &middot; arm64 &middot; ~100 MB</span>
+        </a>
+        <a class="btn primary" id="dl-mac-intel"
+          href="https://github.com/praveensankar969/stretch/releases/download/latest/Stretch-1.0.0-x64.dmg">
+          Mac (Intel)
+          <span class="btn-meta">v1.0 &middot; x64 &middot; ~100 MB</span>
         </a>
         <a class="btn primary" id="dl-win"
           href="https://github.com/praveensankar969/stretch/releases/download/latest/Stretch-1.0.0.exe">
@@ -427,6 +433,51 @@
           <p>One tick toward today's goal. A warm sparkline for the last seven days. A streak that only asks for one
             stretch a day to keep.</p>
         </article>
+      </div>
+    </section>
+
+    <section class="install" id="install">
+      <div class="install-head reveal">
+        <p class="eyebrow">macOS Installation</p>
+        <h2>Two ways to get it.</h2>
+        <p class="body">
+          Stretch is distributed as an Ad-Hoc signed app. Choose the method that fits your workflow.
+        </p>
+      </div>
+      <div class="install-grid">
+        <article class="install-card reveal">
+          <h3>Homebrew <span class="install-badge">Recommended</span></h3>
+          <p>The cleanest way to install and keep Stretch updated. This automatically handles the correct architecture
+            for your Mac.</p>
+          <div class="terminal-block has-copy">
+            <code id="brew-cmd">brew tap praveensankar969/stretch
+brew install --cask stretch</code>
+            <button class="terminal-copy" onclick="navigator.clipboard.writeText(document.getElementById('brew-cmd').innerText); this.innerText='Copied!'; setTimeout(()=>this.innerText='Copy', 2000)" aria-label="Copy command">Copy</button>
+          </div>
+        </article>
+
+        <article class="install-card reveal">
+          <h3>Manual Download</h3>
+          <p>Download the disk image directly from GitHub. Choose between <a
+              href="https://github.com/praveensankar969/stretch/releases/download/latest/Stretch-1.0.0-arm64.dmg">Apple
+              Silicon</a> or <a
+              href="https://github.com/praveensankar969/stretch/releases/download/latest/Stretch-1.0.0-x64.dmg">Intel</a>.
+          </p>
+        </article>
+      </div>
+
+      <div class="install-warn reveal" style="margin-top: 1.5rem;">
+        <strong>Security Warning:</strong> Because Stretch is a free app, it skips the $99 Apple Developer fee.
+        Whether you use Homebrew or download manually, macOS will show an "Unidentified Developer" or "Damaged App / Move to Trash" warning.
+        <br><br>
+        To fix this, either:
+        <br>1. Go to <strong>System Settings > Privacy &amp; Security</strong> and click <strong>Open
+          Anyway</strong>.
+        <br>2. Run this command in Terminal after installing to remove the macOS quarantine flag:
+        <div class="terminal-block inline-terminal has-copy">
+          <code id="xattr-cmd">xattr -cr /Applications/Stretch.app</code>
+          <button class="terminal-copy" onclick="navigator.clipboard.writeText(document.getElementById('xattr-cmd').innerText); this.innerText='Copied!'; setTimeout(()=>this.innerText='Copy', 2000)" aria-label="Copy command">Copy</button>
+        </div>
       </div>
     </section>
 
@@ -658,7 +709,7 @@
       <p class="eyebrow">Under the hood</p>
       <h2>A small, honest app.</h2>
       <ul class="hood-grid">
-        <li><span class="hood-num">~75&ndash;85 MB</span><span class="hood-lbl">Installed size</span></li>
+        <li><span class="hood-num">~95&ndash;105 MB</span><span class="hood-lbl">Installed size</span></li>
         <li><span class="hood-num">Electron 30</span><span class="hood-lbl">Runtime</span></li>
         <li><span class="hood-num">MIT</span><span class="hood-lbl">Licence</span></li>
         <li><span class="hood-num">DMG &middot; NSIS</span><span class="hood-lbl">Installer</span></li>
@@ -669,9 +720,14 @@
 
     <section class="cta-band reveal">
       <h2>One minute. Every thirty.</h2>
-      <a class="btn primary" style="margin-bottom: 10px;" id="cta-dl-mac"
-        href="https://github.com/praveensankar969/stretch/releases/download/latest/Stretch-1.0.0.dmg">
-        Download for macOS
+      <a class="btn primary" style="margin-bottom: 10px;" id="cta-dl-mac-arm"
+        href="https://github.com/praveensankar969/stretch/releases/download/latest/Stretch-1.0.0-arm64.dmg">
+        Mac (Apple Silicon)
+        <span class="btn-meta">Free &middot; MIT &middot; no accounts</span>
+      </a>
+      <a class="btn primary" style="margin-bottom: 10px;" id="cta-dl-mac-intel"
+        href="https://github.com/praveensankar969/stretch/releases/download/latest/Stretch-1.0.0-x64.dmg">
+        Mac (Intel)
         <span class="btn-meta">Free &middot; MIT &middot; no accounts</span>
       </a>
       <a class="btn primary" id="cta-dl-win"
@@ -723,22 +779,27 @@
       // OS detection — highlight the right download CTA
       (function () {
         var isMac = /Mac|iPhone|iPad|iPod/i.test(navigator.userAgent);
-        var primary = isMac ? 'mac' : 'win';
-        var secondary = isMac ? 'win' : 'mac';
+        var primaryIds = isMac ? ['dl-mac-arm', 'dl-mac-intel'] : ['dl-win'];
+        var secondaryIds = isMac ? ['dl-win'] : ['dl-mac-arm', 'dl-mac-intel'];
+
         // Hero CTAs
-        var heroPrimary = document.getElementById('dl-' + primary);
-        var heroSecondary = document.getElementById('dl-' + secondary);
-        if (heroSecondary) {
-          heroSecondary.classList.remove('primary');
-          heroSecondary.classList.add('ghost');
-        }
+        secondaryIds.forEach(function (id) {
+          var el = document.getElementById(id);
+          if (el) {
+            el.classList.remove('primary');
+            el.classList.add('ghost');
+          }
+        });
+
         // Bottom CTA band
-        var ctaPrimary = document.getElementById('cta-dl-' + primary);
-        var ctaSecondary = document.getElementById('cta-dl-' + secondary);
-        if (ctaSecondary) {
-          ctaSecondary.classList.remove('primary');
-          ctaSecondary.classList.add('ghost');
-        }
+        var ctaSecondaryIds = isMac ? ['cta-dl-win'] : ['cta-dl-mac-arm', 'cta-dl-mac-intel'];
+        ctaSecondaryIds.forEach(function (id) {
+          var el = document.getElementById(id);
+          if (el) {
+            el.classList.remove('primary');
+            el.classList.add('ghost');
+          }
+        });
         // Sticky bar
         var stickyLink = document.getElementById('sticky-dl-link');
         if (stickyLink && !isMac) {

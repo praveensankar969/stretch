@@ -34,7 +34,7 @@ the app ships as an ad-hoc signed DMG (universal binary for arm64 + x64).
 - [GitHub repository](https://github.com/praveensankar969/stretch): source code, issues, releases.
 - [Changelog](https://github.com/praveensankar969/stretch/blob/main/CHANGELOG.md): release history.
 - [Latest Windows installer](https://github.com/praveensankar969/stretch/releases/download/latest/Stretch-1.0.0.exe): signed Windows installer.
-- [Latest macOS DMG](https://github.com/praveensankar969/stretch/releases/download/latest/Stretch-1.0.0.dmg): ad-hoc signed universal binary.
+- [Latest macOS DMG](https://github.com/praveensankar969/stretch/releases/download/latest/Stretch-1.0.0-arm64.dmg): ad-hoc signed universal binary.
 - [PRIVACY.md](https://github.com/praveensankar969/stretch/blob/master/PRIVACY.md): privacy note, versioned with source.
 
 ## How reminders work
