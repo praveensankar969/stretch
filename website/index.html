@@ -452,7 +452,9 @@
           <div class="terminal-block has-copy">
             <code id="brew-cmd">brew tap praveensankar969/stretch
 brew install --cask stretch</code>
-            <button class="terminal-copy" onclick="navigator.clipboard.writeText(document.getElementById('brew-cmd').innerText); this.innerText='Copied!'; setTimeout(()=>this.innerText='Copy', 2000)" aria-label="Copy command">Copy</button>
+            <button class="terminal-copy"
+              onclick="navigator.clipboard.writeText(document.getElementById('brew-cmd').innerText); this.innerText='Copied!'; setTimeout(()=>this.innerText='Copy', 2000)"
+              aria-label="Copy command">Copy</button>
           </div>
         </article>
 
@@ -468,7 +470,8 @@ brew install --cask stretch</code>
 
       <div class="install-warn reveal" style="margin-top: 1.5rem;">
         <strong>Security Warning:</strong> Because Stretch is a free app, it skips the $99 Apple Developer fee.
-        Whether you use Homebrew or download manually, macOS will show an "Unidentified Developer" or "Damaged App / Move to Trash" warning.
+        Whether you use Homebrew or download manually, macOS will show an "Unidentified Developer" or "Damaged App /
+        Move to Trash" warning.
         <br><br>
         To fix this, either:
         <br>1. Go to <strong>System Settings > Privacy &amp; Security</strong> and click <strong>Open
@@ -476,7 +479,9 @@ brew install --cask stretch</code>
         <br>2. Run this command in Terminal after installing to remove the macOS quarantine flag:
         <div class="terminal-block inline-terminal has-copy">
           <code id="xattr-cmd">xattr -cr /Applications/Stretch.app</code>
-          <button class="terminal-copy" onclick="navigator.clipboard.writeText(document.getElementById('xattr-cmd').innerText); this.innerText='Copied!'; setTimeout(()=>this.innerText='Copy', 2000)" aria-label="Copy command">Copy</button>
+          <button class="terminal-copy"
+            onclick="navigator.clipboard.writeText(document.getElementById('xattr-cmd').innerText); this.innerText='Copied!'; setTimeout(()=>this.innerText='Copy', 2000)"
+            aria-label="Copy command">Copy</button>
         </div>
       </div>
     </section>
@@ -805,6 +810,18 @@ brew install --cask stretch</code>
         if (stickyLink && !isMac) {
           stickyLink.href = 'https://github.com/praveensankar969/stretch/releases/download/latest/Stretch-1.0.0.exe';
         }
+
+        var dmgLinks = document.querySelectorAll('a[href$=".dmg"]');
+        dmgLinks.forEach(function (link) {
+          link.addEventListener('click', function () {
+            setTimeout(function () {
+              var installSec = document.getElementById('install');
+              if (installSec) {
+                installSec.scrollIntoView({ behavior: 'smooth' });
+              }
+            }, 150);
+          });
+        });
       })();
       var saveData = !!(navigator.connection && navigator.connection.saveData);
       var narrowMq = matchMedia('(max-width: 519px)');
