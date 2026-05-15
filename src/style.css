@@ -58,7 +58,7 @@ input[type='time'] {
   height: 100%;
   max-width: 440px;
   margin: 0 auto;
-  padding: 24px 28px 16px;
+  padding: 24px 28px 24px;
   display: flex;
   flex-direction: column;
   gap: 14px;
@@ -269,7 +269,7 @@ input[type='time'] {
 }
 
 input[type='time'] {
-  width: 110px;
+  width: 140px;
 }
 
 input:focus-visible {

@@ -59,8 +59,7 @@ function renderSpark(history, goal) {
   const dots = pts
     .map(
       ([x, y], i) =>
-        `<circle cx="${x}" cy="${y}" r="${i === pts.length - 1 ? 3 : 2}" class="${
-          i === pts.length - 1 ? 'spark-today' : 'spark-dot'
+        `<circle cx="${x}" cy="${y}" r="${i === pts.length - 1 ? 3 : 2}" class="${i === pts.length - 1 ? 'spark-today' : 'spark-dot'
         }" />`
     )
     .join('');
@@ -120,7 +119,7 @@ function readInt(el, fallback, min, max) {
 
 async function save() {
   const patch = {
-    interval: readInt(els.interval, 30, 5, 240),
+    interval: readInt(els.interval, 30, 1, 240),
     dailyGoal: readInt(els.dailyGoal, 8, 1, 50),
     autoStart: els.autoStart.checked,
     quietHoursEnabled: els.quietEnabled.checked,
@@ -199,6 +198,17 @@ async function init() {
       e.preventDefault();
       save();
     }
+  });
+
+  const platform = window.stretch.platform;
+  document.querySelectorAll('[data-win-only]').forEach(el => {
+    if (platform !== 'win32') el.style.display = 'none';
+  });
+  document.querySelectorAll('[data-win]').forEach(el => {
+    if (platform !== 'win32') el.style.display = 'none';
+  });
+  document.querySelectorAll('[data-mac]').forEach(el => {
+    if (platform !== 'darwin') el.style.display = 'none';
   });
 }
 

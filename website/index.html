@@ -1,15 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>Stretch — Quiet Desk Stretch Reminders for Windows</title>
-  <meta name="description" content="Stretch is a quiet Windows tray app that walks you through ten line-art desk stretches, one minute every 30. Tray-only footprint, breath-paced overlay, quiet hours, Focus Assist and full-screen aware, idle-detecting, streak-tracking. No accounts. No telemetry. No nagging.">
+  <title>Stretch — Quiet Desk Stretch Reminders for macOS and Windows</title>
+  <meta name="description"
+    content="Stretch is a quiet menu bar and tray app for macOS and Windows that walks you through ten line-art desk stretches, one minute every 30. Tray-only footprint, breath-paced overlay, quiet hours, Focus Assist and full-screen aware, idle-detecting, streak-tracking. No accounts. No telemetry. No nagging.">
   <meta name="application-name" content="Stretch">
   <meta name="author" content="Stretch">
   <meta name="generator" content="Hand-written · Electron 30">
-  <meta name="keywords" content="stretch reminder, desk stretches, posture app, break reminder, Windows tray app, RSI prevention, pomodoro stretch, movement reminder, local-only app, privacy-first app, breath ring, line-art exercise, streak tracker">
+  <meta name="keywords"
+    content="stretch reminder, desk stretches, posture app, break reminder, menu bar app, macOS stretch app, Windows tray app, RSI prevention, pomodoro stretch, movement reminder, local-only app, privacy-first app, breath ring, line-art exercise, streak tracker">
   <meta name="referrer" content="strict-origin-when-cross-origin">
   <meta name="color-scheme" content="light dark">
   <meta name="theme-color" content="#F5EFE6" media="(prefers-color-scheme: light)">
@@ -33,8 +36,9 @@
 
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Stretch">
-  <meta property="og:title" content="Stretch — Quiet Desk Stretch Reminders for Windows">
-  <meta property="og:description" content="A quiet Windows tray app with ten breath-paced desk stretches, one minute every 30. Quiet hours, Focus Assist aware, streak tracker. No accounts. No telemetry. Local only.">
+  <meta property="og:title" content="Stretch — Quiet Desk Stretch Reminders for macOS and Windows">
+  <meta property="og:description"
+    content="A quiet menu bar and tray app with ten breath-paced desk stretches, one minute every 30. Quiet hours, Focus Assist aware, streak tracker. No accounts. No telemetry. Local only.">
   <meta property="og:url" content="https://stretchapp.in/">
   <meta property="og:locale" content="en_US">
   <meta property="og:image" content="https://stretchapp.in/assets/og.png">
@@ -42,13 +46,16 @@
   <meta property="og:image:type" content="image/png">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
-  <meta property="og:image:alt" content="The Stretch overlay: a soft breathing ring and a seated-twist line-art figure on a warm paper background.">
+  <meta property="og:image:alt"
+    content="The Stretch overlay: a soft breathing ring and a seated-twist line-art figure on a warm paper background.">
 
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Stretch — Quiet Desk Stretch Reminders for Windows">
-  <meta name="twitter:description" content="A quiet Windows tray app with ten breath-paced desk stretches, one minute every 30. Quiet hours, Focus Assist aware, streak tracker. No accounts. No telemetry. Local only.">
+  <meta name="twitter:title" content="Stretch — Quiet Desk Stretch Reminders for macOS and Windows">
+  <meta name="twitter:description"
+    content="A quiet menu bar and tray app with ten breath-paced desk stretches, one minute every 30. Quiet hours, Focus Assist aware, streak tracker. No accounts. No telemetry. Local only.">
   <meta name="twitter:image" content="https://stretchapp.in/assets/og.png">
-  <meta name="twitter:image:alt" content="The Stretch overlay: a soft breathing ring and a seated-twist line-art figure.">
+  <meta name="twitter:image:alt"
+    content="The Stretch overlay: a soft breathing ring and a seated-twist line-art figure.">
 
   <link rel="sitemap" type="application/xml" href="sitemap.xml">
   <link rel="preload" as="style" href="../src/assets/tokens.css">
@@ -62,9 +69,19 @@
   <noscript>
     <style>
       .reveal,
-      .reveal.is-in { opacity: 1 !important; transform: none !important; transition: none !important; }
-      #overlay-preview .overlay-timer { content: normal; }
-      .ex-strip { pointer-events: none; }
+      .reveal.is-in {
+        opacity: 1 !important;
+        transform: none !important;
+        transition: none !important;
+      }
+
+      #overlay-preview .overlay-timer {
+        content: normal;
+      }
+
+      .ex-strip {
+        pointer-events: none;
+      }
     </style>
   </noscript>
 
@@ -79,8 +96,8 @@
     "image": "https://stretchapp.in/assets/og.png",
     "applicationCategory": "HealthApplication",
     "applicationSubCategory": "Wellness",
-    "operatingSystem": "Windows 10, Windows 11",
-    "softwareVersion": "1.0.0",
+    "operatingSystem": "macOS 12+, Windows 10, Windows 11",
+    "softwareVersion": "1.1.0",
     "fileSize": "75MB",
     "downloadUrl": "https://stretchapp.in/Stretch-1.0.0.exe",
     "installUrl": "https://stretchapp.in/download/",
@@ -94,18 +111,18 @@
       "availability": "https://schema.org/InStock"
     },
     "featureList": [
-      "Sits in the system tray — no dock icon, no window",
+      "Sits in the menu bar (macOS) or system tray (Windows) — no dock icon, no window",
       "One-minute stretch reminder every 30 minutes (configurable 5-240 min)",
       "Ten line-art desk exercises with 20-40 second holds, breath-paced overlay",
       "Keyboard-first controls: Enter to log, Esc to snooze 5 min, S to skip",
       "Daily goal tracking with a seven-day sparkline and streak counter",
       "Quiet hours by default (18:00-09:00), fully configurable",
       "Respects Windows Focus Assist, skips full-screen apps, auto-pauses after 10 min idle",
-      "Right-click tray menu: snooze 15 min / 1 hour, stretch now, pause reminders",
+      "Right-click menu: snooze 15 min / 1 hour, stretch now, pause reminders",
       "First-run onboarding chooses cadence, quiet hours, and launch-at-login",
       "Zero telemetry, zero accounts, no crash reporter, no remote scripts, no CDN fonts",
-      "Single JSON config at %APPDATA%/Stretch/, history trimmed to 365 days",
-      "Self-updating every 6 hours via signed GitHub Releases"
+      "Single local JSON config, history trimmed to 365 days",
+      "Self-updating on Windows via signed GitHub Releases"
     ],
     "author": {
       "@type": "Organization",
@@ -128,7 +145,7 @@
     "name": "Stretch",
     "url": "https://stretchapp.in/",
     "inLanguage": "en",
-    "description": "Marketing site for Stretch, a quiet Windows tray app that reminds you to stretch for one minute every 30 — ten line-art exercises, local-only, no accounts or telemetry.",
+    "description": "Marketing site for Stretch, a quiet menu bar and tray app for macOS and Windows that reminds you to stretch for one minute every 30 — ten line-art exercises, local-only, no accounts or telemetry.",
     "publisher": {
       "@type": "Organization",
       "name": "Stretch",
@@ -168,7 +185,7 @@
         "name": "Does it track me or send data anywhere?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "No. Stretch has no server, no account, and no telemetry. It does not load remote scripts, does not fetch fonts at runtime, and does not include a crash reporter. Your settings and streak live in a single JSON file inside %APPDATA%/Stretch/config.json."
+          "text": "No. Stretch has no server, no account, and no telemetry. It does not load remote scripts, does not fetch fonts at runtime, and does not include a crash reporter. Your settings and streak live in a single local JSON file on your machine."
         }
       },
       {
@@ -184,7 +201,7 @@
         "name": "Will it interrupt me during a meeting or presentation?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "No. Stretch pauses when a full-screen application is focused, when Windows Focus Assist is set to Alarms-Only or Priority-Only, during your configured quiet hours, and after ten minutes of keyboard or mouse idle. None of that requires setup."
+          "text": "No. Stretch pauses when a full-screen application is focused, when Windows Focus Assist is active, during your configured quiet hours, and after ten minutes of keyboard or mouse idle. None of that requires setup."
         }
       },
       {
@@ -192,7 +209,7 @@
         "name": "Can I snooze or skip a reminder?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "Yes. Press Enter to log the minute as done, Esc to snooze five minutes, or S to skip this one. Clicking outside the card also snoozes. The tray menu offers a 15-minute and a 1-hour snooze, plus a toggle that pauses reminders completely."
+          "text": "Yes. Press Enter to log the minute as done, Esc to snooze five minutes, or S to skip this one. Clicking outside the card also snoozes. The menu offers a 15-minute and a 1-hour snooze, plus a toggle that pauses reminders completely."
         }
       },
       {
@@ -200,7 +217,7 @@
         "name": "Where are my settings and streak stored?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "In a single human-readable JSON file at %APPDATA%/Stretch/config.json on your machine. History is trimmed automatically to the last 365 days. Uninstalling the app removes the app; the config directory is kept so you can delete it yourself."
+          "text": "In a single human-readable JSON file on your machine (%APPDATA%/Stretch/ on Windows, ~/Library/Application Support/Stretch/ on macOS). History is trimmed automatically to the last 365 days. Uninstalling the app removes the app; the config directory is kept so you can delete it yourself."
         }
       },
       {
@@ -208,13 +225,14 @@
         "name": "Is Stretch really free?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "Yes. Stretch is open source under the MIT license, distributed as a signed NSIS installer from GitHub Releases, and auto-updates every six hours. No ads, no upsells, no paid tier."
+          "text": "Yes. Stretch is open source under the MIT license, distributed as a DMG for macOS and a signed NSIS installer for Windows from GitHub Releases. No ads, no upsells, no paid tier."
         }
       }
     ]
   }
   </script>
 </head>
+
 <body class="theme-paper">
   <div class="grain" aria-hidden="true"></div>
 
@@ -234,27 +252,32 @@
 
   <main id="top">
     <section class="hero">
-      <p class="eyebrow"><span class="eyebrow-dot"></span> For Windows · Local only · MIT</p>
+      <p class="eyebrow"><span class="eyebrow-dot"></span> For macOS &amp; Windows &middot; Local only &middot; MIT</p>
       <h1 class="hero-title">
         A small nudge,<br>
         <em>every thirty minutes.</em>
       </h1>
       <p class="hero-lede">
-        Stretch lives quietly in your system tray and walks you through a
-        one-minute movement &mdash; ten desk-friendly stretches, one
+        Stretch lives quietly in your menu bar or system tray and walks you
+        through a one-minute movement &mdash; ten desk-friendly stretches, one
         breath-paced overlay, one line of instruction. It knows when you're
         presenting, idle, or off the clock, and it stays quiet then.
       </p>
       <div class="hero-ctas" id="download">
-        <a class="btn primary" href="download/">
+        <a class="btn primary" id="dl-mac"
+          href="https://github.com/praveensankar969/stretch/releases/download/latest/Stretch-1.0.0.dmg">
+          Download for macOS
+          <span class="btn-meta">v1.1 &middot; universal &middot; ~85 MB</span>
+        </a>
+        <a class="btn primary" id="dl-win"
+          href="https://github.com/praveensankar969/stretch/releases/download/latest/Stretch-1.0.0.exe">
           Download for Windows
           <span class="btn-meta">v1.0 &middot; signed installer &middot; ~75 MB</span>
         </a>
         <a class="btn ghost" href="https://github.com/praveensankar969/stretch">View on GitHub</a>
       </div>
       <p class="hero-fineprint">
-        Windows 10 &amp; 11. Open source. No accounts, no telemetry, no ads.
-        macOS &amp; Linux on the roadmap.
+        macOS 12+ &amp; Windows 10/11. Open source. No accounts, no telemetry, no ads.
       </p>
     </section>
 
@@ -262,13 +285,13 @@
       <svg viewBox="0 0 1200 320" preserveAspectRatio="none">
         <defs>
           <linearGradient id="stroke" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" stop-color="#8A7458" stop-opacity="0"/>
-            <stop offset="50%" stop-color="#D9734A"/>
-            <stop offset="100%" stop-color="#8A7458" stop-opacity="0"/>
+            <stop offset="0%" stop-color="#8A7458" stop-opacity="0" />
+            <stop offset="50%" stop-color="#D9734A" />
+            <stop offset="100%" stop-color="#8A7458" stop-opacity="0" />
           </linearGradient>
         </defs>
-        <path id="breath-path" d="M0,160 C 200,40 400,280 600,160 C 800,40 1000,280 1200,160"
-              fill="none" stroke="url(#stroke)" stroke-width="1.5"/>
+        <path id="breath-path" d="M0,160 C 200,40 400,280 600,160 C 800,40 1000,280 1200,160" fill="none"
+          stroke="url(#stroke)" stroke-width="1.5" />
       </svg>
     </section>
 
@@ -290,7 +313,8 @@
         Demo &mdash; this is how it looks on your screen.
       </p>
 
-      <div class="device-frame reveal" role="img" aria-label="Live replica of the Stretch overlay: breath ring, line-art figure, title, one-line instruction, keyboard shortcuts">
+      <div class="device-frame reveal" role="img"
+        aria-label="Live replica of the Stretch overlay: breath ring, line-art figure, title, one-line instruction, keyboard shortcuts">
         <div class="device-chrome" aria-hidden="true">
           <div class="device-desk"></div>
           <div class="device-taskbar">
@@ -316,22 +340,28 @@
 
             <div class="overlay-stage">
               <svg class="overlay-breath" viewBox="0 0 240 240" aria-hidden="true">
-                <circle class="overlay-breath-track" cx="120" cy="120" r="108"/>
-                <circle class="overlay-breath-circle" cx="120" cy="120" r="108"/>
+                <circle class="overlay-breath-track" cx="120" cy="120" r="108" />
+                <circle class="overlay-breath-circle" cx="120" cy="120" r="108" />
               </svg>
               <svg class="overlay-silhouette" viewBox="0 0 240 240" aria-hidden="true">
-                <circle cx="120" cy="82" r="16" fill="none" stroke="currentColor" stroke-width="4"/>
-                <line x1="120" y1="98" x2="120" y2="160" stroke="currentColor" stroke-width="5" stroke-linecap="round"/>
-                <line x1="120" y1="118" x2="82" y2="142" stroke="currentColor" stroke-width="4" stroke-linecap="round"/>
-                <line x1="120" y1="118" x2="158" y2="142" stroke="currentColor" stroke-width="4" stroke-linecap="round"/>
-                <line x1="120" y1="160" x2="98" y2="198" stroke="currentColor" stroke-width="4" stroke-linecap="round"/>
-                <line x1="120" y1="160" x2="142" y2="198" stroke="currentColor" stroke-width="4" stroke-linecap="round"/>
+                <circle cx="120" cy="82" r="16" fill="none" stroke="currentColor" stroke-width="4" />
+                <line x1="120" y1="98" x2="120" y2="160" stroke="currentColor" stroke-width="5"
+                  stroke-linecap="round" />
+                <line x1="120" y1="118" x2="82" y2="142" stroke="currentColor" stroke-width="4"
+                  stroke-linecap="round" />
+                <line x1="120" y1="118" x2="158" y2="142" stroke="currentColor" stroke-width="4"
+                  stroke-linecap="round" />
+                <line x1="120" y1="160" x2="98" y2="198" stroke="currentColor" stroke-width="4"
+                  stroke-linecap="round" />
+                <line x1="120" y1="160" x2="142" y2="198" stroke="currentColor" stroke-width="4"
+                  stroke-linecap="round" />
               </svg>
               <div class="overlay-lottie" id="overlay-lottie" aria-hidden="true"></div>
             </div>
 
             <h3 class="overlay-title" id="overlay-title">Sky Reach</h3>
-            <p class="overlay-desc" id="overlay-desc">Interlace your fingers, press your palms upward, and lengthen through your ribs. Breathe in for four, out for six.</p>
+            <p class="overlay-desc" id="overlay-desc">Interlace your fingers, press your palms upward, and lengthen
+              through your ribs. Breathe in for four, out for six.</p>
 
             <div class="overlay-timer" id="overlay-timer">30s</div>
 
@@ -376,22 +406,26 @@
         <article class="how-card reveal">
           <div class="numeral">I</div>
           <h3>It waits.</h3>
-          <p>The app lives in your system tray. No dock icon, no window. It counts the minutes between reminders &mdash; nothing else.</p>
+          <p>The app lives in your system tray. No dock icon, no window. It counts the minutes between reminders &mdash;
+            nothing else.</p>
         </article>
         <article class="how-card how-card-offset reveal">
           <div class="numeral">II</div>
           <h3>It dims the room.</h3>
-          <p>When the thirty minutes are up, the screen softens and one card appears at the center. One stretch, one minute, one line of instruction.</p>
+          <p>When the thirty minutes are up, the screen softens and one card appears at the center. One stretch, one
+            minute, one line of instruction.</p>
         </article>
         <article class="how-card reveal">
           <div class="numeral">III</div>
           <h3>It lets you go.</h3>
-          <p><kbd>Enter</kbd> to log. <kbd>Esc</kbd> to snooze five minutes. <kbd>S</kbd> to skip. Click outside &mdash; also a snooze. It never holds you hostage.</p>
+          <p><kbd>Enter</kbd> to log. <kbd>Esc</kbd> to snooze five minutes. <kbd>S</kbd> to skip. Click outside &mdash;
+            also a snooze. It never holds you hostage.</p>
         </article>
         <article class="how-card how-card-offset reveal">
           <div class="numeral">IV</div>
           <h3>It logs your minute.</h3>
-          <p>One tick toward today's goal. A warm sparkline for the last seven days. A streak that only asks for one stretch a day to keep.</p>
+          <p>One tick toward today's goal. A warm sparkline for the last seven days. A streak that only asks for one
+            stretch a day to keep.</p>
         </article>
       </div>
     </section>
@@ -402,14 +436,14 @@
         <h2>Stretch is <em>quiet</em> by default.</h2>
         <p class="body">
           Reminders are paused during your quiet hours, while Windows
-          Focus Assist is set to Alarms-Only or Priority-Only, when a
+          Focus Assist is active (or during macOS Do Not Disturb in a future release), when a
           full-screen application is focused, and when you've stepped
           away from the keyboard for ten minutes. Nothing to configure
           &mdash; though you can, if you want to.
         </p>
         <ul class="quiet-list">
           <li>Default quiet hours <strong>18:00 &rarr; 09:00</strong>, editable to the minute.</li>
-          <li>Skips Focus Assist via Windows' own do-not-disturb signal.</li>
+          <li>Skips Focus Assist (Windows) via the OS do-not-disturb signal.</li>
           <li>Skips full-screen apps &mdash; games, Zoom, Keynote, anything.</li>
           <li>Auto-pauses after <strong>10 minutes</strong> of keyboard or mouse idle.</li>
           <li>Silent by default. Sound is strictly opt-in.</li>
@@ -447,14 +481,15 @@
         <p class="eyebrow">Your day at a glance</p>
         <h2>A tiny dashboard.<br><em>No guilt.</em></h2>
         <p class="body">
-          Open Stretch from the tray and you'll see today's progress, a
+          Open Stretch from the menu bar or tray and you'll see today's progress, a
           seven-day sparkline, and your current streak. A streak asks for
           one stretch a day to keep &mdash; it's here to encourage, not to
           shame.
         </p>
       </div>
 
-      <figure class="dashboard-mock reveal" aria-label="Replica of the Stretch dashboard: three of eight today, five-day streak">
+      <figure class="dashboard-mock reveal"
+        aria-label="Replica of the Stretch dashboard: three of eight today, five-day streak">
         <div class="dash-frame">
           <header class="dash-top">
             <div class="dash-brand">
@@ -474,17 +509,17 @@
                 <span class="dash-streak-num">5</span><span class="dash-streak-word">&nbsp;day streak</span>
               </div>
             </div>
-            <svg class="dash-spark" viewBox="0 0 280 48" preserveAspectRatio="none" aria-label="Last seven days: 6, 8, 7, 5, 8, 4, 3 stretches">
-              <polyline points="10,30 55,12 100,18 145,28 190,10 235,34 270,38"
-                        fill="none" stroke="currentColor" stroke-width="1.5"
-                        stroke-linecap="round" stroke-linejoin="round"/>
-              <circle cx="10" cy="30" r="3"/>
-              <circle cx="55" cy="12" r="3"/>
-              <circle cx="100" cy="18" r="3"/>
-              <circle cx="145" cy="28" r="3"/>
-              <circle cx="190" cy="10" r="3"/>
-              <circle cx="235" cy="34" r="3"/>
-              <circle cx="270" cy="38" r="4" class="dash-today"/>
+            <svg class="dash-spark" viewBox="0 0 280 48" preserveAspectRatio="none"
+              aria-label="Last seven days: 6, 8, 7, 5, 8, 4, 3 stretches">
+              <polyline points="10,30 55,12 100,18 145,28 190,10 235,34 270,38" fill="none" stroke="currentColor"
+                stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+              <circle cx="10" cy="30" r="3" />
+              <circle cx="55" cy="12" r="3" />
+              <circle cx="100" cy="18" r="3" />
+              <circle cx="145" cy="28" r="3" />
+              <circle cx="190" cy="10" r="3" />
+              <circle cx="235" cy="34" r="3" />
+              <circle cx="270" cy="38" r="4" class="dash-today" />
             </svg>
           </div>
 
@@ -536,7 +571,7 @@
         <h2>Set it once. <em>We mean it.</em></h2>
         <p class="body">
           Three screens on first launch. Pick a cadence. Set your quiet
-          hours. Decide whether it launches with Windows. That's the whole
+          hours. Decide whether it launches at login. That's the whole
           setup &mdash; you never have to open settings again.
         </p>
       </div>
@@ -551,7 +586,8 @@
             <span class="onb-choice"><span class="onb-num">45</span><span class="onb-unit">min</span></span>
             <span class="onb-choice"><span class="onb-num">60</span><span class="onb-unit">min</span></span>
           </div>
-          <p class="onb-note">Restless, balanced, deep focus, hourly &mdash; pick a cadence that won't break your flow.</p>
+          <p class="onb-note">Restless, balanced, deep focus, hourly &mdash; pick a cadence that won't break your flow.
+          </p>
         </li>
         <li class="onb-card reveal">
           <span class="onb-step">Step two</span>
@@ -560,7 +596,8 @@
             <div class="onb-time"><span class="onb-time-label">From</span><span class="onb-time-val">18:00</span></div>
             <div class="onb-time"><span class="onb-time-label">Until</span><span class="onb-time-val">09:00</span></div>
           </div>
-          <p class="onb-note">No reminders after hours or during Focus Assist. On by default &mdash; off with one click.</p>
+          <p class="onb-note">No reminders after hours or during Focus Assist. On by default &mdash; off with one click.
+          </p>
         </li>
         <li class="onb-card reveal">
           <span class="onb-step">Step three</span>
@@ -571,7 +608,8 @@
               Launch at login
             </span>
           </div>
-          <p class="onb-note">Starts hidden in the tray &mdash; appears only when you open it. No dock clutter.</p>
+          <p class="onb-note">Starts hidden in the menu bar or tray &mdash; appears only when you open it. No dock
+            clutter.</p>
         </li>
       </ol>
     </section>
@@ -583,9 +621,10 @@
         <p class="body">
           Stretch has no server. It does not phone home, load remote scripts,
           fetch fonts at runtime, collect anonymous analytics, or include a
-          crash reporter. Your settings and streak live in one JSON file at
-          <code>%APPDATA%/Stretch/config.json</code>, trimmed automatically to
-          the last 365 days. You can open it in Notepad.
+          crash reporter. Your settings and streak live in one local JSON file
+          (<code>%APPDATA%/Stretch/</code> on Windows,
+          <code>~/Library/Application Support/Stretch/</code> on macOS),
+          trimmed automatically to the last 365 days.
         </p>
       </div>
       <ul class="privacy-grid reveal">
@@ -617,20 +656,26 @@
 
     <section class="hood reveal" id="hood">
       <p class="eyebrow">Under the hood</p>
-      <h2>A small, honest Windows app.</h2>
+      <h2>A small, honest app.</h2>
       <ul class="hood-grid">
-        <li><span class="hood-num">~75 MB</span><span class="hood-lbl">Installed size</span></li>
+        <li><span class="hood-num">~75&ndash;85 MB</span><span class="hood-lbl">Installed size</span></li>
         <li><span class="hood-num">Electron 30</span><span class="hood-lbl">Runtime</span></li>
         <li><span class="hood-num">MIT</span><span class="hood-lbl">Licence</span></li>
-        <li><span class="hood-num">NSIS &middot; signed</span><span class="hood-lbl">Installer</span></li>
-        <li><span class="hood-num">Every 6 hrs</span><span class="hood-lbl">Auto-update</span></li>
-        <li><span class="hood-num">Win 10 &amp; 11</span><span class="hood-lbl">Support</span></li>
+        <li><span class="hood-num">DMG &middot; NSIS</span><span class="hood-lbl">Installer</span></li>
+        <li><span class="hood-num">Every 6 hrs</span><span class="hood-lbl">Auto-update (Win)</span></li>
+        <li><span class="hood-num">macOS 12+ &amp; Win 10/11</span><span class="hood-lbl">Support</span></li>
       </ul>
     </section>
 
     <section class="cta-band reveal">
       <h2>One minute. Every thirty.</h2>
-      <a class="btn primary" href="download/">
+      <a class="btn primary" style="margin-bottom: 10px;" id="cta-dl-mac"
+        href="https://github.com/praveensankar969/stretch/releases/download/latest/Stretch-1.0.0.dmg">
+        Download for macOS
+        <span class="btn-meta">Free &middot; MIT &middot; no accounts</span>
+      </a>
+      <a class="btn primary" id="cta-dl-win"
+        href="https://github.com/praveensankar969/stretch/releases/download/latest/Stretch-1.0.0.exe">
         Download for Windows
         <span class="btn-meta">Free &middot; MIT &middot; no accounts</span>
       </a>
@@ -652,16 +697,18 @@
     </div>
   </footer>
 
-  <aside class="sticky-dl" id="sticky-dl" hidden aria-label="Download Stretch for Windows">
+  <aside class="sticky-dl" id="sticky-dl" hidden aria-label="Download Stretch">
     <div class="sticky-dl-inner">
       <span class="sticky-dl-text">
         <span class="brand-mark small" aria-hidden="true"></span>
-        Stretch for Windows
+        Stretch
       </span>
-      <a class="sticky-dl-cta" href="download/">
+      <a class="sticky-dl-cta" id="sticky-dl-link"
+        href="https://github.com/praveensankar969/stretch/releases/download/latest/Stretch-1.0.0.dmg">
         Get it
       </a>
-      <button class="sticky-dl-close" type="button" id="sticky-dl-close" aria-label="Dismiss download bar">&times;</button>
+      <button class="sticky-dl-close" type="button" id="sticky-dl-close"
+        aria-label="Dismiss download bar">&times;</button>
     </div>
   </aside>
 
@@ -672,6 +719,32 @@
       'use strict';
 
       var prefersReduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      // OS detection — highlight the right download CTA
+      (function () {
+        var isMac = /Mac|iPhone|iPad|iPod/i.test(navigator.userAgent);
+        var primary = isMac ? 'mac' : 'win';
+        var secondary = isMac ? 'win' : 'mac';
+        // Hero CTAs
+        var heroPrimary = document.getElementById('dl-' + primary);
+        var heroSecondary = document.getElementById('dl-' + secondary);
+        if (heroSecondary) {
+          heroSecondary.classList.remove('primary');
+          heroSecondary.classList.add('ghost');
+        }
+        // Bottom CTA band
+        var ctaPrimary = document.getElementById('cta-dl-' + primary);
+        var ctaSecondary = document.getElementById('cta-dl-' + secondary);
+        if (ctaSecondary) {
+          ctaSecondary.classList.remove('primary');
+          ctaSecondary.classList.add('ghost');
+        }
+        // Sticky bar
+        var stickyLink = document.getElementById('sticky-dl-link');
+        if (stickyLink && !isMac) {
+          stickyLink.href = 'https://github.com/praveensankar969/stretch/releases/download/latest/Stretch-1.0.0.exe';
+        }
+      })();
       var saveData = !!(navigator.connection && navigator.connection.saveData);
       var narrowMq = matchMedia('(max-width: 519px)');
       var mobileMq = matchMedia('(max-width: 720px)');
@@ -730,7 +803,7 @@
         io.observe(hero);
         closeBtn.addEventListener('click', function () {
           bar.hidden = true;
-          try { sessionStorage.setItem('stretchDismissedDownloadBar', '1'); } catch (_) {}
+          try { sessionStorage.setItem('stretchDismissedDownloadBar', '1'); } catch (_) { }
         });
         mobileMq.addEventListener && mobileMq.addEventListener('change', function () {
           if (!mobileMq.matches) bar.hidden = true;
@@ -819,7 +892,7 @@
 
         function loadAnim(id) {
           if (!lottieReady || typeof window.lottie === 'undefined') return;
-          if (anim) { try { anim.destroy(); } catch (_) {} anim = null; }
+          if (anim) { try { anim.destroy(); } catch (_) { } anim = null; }
           lottieEl.innerHTML = '';
           stageEl.classList.remove('has-lottie');
           fetch('../src/assets/lottie/' + id + '.json')
@@ -834,7 +907,7 @@
                 animationData: data,
                 rendererSettings: { preserveAspectRatio: 'xMidYMid meet', progressiveLoad: true }
               });
-              if (anim && shouldAutoplay()) { try { anim.play(); } catch (_) {} }
+              if (anim && shouldAutoplay()) { try { anim.play(); } catch (_) { } }
               stageEl.classList.add('has-lottie');
             })
             .catch(function (err) { console.warn('lottie fetch failed', err); });
@@ -864,7 +937,7 @@
           clearInterval(rotateTimer);
           rotateTimer = null;
           clearInterval(countdownTimer);
-          if (anim) { try { anim.pause(); } catch (_) {} }
+          if (anim) { try { anim.pause(); } catch (_) { } }
         }
 
         function loadLottieLibrary() {
@@ -907,7 +980,7 @@
               visible = e.isIntersecting;
               if (e.isIntersecting) {
                 loadLottieLibrary();
-                if (anim) { try { anim.play(); } catch (_) {} }
+                if (anim) { try { anim.play(); } catch (_) { } }
                 if (canRotate()) startRotation();
                 if (!lowMo) {
                   var ex = exById(currentId);
@@ -926,4 +999,5 @@
     })();
   </script>
 </body>
+
 </html>

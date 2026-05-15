@@ -17,6 +17,10 @@ const path = require('path');
 const fs = require('fs');
 const os = require('os');
 
+if (process.platform === 'darwin') {
+  app.setActivationPolicy('accessory');
+}
+
 const gotLock = app.requestSingleInstanceLock();
 if (!gotLock) {
   app.quit();
@@ -103,11 +107,12 @@ function cleanupLegacyLoginItems() {
 function applyAutoStart() {
   if (!app.isPackaged) return;
   try {
-    app.setLoginItemSettings({
-      openAtLogin: !!config.autoStart,
-      path: app.getPath('exe'),
-      args: ['--hidden']
-    });
+    const opts = { openAtLogin: !!config.autoStart };
+    if (process.platform === 'win32') {
+      opts.path = app.getPath('exe');
+      opts.args = ['--hidden'];
+    }
+    app.setLoginItemSettings(opts);
   } catch (err) {
     console.warn('setLoginItemSettings failed', err);
   }
@@ -120,6 +125,8 @@ let tray = null;
 const APP_ICO = path.join(__dirname, 'src', 'assets', 'icon.ico');
 const APP_TRAY_PNG = path.join(__dirname, 'src', 'assets', 'tray.png');
 const LEGACY_LOGO = path.join(__dirname, 'logo.png');
+const APP_TRAY_TEMPLATE = path.join(__dirname, 'src', 'assets', 'tray-Template.png');
+const APP_TRAY_TEMPLATE_2X = path.join(__dirname, 'src', 'assets', 'tray-Template@2x.png');
 
 function iconPath() {
   if (process.platform === 'win32' && fs.existsSync(APP_ICO)) return APP_ICO;
@@ -138,20 +145,26 @@ const baseWebPreferences = {
 
 function createMainWindow({ show = true } = {}) {
   if (mainWindow && !mainWindow.isDestroyed()) {
-    if (show) mainWindow.show();
+    if (show) {
+      mainWindow.show();
+    }
     return mainWindow;
   }
 
+  const isMac = process.platform === 'darwin';
   mainWindow = new BrowserWindow({
     width: 480,
-    height: 680,
+    height: isMac ? 740 : 680,
+    minHeight: 600,
+    minWidth: 480,
     show: false,
-    resizable: false,
+    resizable: isMac,
     maximizable: false,
     fullscreenable: false,
     icon: iconPath(),
     backgroundColor: '#17130F',
     autoHideMenuBar: true,
+    ...(isMac ? { titleBarStyle: 'default' } : {}),
     webPreferences: baseWebPreferences
   });
 
@@ -204,7 +217,10 @@ function createOverlayWindow(exerciseId, { preview = false } = {}) {
     show: false,
     backgroundColor: '#00000000',
     icon: iconPath(),
-    webPreferences: baseWebPreferences
+    webPreferences: {
+      ...baseWebPreferences,
+      backgroundThrottling: false
+    }
   });
 
   overlayWindow.setAlwaysOnTop(true, 'screen-saver');
@@ -370,21 +386,28 @@ function publicConfig() {
 }
 
 function trayImage() {
-  const candidates =
-    process.platform === 'win32'
-      ? [APP_ICO, APP_TRAY_PNG, LEGACY_LOGO]
-      : [APP_TRAY_PNG, APP_ICO, LEGACY_LOGO];
+  if (process.platform === 'darwin') {
+    for (const p of [APP_TRAY_TEMPLATE_2X, APP_TRAY_TEMPLATE, APP_TRAY_PNG]) {
+      if (!fs.existsSync(p)) continue;
+      const img = nativeImage.createFromPath(p);
+      if (!img.isEmpty()) {
+        img.setTemplateImage(true);
+        return img;
+      }
+    }
+  }
 
+  const candidates = process.platform === 'win32'
+    ? [APP_ICO, APP_TRAY_PNG, LEGACY_LOGO]
+    : [APP_TRAY_PNG, LEGACY_LOGO];
   for (const p of candidates) {
     if (!fs.existsSync(p)) continue;
     const img = nativeImage.createFromPath(p);
-    if (!img.isEmpty()) {
-      return process.platform === 'darwin' ? img.resize({ width: 18, height: 18 }) : img;
-    }
+    if (!img.isEmpty()) return img;
     console.warn('tray icon decoded empty from', p);
   }
 
-  console.error('tray icon: no usable image found; tray will be invisible');
+  console.error('tray icon: no usable image found');
   return nativeImage.createEmpty();
 }
 
@@ -437,14 +460,25 @@ function updateTrayMenu() {
       }
     }
   ]);
-  tray.setContextMenu(menu);
+  if (process.platform !== 'darwin') {
+    tray.setContextMenu(menu);
+  } else {
+    tray._cachedMenu = menu;
+  }
   tray.setToolTip(`Stretch — ${humanNext()}`);
 }
 
 function createTray() {
   tray = new Tray(trayImage());
   tray.on('click', () => createMainWindow({ show: true }));
-  tray.on('double-click', () => createMainWindow({ show: true }));
+  if (process.platform === 'darwin') {
+    tray.on('right-click', () => {
+      updateTrayMenu();
+      if (tray._cachedMenu) tray.popUpContextMenu(tray._cachedMenu);
+    });
+  } else {
+    tray.on('double-click', () => createMainWindow({ show: true }));
+  }
   updateTrayMenu();
   setInterval(updateTrayMenu, 60 * 1000);
 }
@@ -552,14 +586,18 @@ ipcMain.handle('diagnostics:copy', () => {
 
 function setupAutoUpdater() {
   if (!app.isPackaged) return;
+  if (process.platform === 'darwin') {
+    console.log('Auto-updater disabled on macOS (unsigned build). Check https://github.com/praveensankar969/stretch/releases for updates.');
+    return;
+  }
   try {
     const { autoUpdater } = require('electron-updater');
     autoUpdater.autoDownload = true;
     autoUpdater.autoInstallOnAppQuit = true;
     autoUpdater.on('error', (err) => console.warn('updater error', err?.message));
-    autoUpdater.checkForUpdatesAndNotify().catch(() => {});
+    autoUpdater.checkForUpdatesAndNotify().catch(() => { });
     setInterval(() => {
-      autoUpdater.checkForUpdatesAndNotify().catch(() => {});
+      autoUpdater.checkForUpdatesAndNotify().catch(() => { });
     }, 6 * 60 * 60 * 1000);
   } catch (err) {
     console.warn('electron-updater unavailable', err?.message);
@@ -578,10 +616,21 @@ app.on('second-instance', () => {
 app.whenReady().then(() => {
   loadConfig();
   cleanupLegacyLoginItems();
+
+  app.on('browser-window-focus', () => {
+    if (process.platform === 'darwin') {
+      app.dock.hide();
+      app.setActivationPolicy('accessory');
+    }
+  });
+
   Menu.setApplicationMenu(null);
+
   createTray();
 
-  const startedHidden = process.argv.includes('--hidden');
+  const startedHidden = process.platform === 'win32'
+    ? process.argv.includes('--hidden')
+    : app.getLoginItemSettings().wasOpenedAtLogin;
   if (!config.onboardingDone) {
     createMainWindow({ show: true });
   } else {
@@ -600,4 +649,4 @@ app.on('before-quit', () => {
   app.isQuitting = true;
 });
 
-app.on('window-all-closed', () => {});
+app.on('window-all-closed', () => { });

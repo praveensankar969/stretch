@@ -1,15 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta http-equiv="Content-Security-Policy"
-        content="default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self'; font-src 'self'; img-src 'self' data:;">
+    content="default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self'; font-src 'self'; img-src 'self' data:;">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Stretch</title>
   <link rel="stylesheet" href="assets/tokens.css">
   <link rel="stylesheet" href="assets/fonts.css">
   <link rel="stylesheet" href="style.css">
 </head>
+
 <body class="app">
   <div class="grain" aria-hidden="true"></div>
 
@@ -42,7 +44,7 @@
           <span class="row-help">We gently nudge, never alarm.</span>
         </label>
         <div class="input-pair">
-          <input id="interval" type="number" min="5" max="240" step="1" value="30" inputmode="numeric">
+          <input id="interval" type="number" min="1" max="240" step="1" value="30" inputmode="numeric">
           <span class="unit">min</span>
         </div>
       </div>
@@ -61,7 +63,8 @@
       <div class="row row-toggle">
         <label for="auto-start" class="row-label">
           <span class="row-title">Launch at login</span>
-          <span class="row-help">Stretch lives quietly in your tray.</span>
+          <span class="row-help">Stretch lives quietly in your <span data-win>tray</span><span data-mac>menu
+              bar</span>.</span>
         </label>
         <label class="switch">
           <input id="auto-start" type="checkbox">
@@ -93,7 +96,7 @@
         </div>
       </div>
 
-      <div class="row row-toggle">
+      <div class="row row-toggle" data-win-only>
         <label for="respect-focus" class="row-label">
           <span class="row-title">Respect Focus Assist</span>
           <span class="row-help">Skip reminders when Windows is in do-not-disturb.</span>
@@ -122,4 +125,5 @@
 
   <script src="renderer.js"></script>
 </body>
+
 </html>

@@ -1,19 +1,21 @@
 {
   "name": "stretch",
   "version": "1.0.0",
-  "description": "A calm, local-only stretch reminder that lives in your Windows tray.",
+  "description": "A calm, local-only stretch reminder for macOS and Windows.",
   "main": "main.js",
   "scripts": {
     "start": "electron .",
-    "postinstall": "node scripts/copy-vendor.mjs && node scripts/fetch-fonts.mjs && node scripts/build-lottie.mjs",
+    "postinstall": "node scripts/copy-vendor.mjs && node scripts/fetch-fonts.mjs && node scripts/build-lottie.mjs && node scripts/patch-electron-plist.mjs",
     "fonts": "node scripts/fetch-fonts.mjs",
     "lottie": "node scripts/build-lottie.mjs",
     "vendor": "node scripts/copy-vendor.mjs",
     "icons": "node scripts/build-icons.mjs",
     "prebuild": "npm run vendor && npm run lottie && npm run icons",
     "build": "electron-builder --win",
+    "build:mac": "CSC_IDENTITY_AUTO_DISCOVERY=false electron-builder --mac",
     "prerelease": "npm run vendor && npm run lottie && npm run icons",
-    "release": "electron-builder --win --publish always"
+    "release": "electron-builder --win --publish always",
+    "release:mac": "CSC_IDENTITY_AUTO_DISCOVERY=false electron-builder --mac --publish always"
   },
   "author": {
     "name": "Stretch",
@@ -24,6 +26,7 @@
     "electron": "^30.0.0",
     "electron-builder": "^26.8.1",
     "png-to-ico": "^2.1.8",
+    "png2icons": "^2.0.1",
     "sharp": "^0.34.5"
   },
   "dependencies": {
@@ -84,6 +87,30 @@
         "owner": "praveensankar969",
         "repo": "Stretch"
       }
-    ]
+    ],
+    "mac": {
+      "target": [
+        { "target": "dmg", "arch": ["arm64", "x64"] },
+        { "target": "zip", "arch": ["arm64", "x64"] }
+      ],
+      "icon": "build/icon.icns",
+      "category": "public.app-category.healthcare-fitness",
+      "hardenedRuntime": false,
+      "gatekeeperAssess": false,
+      "identity": "-",
+      "notarize": false,
+      "extendInfo": {
+        "LSUIElement": true,
+        "NSHumanReadableCopyright": "MIT — Stretch"
+      }
+    },
+    "dmg": {
+      "title": "Stretch ${version}",
+      "icon": "build/icon.icns",
+      "contents": [
+        { "x": 130, "y": 220, "type": "file" },
+        { "x": 410, "y": 220, "type": "link", "path": "/Applications" }
+      ]
+    }
   }
 }

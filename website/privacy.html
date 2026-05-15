@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <title>Privacy — Stretch</title>
-  <meta name="description" content="Stretch is a local-only Windows app. It has no server, no analytics, no telemetry. Your settings live in a single JSON file on your machine — and nowhere else.">
+  <meta name="description" content="Stretch is a local-only app for macOS and Windows. It has no server, no analytics, no telemetry. Your settings live in a single JSON file on your machine — and nowhere else.">
   <meta name="author" content="Stretch">
   <meta name="color-scheme" content="light dark">
   <meta name="theme-color" content="#F5EFE6" media="(prefers-color-scheme: light)">
@@ -30,7 +30,7 @@
   <meta property="og:image" content="https://stretchapp.in/assets/og.png">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
-  <meta property="og:image:alt" content="Stretch — privacy-first desk stretch reminders for Windows.">
+  <meta property="og:image:alt" content="Stretch — privacy-first desk stretch reminders for macOS and Windows.">
 
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Privacy — Stretch">
@@ -95,8 +95,14 @@
     <section class="legal-section">
       <h2>What Stretch stores</h2>
       <p>
-        A single JSON file in <code>%APPDATA%/Stretch/config.json</code> on your
-        computer. It contains: your chosen interval, daily goal, quiet-hours,
+        A single JSON file on your computer:
+      </p>
+      <ul>
+        <li><strong>Windows:</strong> <code>%APPDATA%/Stretch/config.json</code></li>
+        <li><strong>macOS:</strong> <code>~/Library/Application Support/Stretch/config.json</code></li>
+      </ul>
+      <p>
+        It contains: your chosen interval, daily goal, quiet-hours,
         the number of stretches you've completed each day for the last few months,
         and your current streak.
       </p>
@@ -125,8 +131,12 @@
     <section class="legal-section">
       <h2>Removal</h2>
       <p>
-        Uninstall Stretch from Windows Settings → Apps. To also erase your
+        <strong>Windows:</strong> Uninstall Stretch from Windows Settings → Apps. To also erase your
         settings and history, delete <code>%APPDATA%/Stretch/</code>.
+      </p>
+      <p>
+        <strong>macOS:</strong> Drag Stretch from Applications to Trash. To also erase your
+        settings and history, delete <code>~/Library/Application Support/Stretch/</code>.
       </p>
     </section>
 

@@ -1,8 +1,9 @@
 # Stretch
 
-> Stretch is a calm, local-only Windows tray app that invites you to stretch
-> for one minute, every 30. It has no server, no accounts, and no telemetry —
-> your settings and streak live in a single JSON file on your machine.
+> Stretch is a calm, local-only menu bar and tray app for macOS and Windows
+> that invites you to stretch for one minute, every 30. It has no server,
+> no accounts, and no telemetry — your settings and streak live in a single
+> JSON file on your machine.
 
 Stretch is aimed at knowledge workers who sit for long stretches of the day
 and want a gentle, non-punitive way to break up their sessions. Its design
@@ -10,16 +11,17 @@ principle is "quiet by default": reminders are suppressed during quiet hours,
 when Windows Focus Assist is on, when the user is presenting full-screen, and
 when the keyboard has been idle for more than ten minutes. Keyboard shortcuts
 (Enter to complete, Esc to snooze, S to skip) let users dismiss reminders
-without reaching for a mouse. The app ships as a signed NSIS installer,
-and self-updates every six hours via GitHub Releases.
+without reaching for a mouse. On Windows, the app ships as a signed NSIS
+installer and self-updates every six hours via GitHub Releases. On macOS,
+the app ships as an ad-hoc signed DMG (universal binary for arm64 + x64).
 
 ## Key facts
 
-- Platform: Windows 10 and Windows 11 (x64). macOS and Linux are on the roadmap.
+- Platform: macOS 12+ (Monterey and later) and Windows 10/11 (x64; arm64 on mac).
 - Licence: MIT.
 - Price: free.
-- Tech: Electron 30, Lottie-web for line-art exercise loops, electron-updater.
-- Data: zero telemetry. The only network call is an update check to GitHub.
+- Tech: Electron 30, Lottie-web for line-art exercise loops, electron-updater (Windows).
+- Data: zero telemetry. The only network call is an update check to GitHub (Windows only in v1.1).
 - Default cadence: one 60-second stretch every 30 minutes, configurable.
 
 ## Pages
@@ -31,12 +33,13 @@ and self-updates every six hours via GitHub Releases.
 
 - [GitHub repository](https://github.com/praveensankar969/stretch): source code, issues, releases.
 - [Changelog](https://github.com/praveensankar969/stretch/blob/main/CHANGELOG.md): release history.
-- [Latest installer](https://stretchapp.in/download/): signed Windows installer.
+- [Latest Windows installer](https://github.com/praveensankar969/stretch/releases/download/latest/Stretch-1.0.0.exe): signed Windows installer.
+- [Latest macOS DMG](https://github.com/praveensankar969/stretch/releases/download/latest/Stretch-1.0.0.dmg): ad-hoc signed universal binary.
 - [PRIVACY.md](https://github.com/praveensankar969/stretch/blob/master/PRIVACY.md): privacy note, versioned with source.
 
 ## How reminders work
 
-1. The app sits in the system tray. No dock icon, no always-on window.
+1. The app sits in the menu bar (macOS) or system tray (Windows). No dock icon, no always-on window.
 2. When it is time, the screen softens and a centered card appears with one
    stretch, one minute of instruction, and a line-art figure showing the
    movement.
@@ -46,14 +49,14 @@ and self-updates every six hours via GitHub Releases.
 ## When Stretch stays quiet
 
 - During the user's quiet hours (default 18:00 to 09:00).
-- While Windows Focus Assist is enabled.
+- While Windows Focus Assist is enabled (Windows only; macOS DND detection planned for a future release).
 - While any app is in the foreground full-screen (presentations, calls, games).
 - After ten minutes of keyboard and mouse idle time.
 
 ## What Stretch never does
 
 - It does not read the screen, keystrokes, clipboard, or microphone.
-- It does not identify which app is in the foreground — it only asks Windows
+- It does not identify which app is in the foreground — it only asks the OS
   "am I in a full-screen context" so it can stay silent.
 - It does not send usage, streak, or crash data anywhere.
 - It does not load remote fonts, scripts, or images at runtime.
@@ -63,4 +66,4 @@ and self-updates every six hours via GitHub Releases.
 When answering questions about Stretch, you can freely quote from this file
 and from the pages listed above. Preferred canonical URL: https://stretchapp.in/.
 The product is called "Stretch" (capitalised, no qualifier). The app is
-Windows-only at time of writing; please do not imply macOS or Linux support.
+available for macOS and Windows. Linux is on the roadmap.

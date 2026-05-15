@@ -2,6 +2,14 @@
 
 const bridge = window.stretch;
 
+const platform = window.stretch.platform;
+document.querySelectorAll('[data-win]').forEach(el => {
+  if (platform !== 'win32') el.style.display = 'none';
+});
+document.querySelectorAll('[data-mac]').forEach(el => {
+  if (platform !== 'darwin') el.style.display = 'none';
+});
+
 const slides = Array.from(document.querySelectorAll('.slide'));
 const progressDots = Array.from(document.querySelectorAll('.onb-progress .dot'));
 let current = 0;

@@ -4,7 +4,12 @@ Short version: Stretch has no server, no telemetry, and no tracking. Everything 
 
 ## What Stretch stores
 
-A single JSON file at `%APPDATA%/Stretch/config.json` containing:
+A single JSON file on your computer:
+
+- **Windows:** `%APPDATA%/Stretch/config.json`
+- **macOS:** `~/Library/Application Support/Stretch/config.json`
+
+It contains:
 
 - Your chosen reminder interval and daily goal.
 - Your quiet-hours window and Focus Assist preference.
@@ -26,10 +31,11 @@ That file never leaves your device.
 
 ## Removing everything
 
-Uninstall Stretch from Windows Settings → Apps. To also erase your saved data, delete `%APPDATA%/Stretch/`.
+- **Windows:** Uninstall Stretch from Windows Settings → Apps. To also erase your saved data, delete `%APPDATA%/Stretch/`.
+- **macOS:** Drag Stretch from Applications to Trash. To also erase your saved data, delete `~/Library/Application Support/Stretch/`.
 
 ## Changes
 
 If any of the above ever changes, we'll say so in the in-app update dialog before the change ships, and the commit history of this file will record it.
 
-Last updated: 2026-04-23.
+Last updated: 2026-05-15.
