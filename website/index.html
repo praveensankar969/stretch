@@ -469,15 +469,23 @@ brew install --cask stretch</code>
       </div>
 
       <div class="install-warn reveal" style="margin-top: 1.5rem;">
-        <strong>Security Warning:</strong> Because Stretch is a free app, it skips the $99 Apple Developer fee.
+        <strong>macOS Security Warning:</strong> Because Stretch is a free app, it skips the $99 Apple Developer fee.
         Whether you use Homebrew or download manually, macOS will show an "Unidentified Developer" or "Damaged App /
-        Move to Trash" warning.
+        Move to Trash" warning when you try to open it.
         <br><br>
-        To fix this, either:
-        <br>1. Go to <strong>System Settings > Privacy &amp; Security</strong> and click <strong>Open
-          Anyway</strong>.
-        <br>2. Run this command in Terminal after installing to remove the macOS quarantine flag:
-        <div class="terminal-block inline-terminal has-copy">
+        <strong>How to fix this (Two Options):</strong>
+        <br><br>
+        <strong>Option 1: The Settings Way (Recommended for most)</strong>
+        <ol style="margin-top: 4px; padding-left: 20px;">
+          <li>Open Stretch from your Applications folder.</li>
+          <li>You will see a warning. Click <strong>Cancel</strong>.</li>
+          <li>Open your Mac's <strong>System Settings</strong> and go to <strong>Privacy &amp; Security</strong>.</li>
+          <li>Scroll down to the "Security" section and click <strong>Open Anyway</strong> next to Stretch.</li>
+        </ol>
+
+        <strong>Option 2: The Terminal Way (Fastest)</strong>
+        <br>Run this command in Terminal after installing to remove the macOS quarantine flag:
+        <div class="terminal-block inline-terminal has-copy" style="margin-top: 8px;">
           <code id="xattr-cmd">xattr -cr /Applications/Stretch.app</code>
           <button class="terminal-copy"
             onclick="navigator.clipboard.writeText(document.getElementById('xattr-cmd').innerText); this.innerText='Copied!'; setTimeout(()=>this.innerText='Copy', 2000)"

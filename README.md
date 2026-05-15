@@ -18,8 +18,18 @@ brew install --cask stretch
 - [Stretch-1.0.0-arm64.dmg](https://github.com/praveensankar969/stretch/releases/download/latest/Stretch-1.0.0-arm64.dmg)
 - [Stretch-1.0.0-x64.dmg](https://github.com/praveensankar969/stretch/releases/download/latest/Stretch-1.0.0-x64.dmg)
 
-> **macOS Security Note:** Stretch is ad-hoc signed to keep it free. Whether installed via Homebrew or DMG, Gatekeeper may show an "Unidentified Developer" or "Damaged App / Move to Trash" warning.
-> To fix this, run `xattr -cr /Applications/Stretch.app` in Terminal to remove the macOS quarantine flag, or go to System Settings > Privacy & Security and scroll down to "Security" and click "Open Anyway".
+> **macOS Security Note:** Stretch is ad-hoc signed to keep it free. Whether installed via Homebrew or DMG, Gatekeeper will show a "Damaged App / Move to Trash" or "Unidentified Developer" warning when you try to open it.
+>
+> **How to fix this:**
+> 
+> **Option 1: The Settings Way (Recommended for most)**
+> 1. Open Stretch from your Applications folder.
+> 2. You will see the security warning. Click **Cancel**.
+> 3. Open your Mac's **System Settings** > **Privacy & Security**.
+> 4. Scroll down to the "Security" section and click **Open Anyway** next to Stretch.
+> 
+> **Option 2: The Terminal Way (Fastest)**
+> Run `xattr -cr /Applications/Stretch.app` in Terminal to remove the macOS quarantine flag.
 
 **Windows:** 
 - [Stretch-1.0.0.exe](https://github.com/praveensankar969/stretch/releases/download/latest/Stretch-1.0.0.exe) — signed NSIS installer, auto-updates via GitHub Releases.
