@@ -1,21 +1,23 @@
 {
   "name": "stretch",
-  "version": "1.0.0",
-  "description": "A calm, local-only stretch reminder for macOS and Windows.",
+  "version": "2.0.0",
+  "description": "A little room to move. Thoughtful, private stretch breaks for macOS.",
   "main": "main.js",
   "scripts": {
     "start": "electron .",
-    "postinstall": "node scripts/copy-vendor.mjs && node scripts/fetch-fonts.mjs && node scripts/build-lottie.mjs && node scripts/patch-electron-plist.mjs",
-    "fonts": "node scripts/fetch-fonts.mjs",
-    "lottie": "node scripts/build-lottie.mjs",
-    "vendor": "node scripts/copy-vendor.mjs",
+    "test": "node --test tests/*.test.js",
+    "test:ui": "node scripts/test-ui.cjs",
+    "postinstall": "node scripts/build-icons.mjs",
     "icons": "node scripts/build-icons.mjs",
-    "prebuild": "npm run vendor && npm run lottie && npm run icons",
-    "build": "electron-builder --win",
-    "build:mac": "CSC_IDENTITY_AUTO_DISCOVERY=false electron-builder --mac",
-    "prerelease": "npm run vendor && npm run lottie && npm run icons",
-    "release": "electron-builder --win --publish always",
-    "release:mac": "CSC_IDENTITY_AUTO_DISCOVERY=false electron-builder --mac"
+    "prebuild": "npm run icons",
+    "build": "electron-builder --mac",
+    "prebuild:mac": "npm run icons",
+    "build:mac": "electron-builder --mac",
+    "build:mac:dir": "npm run icons && electron-builder --mac --dir",
+    "build:win": "npm run icons && electron-builder --win",
+    "site:preview": "node scripts/serve-site.cjs",
+    "prebuild:mac:local": "npm run icons",
+    "build:mac:local": "electron-builder --mac dmg --publish never -c.mac.identity=- -c.mac.hardenedRuntime=false"
   },
   "author": {
     "name": "Stretch",
@@ -23,15 +25,12 @@
   },
   "license": "MIT",
   "devDependencies": {
-    "electron": "^30.0.0",
-    "electron-builder": "^26.8.1",
+    "electron": "44.4.3",
+    "electron-builder": "^26.15.3",
+    "playwright": "^1.62.1",
     "png-to-ico": "^2.1.8",
     "png2icons": "^2.0.1",
-    "sharp": "^0.34.5"
-  },
-  "dependencies": {
-    "electron-updater": "^6.3.9",
-    "lottie-web": "^5.12.2"
+    "sharp": "^0.35.4"
   },
   "build": {
     "appId": "com.stretchapp.in",
@@ -44,6 +43,8 @@
     "files": [
       "main.js",
       "src/**/*",
+      "!src/vendor/**",
+      "!src/assets/lottie/**",
       "!src/**/*.map"
     ],
     "extraResources": [
@@ -78,7 +79,6 @@
       "createDesktopShortcut": true,
       "createStartMenuShortcut": true,
       "runAfterFinish": true,
-      "include": "build/installer.nsh",
       "shortcutName": "Stretch"
     },
     "publish": [
@@ -107,13 +107,10 @@
       ],
       "icon": "build/icon.icns",
       "category": "public.app-category.healthcare-fitness",
-      "hardenedRuntime": false,
-      "gatekeeperAssess": false,
-      "identity": "-",
-      "notarize": false,
+      "hardenedRuntime": true,
       "extendInfo": {
         "LSUIElement": true,
-        "NSHumanReadableCopyright": "MIT — Stretch"
+        "NSHumanReadableCopyright": "MIT \u2014 Stretch"
       }
     },
     "dmg": {
@@ -133,5 +130,8 @@
         }
       ]
     }
+  },
+  "engines": {
+    "node": ">=22"
   }
 }

@@ -1,129 +1,315 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-
-<head>
-  <meta charset="UTF-8">
-  <meta http-equiv="Content-Security-Policy"
-    content="default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self'; font-src 'self'; img-src 'self' data:;">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Stretch</title>
-  <link rel="stylesheet" href="assets/tokens.css">
-  <link rel="stylesheet" href="assets/fonts.css">
-  <link rel="stylesheet" href="style.css">
-</head>
-
-<body class="app">
-  <div class="grain" aria-hidden="true"></div>
-
-  <main class="shell">
-    <header class="top">
-      <div class="brand">
-        <span class="brand-mark" aria-hidden="true"></span>
-        <span class="brand-word">Stretch</span>
-      </div>
-      <div class="next-badge" id="next-badge" aria-live="polite">Next reminder in — min</div>
-    </header>
-
-    <section class="hero">
-      <h1 class="h-display">Today</h1>
-      <div class="count-row">
-        <div class="count">
-          <span id="today-count">0</span><span class="count-slash">/</span><span id="daily-goal">8</span>
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self'; font-src 'self'; img-src 'self' data:"
+    />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Stretch · A little room to move</title>
+    <link rel="stylesheet" href="assets/fonts.css" />
+    <link rel="stylesheet" href="assets/tokens.css" />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body class="app">
+    <div class="titlebar" aria-hidden="true"></div>
+    <div class="app-layout">
+      <aside class="sidebar">
+        <a class="brand" href="#today"
+          ><span class="brand-mark" aria-hidden="true"></span
+          ><span class="brand-word">Stretch</span
+          ><span class="version-tag">2.0</span></a
+        >
+        <nav aria-label="Main navigation">
+          <button class="nav-item active" data-page="today" aria-current="page">
+            <span aria-hidden="true">◷</span> My day
+          </button>
+          <button class="nav-item" data-page="library">
+            <span aria-hidden="true">⌘</span> Movements
+          </button>
+          <button class="nav-item" data-page="settings">
+            <span aria-hidden="true">☷</span> Preferences
+          </button>
+        </nav>
+        <div class="sidebar-bottom">
+          <div class="sidebar-note">
+            <span class="live-dot"></span> A little, often.
+            <p>Your next good habit starts<br />with a small pause.</p>
+          </div>
+          <button class="profile-btn" id="privacy-link">
+            <span class="profile-icon" aria-hidden="true">↗</span
+            ><span>Just for you<small>Private. On your Mac.</small></span>
+          </button>
         </div>
-        <div class="streak" id="streak-pill" title="Consecutive days with at least one stretch">
-          <span class="streak-num" id="streak-num">0</span><span class="streak-word"> day streak</span>
-        </div>
-      </div>
-      <svg class="spark" id="spark" viewBox="0 0 280 48" preserveAspectRatio="none" aria-label="Last 7 days"></svg>
-    </section>
-
-    <section class="card">
-      <div class="row">
-        <label for="interval" class="row-label">
-          <span class="row-title">Remind me every</span>
-          <span class="row-help">We gently nudge, never alarm.</span>
-        </label>
-        <div class="input-pair">
-          <input id="interval" type="number" min="1" max="240" step="1" value="30" inputmode="numeric">
-          <span class="unit">min</span>
-        </div>
-      </div>
-
-      <div class="row">
-        <label for="daily-goal-input" class="row-label">
-          <span class="row-title">Daily goal</span>
-          <span class="row-help">Small, achievable. Default: 8.</span>
-        </label>
-        <div class="input-pair">
-          <input id="daily-goal-input" type="number" min="1" max="50" step="1" value="8">
-          <span class="unit">stretches</span>
-        </div>
-      </div>
-
-      <div class="row row-toggle">
-        <label for="auto-start" class="row-label">
-          <span class="row-title">Launch at login</span>
-          <span class="row-help">Stretch lives quietly in your <span data-win>tray</span><span data-mac>menu
-              bar</span>.</span>
-        </label>
-        <label class="switch">
-          <input id="auto-start" type="checkbox">
-          <span class="dot" aria-hidden="true"></span>
-        </label>
-      </div>
-    </section>
-
-    <section class="card">
-      <div class="row row-toggle">
-        <label for="quiet-enabled" class="row-label">
-          <span class="row-title">Quiet hours</span>
-          <span class="row-help">No reminders while you sleep or rest.</span>
-        </label>
-        <label class="switch">
-          <input id="quiet-enabled" type="checkbox" checked>
-          <span class="dot" aria-hidden="true"></span>
-        </label>
-      </div>
-
-      <div class="row row-quiet">
-        <div class="input-pair">
-          <label for="quiet-start" class="mini">From</label>
-          <input id="quiet-start" type="time" value="18:00">
-        </div>
-        <div class="input-pair">
-          <label for="quiet-end" class="mini">Until</label>
-          <input id="quiet-end" type="time" value="09:00">
-        </div>
-      </div>
-
-      <div class="row row-toggle" data-win-only>
-        <label for="respect-focus" class="row-label">
-          <span class="row-title">Respect Focus Assist</span>
-          <span class="row-help">Skip reminders when Windows is in do-not-disturb.</span>
-        </label>
-        <label class="switch">
-          <input id="respect-focus" type="checkbox" checked>
-          <span class="dot" aria-hidden="true"></span>
-        </label>
-      </div>
-    </section>
-
-    <footer class="foot">
-      <button id="preview-btn" class="btn ghost" type="button">Preview a stretch</button>
-      <button id="save-btn" class="btn primary" type="button">Save</button>
-    </footer>
-
-    <p class="legal">
-      Not medical advice. Stop if it hurts.
-      <button id="privacy-link" class="linklike" type="button">Privacy</button>
-      <span class="dot-sep">·</span>
-      <button id="diagnostics-link" class="linklike" type="button">Copy diagnostics</button>
-      <span class="dot-sep">·</span>
-      <span id="version-line">v1.0.0</span>
-    </p>
-  </main>
-
-  <script src="renderer.js"></script>
-</body>
-
+      </aside>
+      <main class="content">
+        <section id="page-today" class="page">
+          <header class="page-header">
+            <div>
+              <p class="eyebrow" id="date-label">YOUR EVERYDAY RESET</p>
+              <h1>A little room to move.</h1>
+              <p class="muted subheading">
+                Good work feels better with a few small pauses.
+              </p>
+            </div>
+            <span class="status-pill" id="next-badge" role="status"
+              >Getting ready</span
+            >
+          </header>
+          <div class="dashboard-grid">
+            <section class="feature-card">
+              <div class="feature-copy">
+                <span class="eyebrow">YOUR NEXT MOMENT</span>
+                <h2>Less tension.<br /><em>More you.</em></h2>
+                <p id="suggestion-desc">
+                  Let your shoulders settle.<br />Your inbox can wait a moment.
+                </p>
+                <button class="btn primary" id="start-btn">
+                  Take a stretch break
+                  <span aria-hidden="true">↗</span></button
+                ><span class="feature-meta" id="suggestion-meta"
+                  >30 seconds · Seated · No equipment</span
+                >
+              </div>
+              <div class="feature-art">
+                <div class="art-orbit" aria-hidden="true"></div>
+                <div id="hero-figure" class="figure"></div>
+                <span class="art-caption" id="suggestion-title"
+                  >Shoulder rolls</span
+                >
+              </div>
+            </section>
+            <section class="progress-card">
+              <div class="section-top">
+                <span class="eyebrow">TODAY, AT YOUR PACE</span
+                ><span aria-hidden="true">✳</span>
+              </div>
+              <div class="daily-ring">
+                <svg viewBox="0 0 140 140" aria-hidden="true">
+                  <circle cx="70" cy="70" r="59" />
+                  <circle
+                    id="goal-arc"
+                    cx="70"
+                    cy="70"
+                    r="59"
+                    pathLength="100"
+                  />
+                </svg>
+                <div>
+                  <strong id="today-count">0</strong
+                  ><span>of <span id="daily-goal">6</span> breaks</span>
+                </div>
+              </div>
+              <p id="goal-message">Every small pause counts.</p>
+              <div class="progress-foot">
+                <span><strong id="minutes-count">0</strong> min today</span
+                ><span><strong id="streak-num">0</strong> day streak</span>
+              </div>
+            </section>
+          </div>
+          <section class="rhythm-card">
+            <div>
+              <span class="eyebrow">A RHYTHM THAT FITS</span>
+              <h3 id="rhythm-title">A nudge every 30 minutes</h3>
+              <p class="muted" id="rhythm-help">
+                Quiet when you’re away. Ready when you are.
+              </p>
+            </div>
+            <div class="rhythm-actions">
+              <button id="pause-reminders" class="btn ghost">
+                Pause reminders</button
+              ><select id="snooze-select" aria-label="Snooze reminders">
+                <option value="">Snooze…</option>
+                <option value="5">5 minutes</option>
+                <option value="15">15 minutes</option>
+                <option value="60">1 hour</option>
+              </select>
+            </div>
+          </section>
+          <div class="bottom-grid">
+            <section class="week-card">
+              <div class="section-top">
+                <h3>A week of showing up</h3>
+                <span class="muted" id="week-total">0 breaks</span>
+              </div>
+              <div
+                id="week-chart"
+                class="week-chart"
+                aria-label="Breaks over the past seven days"
+              ></div>
+            </section>
+            <section class="routine-card">
+              <span class="eyebrow">HAVE A LITTLE LONGER?</span>
+              <h2>The desk reset</h2>
+              <p>
+                Shoulders, neck, then a breath.<br />A little space for your
+                whole self.
+              </p>
+              <button id="routine-btn" class="text-btn">
+                Start 1 min 54 sec routine <span aria-hidden="true">↗</span>
+              </button>
+            </section>
+          </div>
+          <p class="page-note">
+            Move gently. Stop if it hurts. Small breaks complement a more active
+            day.
+          </p>
+        </section>
+        <section id="page-library" class="page" hidden>
+          <header class="page-header">
+            <div>
+              <p class="eyebrow">THE MOVEMENT LIBRARY</p>
+              <h1>Find your feel-good.</h1>
+              <p class="muted subheading">
+                Ten gentle ways to change your posture and your pace.
+              </p>
+            </div>
+          </header>
+          <div
+            class="filter-row"
+            id="library-filters"
+            aria-label="Filter movements"
+          ></div>
+          <div class="exercise-grid" id="exercise-grid"></div>
+          <div class="research-note">
+            <span class="eyebrow">THOUGHTFUL MOVEMENT</span>
+            <p>
+              Adapted from NHS, Mayo Clinic, and HSE guidance. Short routines
+              and illustrations are a guide, not a prescription. Use a stable
+              chair without wheels. If you’re unsure whether a movement suits
+              you, ask a health professional.
+            </p>
+          </div>
+        </section>
+        <section id="page-settings" class="page" hidden>
+          <header class="page-header">
+            <div>
+              <p class="eyebrow">MAKE IT YOURS</p>
+              <h1>Your day. Your rhythm.</h1>
+              <p class="muted subheading">
+                Helpful reminders, with room for real life.
+              </p>
+            </div>
+          </header>
+          <form id="settings-form">
+            <section class="settings-card">
+              <h3>Your daily rhythm</h3>
+              <div class="setting-row">
+                <label for="interval"
+                  >Time between breaks<small
+                    >Choose a cadence that fits your work.</small
+                  ></label
+                >
+                <div class="input-pair">
+                  <input
+                    id="interval"
+                    type="number"
+                    min="5"
+                    max="240"
+                    required
+                  /><span>min</span>
+                </div>
+              </div>
+              <div class="setting-row">
+                <label for="daily-goal-input"
+                  >A gentle daily goal<small
+                    >Something to aim for, never catch up on.</small
+                  ></label
+                >
+                <div class="input-pair">
+                  <input
+                    id="daily-goal-input"
+                    type="number"
+                    min="1"
+                    max="50"
+                    required
+                  /><span>breaks</span>
+                </div>
+              </div>
+              <div class="setting-row">
+                <label for="focus-select"
+                  >Give a little extra attention to<small
+                    >Reminders rotate through these movements.</small
+                  ></label
+                ><select id="focus-select">
+                  <option value="all">A bit of everything</option>
+                  <option value="neck">Neck</option>
+                  <option value="shoulders">Shoulders</option>
+                  <option value="back">Back</option>
+                  <option value="wrists">Wrists</option>
+                  <option value="legs">Legs</option>
+                </select>
+              </div>
+            </section>
+            <section class="settings-card">
+              <h3>Space for focus</h3>
+              <div class="setting-row">
+                <label for="quiet-enabled"
+                  >Quiet hours<small
+                    >Let your off-hours stay yours.</small
+                  ></label
+                ><input id="quiet-enabled" type="checkbox" />
+              </div>
+              <div class="setting-row" id="quiet-times">
+                <label for="quiet-start">Quiet from</label
+                ><input id="quiet-start" type="time" required /><label
+                  for="quiet-end"
+                  >until</label
+                ><input id="quiet-end" type="time" required />
+              </div>
+              <div class="setting-row" data-mac-only>
+                <label for="fullscreen-enabled"
+                  >Show over fullscreen apps<small
+                    >A small card on your current Space. It won’t take keyboard
+                    focus.</small
+                  ></label
+                ><input id="fullscreen-enabled" type="checkbox" />
+              </div>
+              <p class="setting-note">
+                Stretch doesn’t detect calls or macOS Focus. Pause or snooze for
+                uninterrupted time. Automatic reminders wait while your Mac is
+                locked, asleep, or idle.
+              </p>
+            </section>
+            <section class="settings-card">
+              <h3>Feel at home</h3>
+              <div class="setting-row">
+                <label for="auto-start"
+                  >Open at login<small
+                    >Keep Stretch in your menu bar.</small
+                  ></label
+                ><input id="auto-start" type="checkbox" />
+              </div>
+              <div class="setting-row">
+                <label for="reduced-motion"
+                  >Still exercise illustrations<small
+                    >Keep the guide and timer, with less movement. Also respects
+                    your system setting.</small
+                  ></label
+                ><input id="reduced-motion" type="checkbox" />
+              </div>
+            </section>
+            <div class="settings-footer">
+              <button class="btn ghost" id="preview-btn" type="button">
+                Try a reminder</button
+              ><button class="btn primary" id="save-btn" type="submit">
+                Save preferences</button
+              ><span role="status" id="save-status"></span>
+            </div>
+          </form>
+          <footer class="page-note">
+            <span id="version-line">Stretch 2.0.0</span><span> · </span
+            ><button class="linklike" id="diagnostics-link">
+              Copy diagnostics
+            </button>
+          </footer>
+        </section>
+        <div id="toast" role="status" class="toast" hidden></div>
+      </main>
+    </div>
+    <script src="shared/exercises.js"></script>
+    <script src="shared/motion.js"></script>
+    <script src="renderer.js"></script>
+  </body>
 </html>

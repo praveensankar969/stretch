@@ -1,92 +1,87 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta http-equiv="Content-Security-Policy"
-        content="default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self'; font-src 'self'; img-src 'self' data:;">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Welcome to Stretch</title>
-  <link rel="stylesheet" href="assets/tokens.css">
-  <link rel="stylesheet" href="assets/fonts.css">
-  <link rel="stylesheet" href="style.css">
-  <link rel="stylesheet" href="onboarding.css">
-</head>
-<body class="app onb">
-  <div class="grain" aria-hidden="true"></div>
-
-  <main class="onb-shell">
-    <div class="onb-progress" aria-hidden="true">
-      <span class="dot on"></span><span class="dot"></span><span class="dot"></span>
-    </div>
-
-    <section class="slide" data-slide="1">
-      <div class="breath-ring"><span class="ring"></span><span class="ring r2"></span></div>
-      <h1 class="h-display">Small movements, <em>often.</em></h1>
-      <p class="lede">
-        Stretch lives quietly in your <span data-win>system tray</span><span data-mac>menu bar</span> and invites you to unfold
-        for one minute every so often. No alarms. No streaks-to-protect.
-        Just a gentle reminder that you have a body.
-      </p>
-      <button class="btn primary" data-next>Begin</button>
-    </section>
-
-    <section class="slide hidden" data-slide="2">
-      <h1 class="h-display">How often?</h1>
-      <p class="lede">Pick a cadence that won't break your focus. You can change it anytime.</p>
-      <div class="choice-row" role="radiogroup" aria-label="Interval">
-        <button class="choice" data-interval="20" role="radio" aria-checked="false">
-          <span class="choice-num">20</span><span class="choice-unit">min</span>
-          <span class="choice-label">Restless</span>
-        </button>
-        <button class="choice is-selected" data-interval="30" role="radio" aria-checked="true">
-          <span class="choice-num">30</span><span class="choice-unit">min</span>
-          <span class="choice-label">Balanced</span>
-        </button>
-        <button class="choice" data-interval="45" role="radio" aria-checked="false">
-          <span class="choice-num">45</span><span class="choice-unit">min</span>
-          <span class="choice-label">Deep focus</span>
-        </button>
-        <button class="choice" data-interval="60" role="radio" aria-checked="false">
-          <span class="choice-num">60</span><span class="choice-unit">min</span>
-          <span class="choice-label">Hourly</span>
-        </button>
-      </div>
-      <div class="onb-actions">
-        <button class="btn ghost" data-back>Back</button>
-        <button class="btn primary" data-next>Continue</button>
-      </div>
-    </section>
-
-    <section class="slide hidden" data-slide="3">
-      <h1 class="h-display">Quiet hours</h1>
-      <p class="lede">
-        No reminders after hours<span data-win> or during Windows Focus Assist</span>. This is on by default —
-        you can turn it off later.
-      </p>
-      <div class="row-quiet onb-quiet">
-        <div class="input-pair">
-          <label for="q-start" class="mini">From</label>
-          <input id="q-start" type="time" value="18:00">
-        </div>
-        <div class="input-pair">
-          <label for="q-end" class="mini">Until</label>
-          <input id="q-end" type="time" value="09:00">
-        </div>
-      </div>
-      <label class="pill-toggle">
-        <input id="q-autostart" type="checkbox" checked>
-        <span>Launch at login</span>
-      </label>
-      <div class="onb-actions">
-        <button class="btn ghost" data-back>Back</button>
-        <button class="btn primary" id="finish-btn">Finish</button>
-      </div>
-      <p class="tiny-note">
-        It will appear in the <span data-win>system tray — the small icons near your clock</span><span data-mac>menu bar — the icons at the top-right of your screen</span>.
-      </p>
-    </section>
-  </main>
-
-  <script src="onboarding.js"></script>
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self'; font-src 'self'; img-src 'self' data:"
+    />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Welcome to Stretch</title>
+    <link rel="stylesheet" href="assets/fonts.css" />
+    <link rel="stylesheet" href="assets/tokens.css" />
+    <link rel="stylesheet" href="onboarding.css" />
+  </head>
+  <body>
+    <div class="titlebar"></div>
+    <main class="welcome">
+      <section class="welcome-art">
+        <a class="brand"
+          ><span class="brand-mark"></span
+          ><span class="brand-word">Stretch</span></a
+        >
+        <div id="welcome-figure" class="figure"></div>
+        <p>A little room to move.</p>
+        <span>SMALL MOMENTS. BETTER DAYS.</span>
+      </section>
+      <section class="welcome-copy">
+        <p class="eyebrow">WELCOME TO STRETCH 2.0</p>
+        <h1>Your body called.<br /><em>Take a little break.</em></h1>
+        <p class="lede">
+          Gentle movements. Thoughtful reminders. A quiet place in your menu
+          bar, just for you.
+        </p>
+        <form id="welcome-form">
+          <label for="cadence">Find your rhythm</label>
+          <div class="cadences" id="cadence">
+            <label
+              ><input type="radio" name="interval" value="20" /><span
+                >20<small>min</small></span
+              ></label
+            ><label
+              ><input type="radio" name="interval" value="30" checked /><span
+                >30<small>min</small></span
+              ></label
+            ><label
+              ><input type="radio" name="interval" value="45" /><span
+                >45<small>min</small></span
+              ></label
+            ><label
+              ><input type="radio" name="interval" value="60" /><span
+                >60<small>min</small></span
+              ></label
+            >
+          </div>
+          <p class="form-hint">
+            A starting point, not a rule. Change it anytime.
+          </p>
+          <div class="quiet-label">
+            <label for="quiet-enabled">Keep evenings quiet</label
+            ><input id="quiet-enabled" type="checkbox" checked />
+          </div>
+          <div class="quiet-times">
+            <label for="q-start">From</label
+            ><input id="q-start" type="time" value="18:00" required /><label
+              for="q-end"
+              >until</label
+            ><input id="q-end" type="time" value="09:00" required />
+          </div>
+          <label class="login-label"
+            ><input id="q-autostart" type="checkbox" checked /> Open Stretch
+            when I log in</label
+          ><button class="btn primary" id="finish-btn">
+            Make a little room <span aria-hidden="true">↗</span>
+          </button>
+          <p id="onboarding-status" role="status"></p>
+        </form>
+        <p class="welcome-note">
+          No account. No tracking. Just you.<br />Move within a comfortable
+          range. Stop if it hurts.
+        </p>
+      </section>
+    </main>
+    <script src="shared/exercises.js"></script>
+    <script src="shared/motion.js"></script>
+    <script src="onboarding.js"></script>
+  </body>
 </html>

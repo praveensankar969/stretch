@@ -2,3 +2,5 @@ node_modules
 dist
 build
 SKILLS.md
+artifacts/
+_site/

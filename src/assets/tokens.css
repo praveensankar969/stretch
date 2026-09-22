@@ -1,81 +1,221 @@
-/*
- * Morning Light — the only palette, type, and motion source for Stretch.
- * Import this first from every stylesheet. Do not redeclare tokens.
- */
-
 :root {
-  /* ── Palette ─────────────────────────────────────────────────────── */
-  --ink-900: #17130F;
-  --ink-800: #1F1A15;
-  --ink-700: #2A241E;
-  --ink-500: #4A4139;
-  --paper-50: #F6F0E6;
-  --paper-100: #F2EADF;
-  --paper-200: #E6DDCF;
-  --paper-500: #B8A98F;
-  --brass-500: #8A7458;
-  --brass-700: #6A5940;
-  --terracotta-500: #D9734A;
-  --terracotta-600: #B85D37;
-  --exhale-500: #6E8AA6;
-
-  /* Semantic aliases (dark — the app default) */
-  --bg: var(--ink-900);
-  --bg-raised: var(--ink-800);
-  --bg-sunk: #100C08;
-  --fg: var(--paper-100);
-  --fg-muted: #B8A98F;
-  --hairline: rgba(242, 234, 223, 0.08);
-  --hairline-strong: rgba(242, 234, 223, 0.16);
-  --accent: var(--terracotta-500);
-  --accent-hover: var(--terracotta-600);
-  --exhale: var(--exhale-500);
-
-  /* ── Type ────────────────────────────────────────────────────────── */
-  --font-display: 'Fraunces', 'Iowan Old Style', 'Palatino Linotype', Georgia, serif;
-  --font-sans: 'Instrument Sans', 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
-
-  --tracking-tight: -0.02em;
-  --tracking-normal: 0em;
-  --tracking-loose: 0.12em;
-
-  /* ── Rhythm ──────────────────────────────────────────────────────── */
-  --s-1: 0.25rem;
-  --s-2: 0.5rem;
-  --s-3: 0.75rem;
-  --s-4: 1rem;
-  --s-5: 1.5rem;
-  --s-6: 2rem;
-  --s-7: 3rem;
-  --s-8: 4rem;
-
-  --radius-sm: 6px;
-  --radius-md: 12px;
-  --radius-lg: 20px;
+  color-scheme: light;
+  --bg: #f6f7f2;
+  --bg-raised: #fffefa;
+  --bg-sunk: #eaeee5;
+  --fg: #243e35;
+  --fg-muted: #687369;
+  --hairline: #dde3d7;
+  --hairline-strong: #bdc8b9;
+  --accent: #315c49;
+  --accent-hover: #224b3a;
+  --mint: #e2ecdb;
+  --peach: #f1dfcc;
+  --paper-100: #f6f7f2;
+  --terracotta-500: #ba704f;
+  --font-display: "Fraunces", "Iowan Old Style", Georgia, serif;
+  --font-sans: "Instrument Sans", -apple-system, BlinkMacSystemFont, sans-serif;
+  --radius-sm: 8px;
+  --radius-md: 16px;
+  --radius-lg: 24px;
   --radius-pill: 999px;
-
-  /* ── Motion — breath cadence ─────────────────────────────────────── */
-  --inhale: 4s;
-  --exhale-dur: 6s;
-  --ease-breath: cubic-bezier(0.45, 0, 0.55, 1);
   --ease-out-soft: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-breath: cubic-bezier(0.45, 0, 0.55, 1);
 }
-
-/* Light variant (marketing site) */
-.theme-paper {
-  --bg: var(--paper-100);
-  --bg-raised: var(--paper-50);
-  --bg-sunk: var(--paper-200);
-  --fg: var(--ink-900);
-  --fg-muted: var(--brass-700);
-  --hairline: rgba(23, 19, 15, 0.10);
-  --hairline-strong: rgba(23, 19, 15, 0.22);
+* {
+  box-sizing: border-box;
 }
-
-/* Reduced motion honours the OS */
+[hidden] {
+  display: none !important;
+}
+html,
+body {
+  margin: 0;
+  min-height: 100%;
+}
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font: 14px/1.5 var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+button,
+input,
+select {
+  font: inherit;
+}
+button,
+a,
+input,
+select {
+  -webkit-app-region: no-drag;
+}
+button,
+a {
+  -webkit-tap-highlight-color: transparent;
+}
+button {
+  color: inherit;
+  cursor: pointer;
+}
+button:disabled {
+  cursor: default;
+  opacity: 0.55;
+}
+a {
+  color: inherit;
+  text-underline-offset: 3px;
+}
+:focus-visible {
+  outline: 3px solid #b27b41;
+  outline-offset: 4px;
+}
+button,
+input,
+select {
+  border-radius: 10px;
+}
+h1,
+h2,
+h3,
+p {
+  margin: 0;
+}
+h1,
+h2,
+.h-display {
+  font-family: var(--font-display);
+  font-weight: 450;
+  letter-spacing: -0.045em;
+  line-height: 1.12;
+}
+h1 {
+  font-size: 46px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 16px;
+  font-weight: 550;
+}
+button {
+  border: 0;
+}
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 13px 21px;
+  min-height: 46px;
+  font-weight: 550;
+  border: 1px solid transparent;
+  text-decoration: none;
+  transition:
+    background 0.18s,
+    transform 0.18s;
+  border-radius: 12px;
+}
+.btn:active {
+  transform: translateY(1px);
+}
+.btn.primary {
+  background: var(--accent);
+  color: #fffefa;
+}
+.btn.primary:hover {
+  background: var(--accent-hover);
+}
+.btn.ghost {
+  border-color: var(--hairline);
+  background: transparent;
+}
+.btn.ghost:hover {
+  background: var(--bg-sunk);
+}
+.linklike {
+  padding: 0;
+  background: none;
+  color: var(--fg-muted);
+  font-size: 12px;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.eyebrow {
+  text-transform: uppercase;
+  font-size: 10px;
+  font-weight: 650;
+  letter-spacing: 0.16em;
+}
+.muted {
+  color: var(--fg-muted);
+}
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  text-decoration: none;
+}
+.brand-word {
+  font-family: var(--font-display);
+  font-size: 25px;
+  letter-spacing: -0.05em;
+}
+.brand-mark {
+  display: inline-block;
+  width: 27px;
+  height: 27px;
+  background: var(--accent);
+  border-radius: 50% 50% 6px 50%;
+  position: relative;
+  transform: rotate(-15deg);
+}
+.brand-mark:before,
+.brand-mark:after {
+  content: "";
+  position: absolute;
+  width: 15px;
+  height: 2px;
+  background: var(--bg);
+  top: 12px;
+  left: 6px;
+  border-radius: 2px;
+  transform: rotate(-45deg);
+}
+.brand-mark:after {
+  transform: rotate(45deg);
+}
+.tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 10px;
+  border-radius: 20px;
+  background: #ffffff70;
+  color: var(--fg-muted);
+  font-size: 10px;
+  letter-spacing: 0.02em;
+}
+input[type="number"],
+input[type="time"],
+select {
+  background: var(--bg-raised);
+  border: 1px solid var(--hairline-strong);
+  padding: 9px 10px;
+  color: var(--fg);
+}
+input[type="checkbox"] {
+  accent-color: var(--accent);
+  width: 18px;
+  height: 18px;
+}
 @media (prefers-reduced-motion: reduce) {
-  :root {
-    --inhale: 0.01s;
-    --exhale-dur: 0.01s;
+  *,
+  *:before,
+  *:after {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
   }
 }

@@ -1,5 +1,4 @@
-'use strict';
-
+"use strict";
 const {
   app,
   BrowserWindow,
@@ -10,643 +9,538 @@ const {
   powerMonitor,
   shell,
   clipboard,
-  nativeImage
-} = require('electron');
-
-const path = require('path');
-const fs = require('fs');
-const os = require('os');
-
-if (process.platform === 'darwin') {
-  app.setActivationPolicy('accessory');
-}
-
-const gotLock = app.requestSingleInstanceLock();
-if (!gotLock) {
+  nativeImage,
+} = require("electron");
+const path = require("path");
+const fs = require("fs");
+const { performance } = require("perf_hooks");
+const { randomUUID } = require("crypto");
+const {
+  migrateConfig,
+  sanitizePatch,
+  dateKey,
+  streakFor,
+  cleanHistory,
+} = require("./src/shared/config");
+const { ReminderScheduler } = require("./src/shared/scheduler");
+const { EXERCISES, SOURCES, pickExercise } = require("./src/shared/exercises");
+app.name = "Stretch";
+if (!app.isPackaged && process.env.STRETCH_TEST_USER_DATA)
+  app.setPath("userData", process.env.STRETCH_TEST_USER_DATA);
+if (process.platform === "darwin") app.setActivationPolicy("accessory");
+if (!app.requestSingleInstanceLock()) {
   app.quit();
   process.exit(0);
 }
-
-const DEFAULT_CONFIG = {
-  version: 2,
-  interval: 30,               // minutes between reminders
-  dailyGoal: 8,               // stretches per day
-  autoStart: true,
-  remindersEnabled: true,
-  quietHoursEnabled: true,
-  quietStart: '18:00',        // 24h HH:MM — local time
-  quietEnd: '09:00',
-  respectFocusAssist: true,
-  notifyBeforeSeconds: 0,     // 0 = no pre-notification, else e.g. 60
-  soundEnabled: false,
-  onboardingDone: false,
-  history: {},                // { 'YYYY-MM-DD': count }
-  streak: 0,
-  streakLastDay: null,
-  lastExerciseId: null
-};
-
-const configPath = path.join(app.getPath('userData'), 'config.json');
-let config = { ...DEFAULT_CONFIG };
-
-function todayKey() {
-  const d = new Date();
-  const y = d.getFullYear();
-  const m = String(d.getMonth() + 1).padStart(2, '0');
-  const day = String(d.getDate()).padStart(2, '0');
-  return `${y}-${m}-${day}`;
-}
-
-function migrateConfig(raw) {
-  const next = { ...DEFAULT_CONFIG, ...raw };
-  if (!next.version || next.version < 2) {
-    if (typeof raw.stretchCount === 'number' && raw.stretchCount > 0) {
-      next.history = next.history || {};
-      next.history[todayKey()] = raw.stretchCount;
-    }
-    delete next.stretchCount;
-    next.version = 2;
-  }
-  return next;
-}
-
-function loadConfig() {
-  try {
-    if (fs.existsSync(configPath)) {
-      const data = fs.readFileSync(configPath, 'utf-8');
-      config = migrateConfig(JSON.parse(data));
-    }
-  } catch (err) {
-    console.error('Failed to load config, starting fresh', err);
-    config = { ...DEFAULT_CONFIG };
-  }
-  applyAutoStart();
-}
-
-function saveConfig() {
-  try {
-    fs.writeFileSync(configPath, JSON.stringify(config, null, 2));
-  } catch (err) {
-    console.error('Failed to save config', err);
-  }
-}
-
-const LEGACY_LOGIN_ITEM_NAMES = ['electron.app.Electron', 'com.antigravity.stretch'];
-
-function cleanupLegacyLoginItems() {
-  if (process.platform !== 'win32') return;
-  for (const name of LEGACY_LOGIN_ITEM_NAMES) {
-    try {
-      app.setLoginItemSettings({ openAtLogin: false, name });
-    } catch (err) {
-      console.warn('cleanupLegacyLoginItems failed for', name, err?.message);
-    }
-  }
-}
-
-function applyAutoStart() {
-  if (!app.isPackaged) return;
-  try {
-    const opts = { openAtLogin: !!config.autoStart };
-    if (process.platform === 'win32') {
-      opts.path = app.getPath('exe');
-      opts.args = ['--hidden'];
-    }
-    app.setLoginItemSettings(opts);
-  } catch (err) {
-    console.warn('setLoginItemSettings failed', err);
-  }
-}
-
-let mainWindow = null;
-let overlayWindow = null;
-let tray = null;
-
-const APP_ICO = path.join(__dirname, 'src', 'assets', 'icon.ico');
-const APP_TRAY_PNG = path.join(__dirname, 'src', 'assets', 'tray.png');
-const LEGACY_LOGO = path.join(__dirname, 'logo.png');
-const APP_TRAY_TEMPLATE = path.join(__dirname, 'src', 'assets', 'tray-Template.png');
-const APP_TRAY_TEMPLATE_2X = path.join(__dirname, 'src', 'assets', 'tray-Template@2x.png');
-
-function iconPath() {
-  if (process.platform === 'win32' && fs.existsSync(APP_ICO)) return APP_ICO;
-  if (fs.existsSync(APP_TRAY_PNG)) return APP_TRAY_PNG;
-  if (fs.existsSync(LEGACY_LOGO)) return LEGACY_LOGO;
-  return APP_ICO;
-}
-
-const baseWebPreferences = {
-  preload: path.join(__dirname, 'src', 'preload.js'),
+const configPath = path.join(app.getPath("userData"), "config.json");
+let config = migrateConfig();
+let mainWindow, overlayWindow, tray, session, scheduler, heartbeat;
+let immersive = false;
+const webPreferences = {
+  preload: path.join(__dirname, "src/preload.js"),
   contextIsolation: true,
   nodeIntegration: false,
   sandbox: true,
-  spellcheck: false
+  spellcheck: false,
 };
-
-function createMainWindow({ show = true } = {}) {
-  if (mainWindow && !mainWindow.isDestroyed()) {
-    if (show) {
-      mainWindow.show();
-    }
-    return mainWindow;
-  }
-
-  const isMac = process.platform === 'darwin';
-  mainWindow = new BrowserWindow({
-    width: 480,
-    height: isMac ? 740 : 680,
-    minHeight: 600,
-    minWidth: 480,
-    show: false,
-    resizable: isMac,
-    maximizable: false,
-    fullscreenable: false,
-    icon: iconPath(),
-    backgroundColor: '#17130F',
-    autoHideMenuBar: true,
-    ...(isMac ? { titleBarStyle: 'default' } : {}),
-    webPreferences: baseWebPreferences
-  });
-
-  const entry = config.onboardingDone ? 'index.html' : 'onboarding.html';
-  mainWindow.loadFile(path.join(__dirname, 'src', entry));
-  mainWindow.once('ready-to-show', () => {
-    if (show) {
-      mainWindow.show();
-      mainWindow.focus();
-    }
-  });
-
-  mainWindow.on('close', (e) => {
-    if (!app.isQuitting) {
-      e.preventDefault();
-      mainWindow.hide();
-    }
-  });
-
-  mainWindow.on('closed', () => {
-    mainWindow = null;
-  });
-
-  return mainWindow;
+const asset = (name) => path.join(__dirname, "src/assets", name);
+function saveConfig() {
+  fs.mkdirSync(path.dirname(configPath), { recursive: true });
+  fs.writeFileSync(configPath + ".tmp", JSON.stringify(config, null, 2));
+  fs.renameSync(configPath + ".tmp", configPath);
 }
-
-function createOverlayWindow(exerciseId, { preview = false } = {}) {
-  if (overlayWindow && !overlayWindow.isDestroyed()) {
-    overlayWindow.focus();
-    return;
-  }
-
-  const display = screen.getDisplayNearestPoint(screen.getCursorScreenPoint());
-  const { x, y, width, height } = display.workArea;
-
-  overlayWindow = new BrowserWindow({
-    x,
-    y,
-    width,
-    height,
-    frame: false,
-    transparent: true,
-    resizable: false,
-    movable: false,
-    fullscreenable: false,
-    hasShadow: false,
-    skipTaskbar: true,
-    alwaysOnTop: true,
-    focusable: true,
-    show: false,
-    backgroundColor: '#00000000',
-    icon: iconPath(),
-    webPreferences: {
-      ...baseWebPreferences,
-      backgroundThrottling: false
-    }
-  });
-
-  overlayWindow.setAlwaysOnTop(true, 'screen-saver');
-  overlayWindow.setVisibleOnAllWorkspaces(true, { visibleOnFullScreen: false });
-  overlayWindow.loadFile(path.join(__dirname, 'src', 'overlay.html'));
-
-  overlayWindow.once('ready-to-show', () => {
-    overlayWindow.show();
-    overlayWindow.focus();
-    overlayWindow.webContents.send('overlay:show', {
-      exerciseId,
-      dailyGoal: config.dailyGoal,
-      todayCount: config.history[todayKey()] || 0,
-      streak: config.streak,
-      preview
-    });
-  });
-
-  overlayWindow.on('closed', () => {
-    overlayWindow = null;
-  });
-}
-
-let reminderTimer = null;
-let snoozeTimer = null;
-let nextFireAt = null;
-
-function isQuietNow() {
-  if (!config.quietHoursEnabled) return false;
-  const now = new Date();
-  const [sH, sM] = (config.quietStart || '18:00').split(':').map(Number);
-  const [eH, eM] = (config.quietEnd || '09:00').split(':').map(Number);
-  const minNow = now.getHours() * 60 + now.getMinutes();
-  const minStart = sH * 60 + sM;
-  const minEnd = eH * 60 + eM;
-  if (minStart === minEnd) return false;
-  if (minStart < minEnd) return minNow >= minStart && minNow < minEnd;
-  return minNow >= minStart || minNow < minEnd;
-}
-
-function isFocusAssistOn() {
-  if (process.platform !== 'win32') return false;
+function persist() {
   try {
-    const { execSync } = require('child_process');
-    const out = execSync(
-      'powershell -NoProfile -Command "(Get-ItemProperty -Path \'HKCU:\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\CloudStore\\Store\\Cache\\DefaultAccount\\$windows.data.notifications.quiethourssettings\\Current\').Data | Out-String"',
-      { timeout: 800, stdio: ['ignore', 'pipe', 'ignore'] }
-    ).toString();
-    return /ALARMS_ONLY|PRIORITY_ONLY/i.test(out);
-  } catch {
-    return false;
+    saveConfig();
+  } catch (error) {
+    console.error("Could not save settings:", error);
   }
 }
-
-function isUserAwayOrBusy() {
-  if (powerMonitor.getSystemIdleTime() > 60 * 10) return true; // 10 min idle
-  const focused = BrowserWindow.getFocusedWindow();
-  if (focused && focused.isFullScreen()) return true;
-  if (config.respectFocusAssist && isFocusAssistOn()) return true;
-  return false;
-}
-
-function scheduleNext() {
-  clearTimeout(reminderTimer);
-  clearTimeout(snoozeTimer);
-  reminderTimer = null;
-  if (!config.remindersEnabled) {
-    nextFireAt = null;
-    updateTrayMenu();
-    return;
-  }
-  const ms = Math.max(1, Number(config.interval) || 30) * 60 * 1000;
-  nextFireAt = Date.now() + ms;
-  reminderTimer = setTimeout(onTick, ms);
-  updateTrayMenu();
-}
-
-function onTick() {
-  if (!config.remindersEnabled) return;
-
-  if (isQuietNow() || isUserAwayOrBusy()) {
-    reminderTimer = setTimeout(onTick, 2 * 60 * 1000);
-    nextFireAt = Date.now() + 2 * 60 * 1000;
-    updateTrayMenu();
-    return;
-  }
-
-  const { pickExercise } = require('./src/shared/exercises');
-  const next = pickExercise(config.lastExerciseId);
-  config.lastExerciseId = next.id;
-  saveConfig();
-
-  createOverlayWindow(next.id);
-  scheduleNext();
-}
-
-function snoozeFor(minutes) {
-  clearTimeout(reminderTimer);
-  clearTimeout(snoozeTimer);
-  reminderTimer = null;
-  if (overlayWindow && !overlayWindow.isDestroyed()) overlayWindow.close();
-  const ms = minutes * 60 * 1000;
-  nextFireAt = Date.now() + ms;
-  snoozeTimer = setTimeout(() => {
-    onTick();
-  }, ms);
-  updateTrayMenu();
-  sendConfigToRenderers();
-}
-
-function trimHistory() {
-  const keep = 365;
-  const keys = Object.keys(config.history).sort();
-  if (keys.length <= keep) return;
-  const drop = keys.slice(0, keys.length - keep);
-  for (const k of drop) delete config.history[k];
-}
-
-function yesterdayKey() {
-  const d = new Date();
-  d.setDate(d.getDate() - 1);
-  const y = d.getFullYear();
-  const m = String(d.getMonth() + 1).padStart(2, '0');
-  const day = String(d.getDate()).padStart(2, '0');
-  return `${y}-${m}-${day}`;
-}
-
-function recordStretchDone() {
-  const today = todayKey();
-  const yesterday = yesterdayKey();
-
-  config.history[today] = (config.history[today] || 0) + 1;
-  trimHistory();
-
-  if (config.streakLastDay === today) {
-  } else if (config.streakLastDay === yesterday) {
-    config.streak = (config.streak || 0) + 1;
-  } else {
-    config.streak = 1;
-  }
-  config.streakLastDay = today;
-
-  saveConfig();
-  sendConfigToRenderers();
-}
-
-function sendConfigToRenderers() {
-  const snapshot = publicConfig();
-  for (const w of BrowserWindow.getAllWindows()) {
-    if (!w.isDestroyed()) {
-      w.webContents.send('config-updated', snapshot);
-    }
+function applyAutoStart() {
+  if (!app.isPackaged) return;
+  try {
+    app.setLoginItemSettings({
+      openAtLogin: config.autoStart,
+      ...(process.platform === "win32"
+        ? { path: app.getPath("exe"), args: ["--hidden"] }
+        : {}),
+    });
+  } catch (error) {
+    console.warn("Login item:", error.message);
   }
 }
-
 function publicConfig() {
   return {
     ...config,
-    today: config.history[todayKey()] || 0,
-    nextFireAt,
-    appVersion: app.getVersion()
+    ...(scheduler?.snapshot() || {}),
+    today: config.history[dateKey()] || 0,
+    todayMinutes: config.minutesHistory[dateKey()] || 0,
+    streak: streakFor(config.history),
+    appVersion: app.getVersion(),
   };
 }
-
-function trayImage() {
-  if (process.platform === 'darwin') {
-    for (const p of [APP_TRAY_TEMPLATE_2X, APP_TRAY_TEMPLATE, APP_TRAY_PNG]) {
-      if (!fs.existsSync(p)) continue;
-      const img = nativeImage.createFromPath(p);
-      if (!img.isEmpty()) {
-        img.setTemplateImage(true);
-        return img;
-      }
+function broadcast() {
+  for (const win of BrowserWindow.getAllWindows())
+    if (!win.isDestroyed())
+      win.webContents.send("config-updated", publicConfig());
+  updateTray();
+}
+function secureWindow(win) {
+  win.webContents.setWindowOpenHandler(() => ({ action: "deny" }));
+  win.webContents.on("will-navigate", (event) => event.preventDefault());
+}
+function createMainWindow({ show = true } = {}) {
+  if (mainWindow && !mainWindow.isDestroyed()) {
+    if (show) {
+      if (mainWindow.isMinimized()) mainWindow.restore();
+      mainWindow.show();
+      mainWindow.focus();
     }
+    return mainWindow;
   }
-
-  const candidates = process.platform === 'win32'
-    ? [APP_ICO, APP_TRAY_PNG, LEGACY_LOGO]
-    : [APP_TRAY_PNG, LEGACY_LOGO];
-  for (const p of candidates) {
-    if (!fs.existsSync(p)) continue;
-    const img = nativeImage.createFromPath(p);
-    if (!img.isEmpty()) return img;
-    console.warn('tray icon decoded empty from', p);
-  }
-
-  console.error('tray icon: no usable image found');
-  return nativeImage.createEmpty();
+  mainWindow = new BrowserWindow({
+    width: 1080,
+    height: 790,
+    minWidth: 740,
+    minHeight: 600,
+    show: false,
+    backgroundColor: "#f6f7f2",
+    title: "Stretch",
+    ...(process.platform === "darwin"
+      ? { titleBarStyle: "hiddenInset", trafficLightPosition: { x: 20, y: 20 } }
+      : { autoHideMenuBar: true }),
+    webPreferences,
+  });
+  secureWindow(mainWindow);
+  mainWindow.loadFile(
+    path.join(
+      __dirname,
+      "src",
+      config.onboardingDone ? "index.html" : "onboarding.html",
+    ),
+  );
+  mainWindow.once("ready-to-show", () => {
+    if (show) mainWindow.show();
+  });
+  mainWindow.on("close", (event) => {
+    if (!app.isQuitting) {
+      event.preventDefault();
+      mainWindow.hide();
+    }
+  });
+  mainWindow.on("closed", () => {
+    mainWindow = null;
+  });
+  return mainWindow;
 }
-
+function overlayBounds() {
+  const display =
+    overlayWindow && !overlayWindow.isDestroyed()
+      ? screen.getDisplayMatching(overlayWindow.getBounds())
+      : screen.getDisplayNearestPoint(screen.getCursorScreenPoint());
+  if (immersive) return display.bounds;
+  const { x, y, width, height } = display.workArea;
+  const w = Math.min(420, width - 32),
+    h = Math.min(700, height - 32);
+  return {
+    x: x + width - w - 20,
+    y: y + Math.round((height - h) / 2),
+    width: w,
+    height: h,
+  };
+}
+function overlayPayload() {
+  return session
+    ? {
+        id: session.id,
+        exerciseIds: session.exerciseIds,
+        preview: session.preview,
+        automatic: session.automatic,
+        reducedMotion: config.reducedMotion,
+        todayCount: config.history[dateKey()] || 0,
+        dailyGoal: config.dailyGoal,
+        immersive,
+      }
+    : null;
+}
+function openSession(ids, { preview = false, automatic = false } = {}) {
+  if (overlayWindow && !overlayWindow.isDestroyed()) {
+    if (!automatic) {
+      overlayWindow.show();
+      overlayWindow.focus();
+    }
+    return;
+  }
+  const selected = pickExercise(
+    config.lastExerciseId,
+    config.focus,
+    config.recentExercises,
+  );
+  const exerciseIds = Array.isArray(ids)
+    ? ids.filter((id) => EXERCISES.some((ex) => ex.id === id)).slice(0, 5)
+    : [selected.id];
+  if (!exerciseIds.length) return;
+  session = {
+    id: randomUUID(),
+    exerciseIds,
+    preview,
+    automatic,
+    elapsed: 0,
+    runningAt: null,
+    credited: false,
+  };
+  scheduler.begin();
+  immersive = false;
+  const win = (overlayWindow = new BrowserWindow({
+    ...overlayBounds(),
+    show: false,
+    frame: false,
+    transparent: false,
+    backgroundColor: "#f9faf5",
+    resizable: false,
+    maximizable: false,
+    fullscreenable: false,
+    skipTaskbar: true,
+    alwaysOnTop: true,
+    hasShadow: true,
+    ...(process.platform === "darwin" ? { type: "panel" } : {}),
+    webPreferences: { ...webPreferences, backgroundThrottling: false },
+  }));
+  secureWindow(win);
+  win.setAlwaysOnTop(true, "floating");
+  win.setVisibleOnAllWorkspaces(true, {
+    visibleOnFullScreen: config.showOverFullscreen,
+    skipTransformProcessType: true,
+  });
+  win.loadFile(path.join(__dirname, "src/overlay.html"));
+  win.once("ready-to-show", () => {
+    if (win.isDestroyed()) return;
+    if (automatic) win.showInactive();
+    else win.show();
+  });
+  win.on("closed", () => {
+    if (overlayWindow !== win) return;
+    const snoozing = session?.closeDisposition === "snooze";
+    overlayWindow = null;
+    session = null;
+    immersive = false;
+    if (!snoozing) scheduler.finish();
+    else broadcast();
+  });
+  win.webContents.on("render-process-gone", () => {
+    if (!win.isDestroyed()) win.close();
+  });
+}
+function setRunning(running) {
+  if (!session) return;
+  if (!running && session.runningAt !== null) {
+    session.elapsed += (performance.now() - session.runningAt) / 1000;
+    session.runningAt = null;
+  }
+  if (running && session.runningAt === null && !scheduler.blockers.size)
+    session.runningAt = performance.now();
+}
+function closeSession() {
+  if (!overlayWindow || overlayWindow.isDestroyed()) return;
+  overlayWindow.close();
+}
+function snooze(minutes) {
+  if (session) session.closeDisposition = "snooze";
+  scheduler.snooze(minutes);
+  closeSession();
+}
+function trusted(event, win) {
+  return (
+    win &&
+    !win.isDestroyed() &&
+    event.sender === win.webContents &&
+    event.senderFrame === win.webContents.mainFrame
+  );
+}
 function humanNext() {
-  if (!nextFireAt) return 'Reminders off';
-  const ms = nextFireAt - Date.now();
-  if (ms <= 0) return 'Any moment';
-  const m = Math.round(ms / 60000);
-  return m < 1 ? 'In under a minute' : `Next in ${m} min`;
+  const state = scheduler?.snapshot();
+  const labels = {
+    setup: "Welcome to Stretch",
+    paused: "Reminders paused",
+    quiet: "Quiet hours",
+    away: "Away from your desk",
+    session: "Time for yourself",
+  };
+  if (!state || labels[state.reminderState])
+    return labels[state?.reminderState] || "Stretch";
+  const minutes = Math.max(
+    1,
+    Math.ceil((state.nextFireAt - Date.now()) / 60000),
+  );
+  return `${state.reminderState === "snoozed" ? "Snoozed · next" : "Next break"} in ${minutes} min`;
 }
-
-function updateTrayMenu() {
+function updateTray() {
   if (!tray || tray.isDestroyed()) return;
   const menu = Menu.buildFromTemplate([
     { label: humanNext(), enabled: false },
-    { type: 'separator' },
-    { label: 'Open Stretch', click: () => createMainWindow({ show: true }) },
+    { label: `${config.history[dateKey()] || 0} breaks today`, enabled: false },
+    { type: "separator" },
+    { label: "Open Stretch", click: () => createMainWindow() },
+    { label: "Stretch now", click: () => openSession() },
     {
-      label: 'Reminders',
-      type: 'checkbox',
+      label: "Reminders",
+      type: "checkbox",
       checked: config.remindersEnabled,
       click: (item) => {
         config.remindersEnabled = item.checked;
-        saveConfig();
-        scheduleNext();
-        sendConfigToRenderers();
-      }
+        persist();
+        scheduler.reset();
+      },
     },
     {
-      label: 'Snooze 15 min',
+      label: "Snooze",
       enabled: config.remindersEnabled,
-      click: () => snoozeFor(15)
+      submenu: [5, 15, 60].map((m) => ({
+        label: `${m} minutes`,
+        click: () => snooze(m),
+      })),
     },
-    {
-      label: 'Snooze 1 hour',
-      enabled: config.remindersEnabled,
-      click: () => snoozeFor(60)
-    },
-    { type: 'separator' },
-    {
-      label: 'Stretch now',
-      click: () => onTick()
-    },
-    { type: 'separator' },
-    {
-      label: 'Quit Stretch',
-      click: () => {
-        app.isQuitting = true;
-        app.quit();
-      }
-    }
+    { type: "separator" },
+    { label: "Quit Stretch", click: () => app.quit() },
   ]);
-  if (process.platform !== 'darwin') {
-    tray.setContextMenu(menu);
-  } else {
-    tray._cachedMenu = menu;
-  }
-  tray.setToolTip(`Stretch — ${humanNext()}`);
+  tray.setToolTip(`Stretch · ${humanNext()}`);
+  if (process.platform === "darwin") tray.menu = menu;
+  else tray.setContextMenu(menu);
 }
-
 function createTray() {
-  tray = new Tray(trayImage());
-  tray.on('click', () => createMainWindow({ show: true }));
-  if (process.platform === 'darwin') {
-    tray.on('right-click', () => {
-      updateTrayMenu();
-      if (tray._cachedMenu) tray.popUpContextMenu(tray._cachedMenu);
-    });
-  } else {
-    tray.on('double-click', () => createMainWindow({ show: true }));
-  }
-  updateTrayMenu();
-  setInterval(updateTrayMenu, 60 * 1000);
+  let icon = nativeImage.createFromPath(
+    asset(process.platform === "darwin" ? "tray-Template.png" : "tray.png"),
+  );
+  if (icon.isEmpty())
+    icon = nativeImage
+      .createFromPath(path.join(__dirname, "logo.png"))
+      .resize({ width: 18, height: 18 });
+  if (process.platform === "darwin") icon.setTemplateImage(true);
+  tray = new Tray(icon);
+  tray.on("click", () => createMainWindow());
+  tray.on("right-click", () => {
+    updateTray();
+    if (tray.menu) tray.popUpContextMenu(tray.menu);
+  });
+  updateTray();
 }
 
-ipcMain.handle('config:get', () => publicConfig());
-
-ipcMain.handle('config:update', (_e, patch) => {
-  if (!patch || typeof patch !== 'object') return publicConfig();
-  const allowed = [
-    'interval',
-    'dailyGoal',
-    'autoStart',
-    'remindersEnabled',
-    'quietHoursEnabled',
-    'quietStart',
-    'quietEnd',
-    'respectFocusAssist',
-    'notifyBeforeSeconds',
-    'soundEnabled'
-  ];
-  for (const k of allowed) {
-    if (k in patch) config[k] = patch[k];
+ipcMain.handle("config:get", () => publicConfig());
+ipcMain.handle("config:update", (event, patch) => {
+  if (!trusted(event, mainWindow))
+    throw new Error("Unsupported settings sender");
+  const previous = config;
+  config = { ...config, ...sanitizePatch(patch) };
+  try {
+    saveConfig();
+  } catch (error) {
+    config = previous;
+    throw error;
   }
-  if (typeof config.interval === 'number') {
-    config.interval = Math.min(240, Math.max(5, Math.round(config.interval)));
-  }
-  if (typeof config.dailyGoal === 'number') {
-    config.dailyGoal = Math.min(50, Math.max(1, Math.round(config.dailyGoal)));
-  }
-  saveConfig();
-  applyAutoStart();
-  scheduleNext();
-  sendConfigToRenderers();
+  if (config.autoStart !== previous.autoStart) applyAutoStart();
+  if (overlayWindow && !overlayWindow.isDestroyed())
+    overlayWindow.setVisibleOnAllWorkspaces(true, {
+      visibleOnFullScreen: config.showOverFullscreen,
+      skipTransformProcessType: true,
+    });
+  scheduler.configure(previous);
   return publicConfig();
 });
-
-ipcMain.handle('onboarding:complete', (_e, patch) => {
-  if (patch && typeof patch === 'object') {
-    if ('interval' in patch) config.interval = Math.min(240, Math.max(5, Number(patch.interval) || 30));
-    if ('quietStart' in patch) config.quietStart = String(patch.quietStart);
-    if ('quietEnd' in patch) config.quietEnd = String(patch.quietEnd);
-    if ('quietHoursEnabled' in patch) config.quietHoursEnabled = !!patch.quietHoursEnabled;
-    if ('autoStart' in patch) config.autoStart = !!patch.autoStart;
+ipcMain.handle("onboarding:complete", (event, patch) => {
+  if (!trusted(event, mainWindow)) throw new Error("Unsupported setup sender");
+  const previous = config;
+  config = { ...config, ...sanitizePatch(patch), onboardingDone: true };
+  try {
+    saveConfig();
+  } catch (error) {
+    config = previous;
+    throw error;
   }
-  config.onboardingDone = true;
-  saveConfig();
   applyAutoStart();
-  scheduleNext();
-
-  if (mainWindow && !mainWindow.isDestroyed()) {
-    mainWindow.loadFile(path.join(__dirname, 'src', 'index.html'));
-  }
+  scheduler.reset();
+  mainWindow.loadFile(path.join(__dirname, "src/index.html"));
   return publicConfig();
 });
-
-ipcMain.on('overlay:action', (_e, action, meta) => {
-  const isPreview = !!(meta && meta.preview);
-  if (overlayWindow && !overlayWindow.isDestroyed()) overlayWindow.close();
-
-  if (isPreview) return;
-
-  if (action === 'done') {
-    recordStretchDone();
-  } else if (action === 'snooze') {
-    snoozeFor(5);
-  } else if (action === 'skip') {
-    scheduleNext();
-  }
+ipcMain.on("session:start", (event, ids) => {
+  if (trusted(event, mainWindow)) openSession(ids);
 });
-
-ipcMain.on('overlay:preview', () => {
-  const { pickExercise } = require('./src/shared/exercises');
-  const ex = pickExercise(config.lastExerciseId);
-  createOverlayWindow(ex.id, { preview: true });
+ipcMain.on("overlay:preview", (event) => {
+  if (trusted(event, mainWindow)) openSession(undefined, { preview: true });
 });
-
-ipcMain.on('open:privacy', () => {
-  shell.openExternal('https://github.com/praveensankar969/stretch/blob/master/PRIVACY.md');
+ipcMain.handle("overlay:get", (event) =>
+  trusted(event, overlayWindow) ? overlayPayload() : null,
+);
+ipcMain.on("overlay:running", (event, id, running) => {
+  if (
+    trusted(event, overlayWindow) &&
+    id === session?.id &&
+    typeof running === "boolean"
+  )
+    setRunning(running);
 });
-
-ipcMain.on('app:quit', () => {
-  app.isQuitting = true;
-  app.quit();
+ipcMain.handle("overlay:expand", (event) => {
+  if (!trusted(event, overlayWindow)) return false;
+  immersive = !immersive;
+  overlayWindow.setBounds(overlayBounds());
+  overlayWindow.webContents.send("overlay:layout", immersive);
+  return immersive;
 });
-
-ipcMain.handle('diagnostics:copy', () => {
-  const diag = {
-    app: app.getVersion(),
-    electron: process.versions.electron,
-    chrome: process.versions.chrome,
-    node: process.versions.node,
-    platform: `${process.platform} ${os.release()}`,
-    locale: app.getLocale(),
-    configPath,
-    config: {
-      ...config,
-      history: Object.fromEntries(
-        Object.entries(config.history).slice(-7)
-      )
+ipcMain.handle("overlay:action", (event, action, id) => {
+  if (!trusted(event, overlayWindow) || id !== session?.id) return false;
+  if (!["done", "skip", "snooze"].includes(action)) return false;
+  if (action === "done") {
+    const elapsed =
+      session.elapsed +
+      (session.runningAt === null
+        ? 0
+        : (performance.now() - session.runningAt) / 1000);
+    const total = session.exerciseIds.reduce(
+      (sum, id) => sum + EXERCISES.find((ex) => ex.id === id).seconds,
+      0,
+    );
+    if (elapsed + 0.3 < total || session.credited) return false;
+    if (!session.preview) {
+      const previous = config;
+      const today = dateKey();
+      config = {
+        ...config,
+        history: cleanHistory({
+          ...config.history,
+          [today]: (config.history[today] || 0) + 1,
+        }),
+        minutesHistory: cleanHistory({
+          ...config.minutesHistory,
+          [today]: (config.minutesHistory[today] || 0) + total / 60,
+        }),
+        lastExerciseId: session.exerciseIds.at(-1),
+        recentExercises: [
+          ...config.recentExercises,
+          ...session.exerciseIds,
+        ].slice(-10),
+      };
+      try {
+        saveConfig();
+      } catch (error) {
+        config = previous;
+        throw error;
+      }
+      session.credited = true;
     }
-  };
-  clipboard.writeText(JSON.stringify(diag, null, 2));
+  }
+  if (action === "snooze") snooze(5);
+  else closeSession();
+  broadcast();
   return true;
 });
-
-function setupAutoUpdater() {
-  if (!app.isPackaged) return;
-  if (process.platform === 'darwin') {
-    console.log('Auto-updater disabled on macOS (unsigned build). Check https://github.com/praveensankar969/stretch/releases for updates.');
-    return;
-  }
-  try {
-    const { autoUpdater } = require('electron-updater');
-    autoUpdater.autoDownload = true;
-    autoUpdater.autoInstallOnAppQuit = true;
-    autoUpdater.on('error', (err) => console.warn('updater error', err?.message));
-    autoUpdater.checkForUpdatesAndNotify().catch(() => { });
-    setInterval(() => {
-      autoUpdater.checkForUpdatesAndNotify().catch(() => { });
-    }, 6 * 60 * 60 * 1000);
-  } catch (err) {
-    console.warn('electron-updater unavailable', err?.message);
-  }
-}
-
-app.name = 'Stretch';
-if (process.platform === 'win32') {
-  app.setAppUserModelId('com.stretchapp.in');
-}
-
-app.on('second-instance', () => {
-  createMainWindow({ show: true });
+ipcMain.on("reminders:snooze", (event, minutes) => {
+  if (trusted(event, mainWindow) && [5, 15, 60].includes(minutes))
+    snooze(minutes);
 });
+ipcMain.on("source:open", (event, key) => {
+  if (
+    (trusted(event, mainWindow) || trusted(event, overlayWindow)) &&
+    SOURCES[key]
+  )
+    shell.openExternal(SOURCES[key].url);
+});
+ipcMain.on("open:privacy", () =>
+  shell.openExternal("https://stretchapp.in/privacy.html"),
+);
+ipcMain.handle("diagnostics:copy", () => {
+  clipboard.writeText(
+    JSON.stringify(
+      {
+        version: app.getVersion(),
+        platform: process.platform,
+        arch: process.arch,
+        electron: process.versions.electron,
+        scheduler: scheduler.snapshot(),
+      },
+      null,
+      2,
+    ),
+  );
+  return true;
+});
+ipcMain.on("app:quit", () => app.quit());
 
+app.on("second-instance", () => createMainWindow());
 app.whenReady().then(() => {
-  loadConfig();
-  cleanupLegacyLoginItems();
-
-  app.on('browser-window-focus', () => {
-    if (process.platform === 'darwin') {
-      app.dock.hide();
-      app.setActivationPolicy('accessory');
-    }
-  });
-
-  Menu.setApplicationMenu(null);
-
-  createTray();
-
-  const startedHidden = process.platform === 'win32'
-    ? process.argv.includes('--hidden')
-    : app.getLoginItemSettings().wasOpenedAtLogin;
-  if (!config.onboardingDone) {
-    createMainWindow({ show: true });
-  } else {
-    createMainWindow({ show: !startedHidden });
+  try {
+    config = migrateConfig(JSON.parse(fs.readFileSync(configPath, "utf8")));
+  } catch (error) {
+    if (error.code !== "ENOENT")
+      console.error("Could not read config:", error.message);
   }
-
-  scheduleNext();
-  setupAutoUpdater();
-
-  app.on('activate', () => {
-    createMainWindow({ show: true });
+  applyAutoStart();
+  scheduler = new ReminderScheduler({
+    getConfig: () => config,
+    isIdle: () => powerMonitor.getSystemIdleTime() > 300,
+    onDue: () => openSession(undefined, { automatic: true }),
+    onChange: broadcast,
   });
+  Menu.setApplicationMenu(
+    Menu.buildFromTemplate(
+      process.platform === "darwin"
+        ? [
+            {
+              label: "Stretch",
+              submenu: [
+                { role: "about" },
+                { type: "separator" },
+                { role: "hide" },
+                { role: "quit" },
+              ],
+            },
+            { role: "editMenu" },
+            { role: "windowMenu" },
+          ]
+        : [{ role: "editMenu" }],
+    ),
+  );
+  createTray();
+  const hidden =
+    process.argv.includes("--hidden") ||
+    (process.platform === "darwin" &&
+      app.getLoginItemSettings().wasOpenedAtLogin);
+  createMainWindow({ show: !config.onboardingDone || !hidden });
+  scheduler.reset();
+  heartbeat = setInterval(() => {
+    scheduler.tick();
+    broadcast();
+  }, 1000);
+  for (const reason of ["suspend", "lock-screen"])
+    powerMonitor.on(reason, () => {
+      scheduler.block(reason);
+      setRunning(false);
+      if (overlayWindow && !overlayWindow.isDestroyed()) {
+        overlayWindow.webContents.send("overlay:pause");
+        overlayWindow.hide();
+      }
+    });
+  for (const [event, reason] of [
+    ["resume", "suspend"],
+    ["unlock-screen", "lock-screen"],
+  ])
+    powerMonitor.on(event, () => {
+      scheduler.unblock(reason);
+      if (
+        !scheduler.blockers.size &&
+        overlayWindow &&
+        !overlayWindow.isDestroyed()
+      )
+        overlayWindow.showInactive();
+    });
+  const reposition = () => {
+    if (overlayWindow && !overlayWindow.isDestroyed())
+      overlayWindow.setBounds(overlayBounds());
+  };
+  screen.on("display-removed", reposition);
+  screen.on("display-metrics-changed", reposition);
+  app.on("activate", () => createMainWindow());
 });
-
-app.on('before-quit', () => {
+app.on("before-quit", () => {
   app.isQuitting = true;
+  clearInterval(heartbeat);
 });
-
-app.on('window-all-closed', () => { });
+app.on("window-all-closed", () => {});

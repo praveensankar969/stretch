@@ -1,215 +1,298 @@
-'use strict';
-
+"use strict";
 const bridge = window.stretch;
-
+const { EXERCISES, SOURCES, pickExercise } = window.StretchExercises;
+const { Figure } = window.StretchMotion;
 const $ = (id) => document.getElementById(id);
-
-const els = {
-  interval: $('interval'),
-  dailyGoal: $('daily-goal-input'),
-  autoStart: $('auto-start'),
-  quietEnabled: $('quiet-enabled'),
-  quietStart: $('quiet-start'),
-  quietEnd: $('quiet-end'),
-  respectFocus: $('respect-focus'),
-  save: $('save-btn'),
-  preview: $('preview-btn'),
-  todayCount: $('today-count'),
-  dailyGoalDisplay: $('daily-goal'),
-  streakNum: $('streak-num'),
-  streakPill: $('streak-pill'),
-  spark: $('spark'),
-  nextBadge: $('next-badge'),
-  privacy: $('privacy-link'),
-  diagnostics: $('diagnostics-link'),
-  version: $('version-line')
-};
-
-function lastSevenDays() {
-  const out = [];
-  const today = new Date();
+let config,
+  settingsDirty = false,
+  currentPage = "today",
+  heroExercise = EXERCISES[1];
+const heroFigure = new Figure($("hero-figure"));
+const reducedQuery = matchMedia("(prefers-reduced-motion: reduce)");
+let animationFrame,
+  animationOrigin = performance.now();
+function animate(t) {
+  if (!document.hidden && currentPage === "today")
+    heroFigure.render(
+      heroExercise,
+      ((t - animationOrigin) / 1000) % heroExercise.seconds,
+      config?.reducedMotion || reducedQuery.matches,
+    );
+  animationFrame = requestAnimationFrame(animate);
+}
+function toast(message) {
+  $("toast").textContent = message;
+  $("toast").hidden = false;
+  clearTimeout(toast.timer);
+  toast.timer = setTimeout(() => ($("toast").hidden = true), 3500);
+}
+function showPage(page) {
+  if (!["today", "library", "settings"].includes(page)) page = "today";
+  currentPage = page;
+  document
+    .querySelectorAll(".page")
+    .forEach((el) => (el.hidden = el.id !== `page-${page}`));
+  document.querySelectorAll("[data-page]").forEach((button) => {
+    button.classList.toggle("active", button.dataset.page === page);
+    if (button.dataset.page === page)
+      button.setAttribute("aria-current", "page");
+    else button.removeAttribute("aria-current");
+  });
+  if (page === "library") renderLibrary("all");
+  window.scrollTo(0, 0);
+}
+function dateKey(d) {
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+}
+function renderWeek() {
+  $("week-chart").replaceChildren();
+  let total = 0;
   for (let i = 6; i >= 0; i--) {
-    const d = new Date(today);
-    d.setDate(today.getDate() - i);
-    const y = d.getFullYear();
-    const m = String(d.getMonth() + 1).padStart(2, '0');
-    const day = String(d.getDate()).padStart(2, '0');
-    out.push(`${y}-${m}-${day}`);
+    const day = new Date();
+    day.setDate(day.getDate() - i);
+    const count = config.history[dateKey(day)] || 0;
+    total += count;
+    const column = document.createElement("div");
+    column.className = "day-column";
+    column.setAttribute(
+      "aria-label",
+      `${day.toLocaleDateString(undefined, { weekday: "long" })}: ${count} breaks`,
+    );
+    column.title = `${count} breaks · ${day.toLocaleDateString()}`;
+    const track = document.createElement("div");
+    track.className = "day-track";
+    const bar = document.createElement("div");
+    bar.className = "day-bar";
+    bar.style.height = `${Math.min(100, (count / config.dailyGoal) * 100)}%`;
+    track.append(bar);
+    const label = document.createElement("span");
+    label.textContent =
+      i === 0
+        ? "Today"
+        : day.toLocaleDateString(undefined, { weekday: "short" });
+    column.append(track, label);
+    $("week-chart").append(column);
   }
-  return out;
+  $("week-total").textContent = `${total} breaks`;
 }
-
-function renderSpark(history, goal) {
-  const days = lastSevenDays();
-  const values = days.map((d) => history[d] || 0);
-  const max = Math.max(goal || 1, ...values, 1);
-  const W = 280;
-  const H = 48;
-  const padX = 6;
-  const step = (W - padX * 2) / (days.length - 1);
-  const pts = values.map((v, i) => {
-    const x = padX + i * step;
-    const y = H - 4 - (v / max) * (H - 12);
-    return [x, y];
-  });
-  const path = pts
-    .map((p, i) => (i === 0 ? `M${p[0]},${p[1]}` : `L${p[0]},${p[1]}`))
-    .join('');
-
-  const dots = pts
-    .map(
-      ([x, y], i) =>
-        `<circle cx="${x}" cy="${y}" r="${i === pts.length - 1 ? 3 : 2}" class="${i === pts.length - 1 ? 'spark-today' : 'spark-dot'
-        }" />`
-    )
-    .join('');
-
-  els.spark.innerHTML = `
-    <path d="${path}" class="spark-line" fill="none"/>
-    ${dots}
-  `;
-}
-
-function renderNext(nextFireAt, remindersEnabled) {
-  if (!remindersEnabled) {
-    els.nextBadge.textContent = 'Reminders paused';
-    els.nextBadge.dataset.state = 'paused';
-    return;
-  }
-  if (!nextFireAt) {
-    els.nextBadge.textContent = '—';
-    return;
-  }
-  const ms = nextFireAt - Date.now();
-  const mins = Math.max(0, Math.round(ms / 60000));
-  els.nextBadge.textContent = mins < 1 ? 'Next reminder: any moment' : `Next reminder in ${mins} min`;
-  els.nextBadge.dataset.state = 'active';
-}
-
-function applyConfig(cfg) {
-  els.interval.value = cfg.interval;
-  els.dailyGoal.value = cfg.dailyGoal;
-  els.autoStart.checked = !!cfg.autoStart;
-  els.quietEnabled.checked = !!cfg.quietHoursEnabled;
-  els.quietStart.value = cfg.quietStart || '18:00';
-  els.quietEnd.value = cfg.quietEnd || '09:00';
-  els.respectFocus.checked = !!cfg.respectFocusAssist;
-
-  els.todayCount.textContent = String(cfg.today || 0);
-  els.dailyGoalDisplay.textContent = String(cfg.dailyGoal);
-  els.streakNum.textContent = String(cfg.streak || 0);
-  els.streakPill.classList.toggle('is-active', (cfg.streak || 0) > 0);
-
-  renderSpark(cfg.history || {}, cfg.dailyGoal);
-  renderNext(cfg.nextFireAt, cfg.remindersEnabled);
-
-  if (els.version) {
-    els.version.textContent = `v${cfg.appVersion || '1.0.0'}`;
-  }
-}
-
-function readInt(el, fallback, min, max) {
-  // Prefer valueAsNumber — parseInt can drop characters silently.
-  // Fall back to parseInt in case the input isn't type=number.
-  let n = el.valueAsNumber;
-  if (!Number.isFinite(n)) n = parseInt(el.value, 10);
-  if (!Number.isFinite(n)) n = fallback;
-  return Math.min(max, Math.max(min, Math.round(n)));
-}
-
-async function save() {
-  const patch = {
-    interval: readInt(els.interval, 30, 1, 240),
-    dailyGoal: readInt(els.dailyGoal, 8, 1, 50),
-    autoStart: els.autoStart.checked,
-    quietHoursEnabled: els.quietEnabled.checked,
-    quietStart: els.quietStart.value,
-    quietEnd: els.quietEnd.value,
-    respectFocusAssist: els.respectFocus.checked
+function renderStatus() {
+  const mins = Math.max(1, Math.ceil((config.nextFireAt - Date.now()) / 60000));
+  const time = config.nextFireAt
+    ? new Date(config.nextFireAt).toLocaleTimeString([], {
+        hour: "numeric",
+        minute: "2-digit",
+      })
+    : "";
+  const labels = {
+    paused: "Reminders paused",
+    quiet: `Quiet until ${time}`,
+    away: "Paused while you’re away",
+    session: "Enjoy your break",
+    setup: "Let’s get set up",
+    snoozed: `Snoozed · ${mins} min`,
+    scheduled: `Next break in ${mins} min`,
   };
-  els.save.disabled = true;
-  els.save.textContent = 'Saving…';
+  const status = labels[config.reminderState] || "Ready when you are";
+  if ($("next-badge").textContent !== status)
+    $("next-badge").textContent = status;
+  $("pause-reminders").textContent = config.remindersEnabled
+    ? "Pause reminders"
+    : "Resume reminders";
+  $("snooze-select").disabled = !config.remindersEnabled;
+  $("rhythm-title").textContent = config.remindersEnabled
+    ? `A nudge every ${config.interval} minutes`
+    : "A little space to focus";
+  $("rhythm-help").textContent =
+    config.reminderState === "quiet"
+      ? `Quiet hours are on. Your next reminder is at ${time}.`
+      : "A manual stretch is always here when you need it.";
+}
+function fillSettings() {
+  $("interval").value = config.interval;
+  $("daily-goal-input").value = config.dailyGoal;
+  $("auto-start").checked = config.autoStart;
+  $("quiet-enabled").checked = config.quietHoursEnabled;
+  $("quiet-start").value = config.quietStart;
+  $("quiet-end").value = config.quietEnd;
+  $("fullscreen-enabled").checked = config.showOverFullscreen;
+  $("reduced-motion").checked = config.reducedMotion;
+  $("focus-select").value = config.focus;
+  updateQuiet();
+}
+function updateQuiet() {
+  $("quiet-start").disabled = $("quiet-end").disabled =
+    !$("quiet-enabled").checked;
+}
+function applyConfig(next) {
+  const previous = config;
+  config = next;
+  if (!settingsDirty) fillSettings();
+  renderStatus();
+  $("today-count").textContent = config.today;
+  $("daily-goal").textContent = config.dailyGoal;
+  $("minutes-count").textContent = Number(config.todayMinutes || 0)
+    .toFixed(1)
+    .replace(".0", "");
+  $("streak-num").textContent = config.streak;
+  $("goal-arc").style.strokeDasharray =
+    `${Math.min(100, (config.today / config.dailyGoal) * 100)} 100`;
+  $("goal-message").textContent =
+    config.today >= config.dailyGoal
+      ? "You made room for yourself."
+      : config.today
+        ? "A little more at ease."
+        : "Every small pause counts.";
+  $("date-label").textContent = new Date()
+    .toLocaleDateString(undefined, {
+      weekday: "long",
+      month: "long",
+      day: "numeric",
+    })
+    .toUpperCase();
+  $("version-line").textContent = `Stretch ${config.appVersion}`;
+  if (
+    !previous ||
+    previous.today !== config.today ||
+    previous.focus !== config.focus
+  ) {
+    heroExercise = pickExercise(
+      config.lastExerciseId,
+      config.focus,
+      config.recentExercises,
+    );
+    $("suggestion-title").textContent = heroExercise.title;
+    $("suggestion-meta").textContent =
+      `${heroExercise.seconds} seconds · ${heroExercise.seated ? "Seated" : "Standing"}`;
+    $("suggestion-desc").textContent = heroExercise.desc;
+    animationOrigin = performance.now();
+  }
+  if (
+    !previous ||
+    JSON.stringify(previous.history) !== JSON.stringify(config.history) ||
+    previous.dailyGoal !== config.dailyGoal ||
+    previous.today !== config.today
+  )
+    renderWeek();
+}
+function renderLibrary(filter) {
+  $("library-filters").replaceChildren();
+  for (const [id, label] of [
+    ["all", "All movements"],
+    ["neck", "Neck"],
+    ["shoulders", "Shoulders"],
+    ["back", "Back"],
+    ["wrists", "Wrists"],
+    ["legs", "Legs"],
+  ]) {
+    const btn = document.createElement("button");
+    btn.className = "filter";
+    btn.textContent = label;
+    btn.setAttribute("aria-pressed", String(filter === id));
+    btn.onclick = () => renderLibrary(id);
+    $("library-filters").append(btn);
+  }
+  $("exercise-grid").replaceChildren();
+  for (const ex of EXERCISES.filter(
+    (ex) => filter === "all" || ex.tags.includes(filter),
+  )) {
+    const card = document.createElement("article");
+    card.className = "exercise-card";
+    card.innerHTML = `<div class="exercise-art"><div class="figure"></div><span class="tag">${ex.seated ? "Seated" : "Standing"}</span></div><div class="exercise-copy"><h3>${ex.title}</h3><p>${ex.region} · ${ex.seconds} sec</p><button class="btn ghost">Start movement <span aria-hidden="true">↗</span></button><button class="source-button">${SOURCES[ex.source].name} ↗</button></div>`;
+    new Figure(card.querySelector(".figure")).render(
+      ex,
+      ex.transition ? ex.transition + 0.5 : ex.cycle / 2,
+      true,
+    );
+    card.querySelector(".btn").onclick = () => bridge.startSession([ex.id]);
+    card.querySelector(".source-button").onclick = () =>
+      bridge.openSource(ex.source);
+    $("exercise-grid").append(card);
+  }
+}
+async function save(event) {
+  event?.preventDefault();
+  if (!$("settings-form").reportValidity()) return;
+  $("save-btn").disabled = true;
   try {
-    const cfg = await bridge.updateConfig(patch);
-    applyConfig(cfg);
-    els.save.textContent = 'Saved';
-    setTimeout(() => {
-      els.save.textContent = 'Save';
-      els.save.disabled = false;
-    }, 1200);
-  } catch (err) {
-    console.error(err);
-    els.save.textContent = 'Save failed — retry';
-    els.save.disabled = false;
+    const result = await bridge.updateConfig({
+      interval: $("interval").valueAsNumber,
+      dailyGoal: $("daily-goal-input").valueAsNumber,
+      autoStart: $("auto-start").checked,
+      quietHoursEnabled: $("quiet-enabled").checked,
+      quietStart: $("quiet-start").value,
+      quietEnd: $("quiet-end").value,
+      showOverFullscreen: $("fullscreen-enabled").checked,
+      reducedMotion: $("reduced-motion").checked,
+      focus: $("focus-select").value,
+    });
+    settingsDirty = false;
+    applyConfig(result);
+    $("save-status").textContent = "Preferences saved";
+  } catch {
+    $("save-status").textContent = "Could not save. Please try again.";
+  } finally {
+    $("save-btn").disabled = false;
   }
 }
-
-async function init() {
-  const cfg = await bridge.getConfig();
-  applyConfig(cfg);
-
-  bridge.onConfigUpdated(applyConfig);
-
-  els.save.addEventListener('click', save);
-  els.preview.addEventListener('click', () => bridge.previewOverlay());
-
-  // Let users type freely — the final clamp happens in save().
-  // Only clamp on blur if the field is outside the allowed range AND the user
-  // has finished interacting with it. Never rewrite an empty field to min
-  // while the user is still thinking.
-  const softClamp = (el, min, max) => {
-    if (el.value === '') return;
-    const n = Number(el.value);
-    if (!Number.isFinite(n)) return;
-    if (n < min) el.value = String(min);
-    else if (n > max) el.value = String(max);
-  };
-  els.interval.addEventListener('blur', () => softClamp(els.interval, 5, 240));
-  els.dailyGoal.addEventListener('blur', () => {
-    softClamp(els.dailyGoal, 1, 50);
-    if (els.dailyGoal.value !== '') {
-      els.dailyGoalDisplay.textContent = String(els.dailyGoal.value);
-    }
-  });
-  els.dailyGoal.addEventListener('input', () => {
-    const n = Number(els.dailyGoal.value);
-    if (Number.isFinite(n) && els.dailyGoal.value !== '') {
-      els.dailyGoalDisplay.textContent = String(n);
-    }
-  });
-
-  els.privacy.addEventListener('click', () => bridge.openPrivacy());
-  els.diagnostics.addEventListener('click', async () => {
+document
+  .querySelectorAll("[data-page]")
+  .forEach((btn) => (btn.onclick = () => showPage(btn.dataset.page)));
+document.querySelector(".brand").onclick = (event) => {
+  event.preventDefault();
+  showPage("today");
+};
+$("start-btn").onclick = () => bridge.startSession([heroExercise.id]);
+$("routine-btn").onclick = () =>
+  bridge.startSession(["shoulder-roll", "neck-turn", "reset-breath"]);
+$("preview-btn").onclick = () => bridge.previewOverlay();
+$("privacy-link").onclick = () => bridge.openPrivacy();
+$("pause-reminders").onclick = async () => {
+  try {
+    applyConfig(
+      await bridge.updateConfig({ remindersEnabled: !config.remindersEnabled }),
+    );
+  } catch {
+    toast("Could not change reminders. Please try again.");
+  }
+};
+$("snooze-select").onchange = (event) => {
+  const value = Number(event.target.value);
+  if (value) bridge.snooze(value);
+  event.target.value = "";
+};
+$("settings-form").onsubmit = save;
+$("settings-form").oninput = () => {
+  settingsDirty = true;
+  $("save-status").textContent = "Unsaved changes";
+};
+$("quiet-enabled").onchange = updateQuiet;
+$("diagnostics-link").onclick = async () => {
+  try {
     await bridge.copyDiagnostics();
-    els.diagnostics.textContent = 'Copied';
-    setTimeout(() => {
-      els.diagnostics.textContent = 'Copy diagnostics';
-    }, 1500);
-  });
-
-  // Refresh "next reminder" label each minute.
-  setInterval(async () => {
-    const latest = await bridge.getConfig();
-    renderNext(latest.nextFireAt, latest.remindersEnabled);
-  }, 30 * 1000);
-
-  document.addEventListener('keydown', (e) => {
-    if ((e.ctrlKey || e.metaKey) && e.key === 's') {
-      e.preventDefault();
-      save();
-    }
-  });
-
-  const platform = window.stretch.platform;
-  document.querySelectorAll('[data-win-only]').forEach(el => {
-    if (platform !== 'win32') el.style.display = 'none';
-  });
-  document.querySelectorAll('[data-win]').forEach(el => {
-    if (platform !== 'win32') el.style.display = 'none';
-  });
-  document.querySelectorAll('[data-mac]').forEach(el => {
-    if (platform !== 'darwin') el.style.display = 'none';
-  });
+    toast("Diagnostics copied");
+  } catch {
+    toast("Could not copy diagnostics");
+  }
+};
+document.addEventListener("keydown", (event) => {
+  if ((event.metaKey || event.ctrlKey) && event.key === "s") {
+    event.preventDefault();
+    if (currentPage === "settings") save();
+  }
+});
+if (bridge.platform !== "darwin") {
+  document.querySelector("[data-mac-only]").hidden = true;
+  document.querySelector(".profile-btn small").textContent =
+    "Private. On your device.";
 }
-
-init();
+bridge.onConfigUpdated(applyConfig);
+bridge
+  .getConfig()
+  .then((cfg) => {
+    applyConfig(cfg);
+    animate(performance.now());
+  })
+  .catch(() => toast("Could not load preferences. Please reopen Stretch."));
+window.addEventListener("beforeunload", () =>
+  cancelAnimationFrame(animationFrame),
+);

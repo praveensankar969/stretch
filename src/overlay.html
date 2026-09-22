@@ -1,58 +1,101 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta http-equiv="Content-Security-Policy"
-        content="default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self'; font-src 'self'; img-src 'self' data:;">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Stretch</title>
-  <link rel="stylesheet" href="assets/tokens.css">
-  <link rel="stylesheet" href="assets/fonts.css">
-  <link rel="stylesheet" href="overlay.css">
-</head>
-<body>
-  <div class="wash" id="wash" aria-hidden="true"></div>
-
-  <main class="dialog" role="dialog" aria-modal="true" aria-labelledby="ex-title">
-    <header class="eyebrow">
-      <span class="eyebrow-dot" aria-hidden="true"></span>
-      <span id="eyebrow-text">A moment for you</span>
-      <span class="eyebrow-meta" id="progress-chip">0 / 8 today</span>
-    </header>
-
-    <div class="stage">
-      <svg class="breath" viewBox="0 0 240 240" aria-hidden="true">
-        <circle class="breath-track" cx="120" cy="120" r="108" />
-        <circle class="breath-circle" cx="120" cy="120" r="108" />
-      </svg>
-      <div class="lottie-stage" id="lottie"></div>
-    </div>
-
-    <h1 id="ex-title" class="title">&nbsp;</h1>
-    <p id="ex-desc" class="desc">&nbsp;</p>
-
-    <div class="timer" id="timer" aria-live="polite"></div>
-
-    <div class="cta">
-      <button id="done-btn" class="btn primary" type="button">
-        I'm done
-        <kbd>Enter</kbd>
-      </button>
-      <button id="snooze-btn" class="btn ghost" type="button">
-        Snooze 5 min
-        <kbd>Esc</kbd>
-      </button>
-    </div>
-
-    <footer class="legal-row">
-      <button id="skip-btn" class="linklike" type="button">Skip this one <kbd>S</kbd></button>
-      <span class="dot-sep">·</span>
-      <span>Not medical advice. Stop if it hurts.</span>
-    </footer>
-  </main>
-
-  <script src="vendor/lottie.min.js"></script>
-  <script src="shared/exercises.js"></script>
-  <script src="overlay.js"></script>
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self'; font-src 'self'; img-src 'self' data:"
+    />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>A moment for you · Stretch</title>
+    <link rel="stylesheet" href="assets/fonts.css" />
+    <link rel="stylesheet" href="assets/tokens.css" />
+    <link rel="stylesheet" href="overlay.css" />
+  </head>
+  <body>
+    <main class="player" aria-labelledby="ex-title">
+      <header class="player-header">
+        <a class="brand" aria-label="Stretch"
+          ><span class="brand-mark" aria-hidden="true"></span
+          ><span class="brand-word">Stretch</span></a
+        >
+        <div class="window-actions">
+          <button
+            id="expand-btn"
+            class="icon-btn"
+            aria-label="Expand to immersive view"
+            title="Expand to immersive view"
+          >
+            ⛶</button
+          ><button
+            id="close-btn"
+            class="icon-btn"
+            aria-label="Close this break"
+            title="Close this break"
+          >
+            ×
+          </button>
+        </div>
+      </header>
+      <div class="player-stage">
+        <div class="stage-label">
+          <span class="tag" id="exercise-position">Seated</span
+          ><span class="tag" id="sequence-label">A MOMENT FOR YOU</span>
+        </div>
+        <div class="stage-circle" aria-hidden="true"></div>
+        <div id="exercise-figure" class="figure"></div>
+        <div class="stage-floor" aria-hidden="true"></div>
+        <span class="stage-caption">Move at your own comfortable pace</span>
+      </div>
+      <section class="player-copy">
+        <div class="player-meta">
+          <span class="eyebrow" id="region-label">YOUR DAILY RESET</span
+          ><span id="progress-chip">0 / 6 today</span>
+        </div>
+        <h1 id="ex-title">A moment for you.</h1>
+        <p id="ex-desc">Let’s make a little space.</p>
+        <div class="cue-box">
+          <span aria-hidden="true">✳</span>
+          <p id="ex-cue">Keep it gentle. Breathe naturally.</p>
+        </div>
+        <div class="playback" id="playback">
+          <div class="phase-row">
+            <span id="phase-label" role="status">Ready when you are</span
+            ><span id="timer">—</span>
+          </div>
+          <div
+            class="timeline"
+            role="progressbar"
+            aria-label="Session progress"
+            aria-valuemin="0"
+            aria-valuemax="100"
+            aria-valuenow="0"
+          >
+            <div id="timeline-fill"></div>
+          </div>
+          <div class="playback-meta">
+            <span id="rep-label">No rush. This is your time.</span
+            ><span id="side-label"></span>
+          </div>
+        </div>
+        <div class="player-actions">
+          <button id="play-btn" class="btn primary">
+            Let’s begin <span aria-hidden="true">→</span></button
+          ><button id="snooze-btn" class="btn ghost">In 5 min</button>
+        </div>
+        <p id="player-message" role="status" class="player-message"></p>
+        <footer class="player-footer">
+          <button id="source-btn" class="linklike">Movement source ↗</button
+          ><span>Stop if it hurts.</span>
+        </footer>
+        <p class="keyboard-hint">
+          Space to pause · Esc to leave immersive view or close
+        </p>
+      </section>
+    </main>
+    <script src="shared/exercises.js"></script>
+    <script src="shared/motion.js"></script>
+    <script src="shared/session-clock.js"></script>
+    <script src="overlay.js"></script>
+  </body>
 </html>

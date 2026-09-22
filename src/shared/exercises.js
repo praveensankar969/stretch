@@ -1,118 +1,208 @@
-/**
- * Single source of truth for the stretch library.
- *
- * Every exercise here is drawn from public desk-stretch references
- * (NHS "stretches to do at your desk", ACE Fitness Office Stretch Guide,
- * Mayo Clinic office ergonomics). Movements are conservative and
- * self-limiting: nothing here requires a mat, props, or standing.
- *
- * Disclaimer shown to the user: "Not medical advice. Stop if it hurts."
- *
- * Each record:
- *   id          kebab-case filename of the Lottie JSON in src/assets/lottie/
- *   title       short display title (Fraunces display font)
- *   desc        one or two sentences a user reads and does
- *   seconds     recommended hold time
- *   side        'bilateral' | 'unilateral' (ask user to repeat other side)
- *   tags        for filtering/rotation logic
- */
-
-const EXERCISES = [
-  {
-    id: 'sky-reach',
-    title: 'Sky Reach',
-    desc: 'Interlace your fingers, press your palms upward, and lengthen through your ribs. Breathe in for four, out for six.',
-    seconds: 30,
-    side: 'bilateral',
-    tags: ['spine', 'shoulders']
-  },
-  {
-    id: 'chest-opener',
-    title: 'Chest Opener',
-    desc: 'Clasp your hands behind your lower back. Gently draw your shoulder blades together and lift your chest.',
-    seconds: 25,
-    side: 'bilateral',
-    tags: ['chest', 'shoulders']
-  },
-  {
-    id: 'shoulder-roll',
-    title: 'Shoulder Roll',
-    desc: 'Lift your shoulders toward your ears, roll them back and down. Five slow circles in each direction.',
-    seconds: 30,
-    side: 'bilateral',
-    tags: ['shoulders', 'neck']
-  },
-  {
-    id: 'neck-crescent',
-    title: 'Neck Crescent',
-    desc: 'Let your chin fall toward your chest. Trace a slow half-circle ear-to-ear. Keep the shoulders heavy.',
-    seconds: 30,
-    side: 'bilateral',
-    tags: ['neck']
-  },
-  {
-    id: 'seated-twist',
-    title: 'Seated Twist',
-    desc: 'Place your right hand on the back of your chair, left hand on the right knee. Rotate gently. Hold, then switch.',
-    seconds: 25,
-    side: 'unilateral',
-    tags: ['spine', 'back']
-  },
-  {
-    id: 'cat-cow',
-    title: 'Seated Cat-Cow',
-    desc: 'Hands on knees. Inhale, arch your back and open your chest. Exhale, round the spine and tuck the chin.',
-    seconds: 40,
-    side: 'bilateral',
-    tags: ['spine', 'back']
-  },
-  {
-    id: 'wrist-extensor',
-    title: 'Wrist Stretch',
-    desc: 'Extend your arm, palm up. With the other hand, gently pull your fingers back toward you. Hold, then switch.',
-    seconds: 20,
-    side: 'unilateral',
-    tags: ['wrists', 'forearms']
-  },
-  {
-    id: 'ankle-stretch',
-    title: 'Ankle Stretch',
-    desc: 'Cross your right ankle over your left knee. Hinge forward from the hips until you feel the hip release. Switch.',
-    seconds: 30,
-    side: 'unilateral',
-    tags: ['hips', 'glutes']
-  },
-  {
-    id: 'ankle-orbit',
-    title: 'Ankle Orbits',
-    desc: 'Lift one foot off the floor. Trace ten slow circles with your toes, then reverse. Switch feet.',
-    seconds: 30,
-    side: 'unilateral',
-    tags: ['ankles', 'legs']
-  },
-  {
-    id: 'reset-breath',
-    title: 'Reset Breath',
-    desc: 'Close your eyes. Inhale through the nose for four. Exhale through the mouth for six. Three rounds.',
-    seconds: 30,
-    side: 'bilateral',
-    tags: ['breath', 'nervous-system']
+(function (root) {
+  "use strict";
+  const SOURCES = {
+    sitting: {
+      name: "NHS · Sitting exercises",
+      url: "https://www.nhs.uk/live-well/exercise/sitting-exercises/",
+    },
+    wrists: {
+      name: "Mayo Clinic · Wrist & forearm stretches",
+      url: "https://www.mayoclinic.org/healthy-lifestyle/adult-health/multimedia/forearm-stretches/vid-20084698",
+    },
+    shoulders: {
+      name: "Mayo Clinic · Movement at work",
+      url: "https://sportsmedicine.mayoclinic.org/news/the-importance-of-stretching-during-your-workday/",
+    },
+    flexibility: {
+      name: "NHS · Flexibility exercises",
+      url: "https://assets.nhs.uk/prod/documents/NHS-flexibility-exercise.pdf",
+    },
+    breathing: {
+      name: "NHS · Gentle breathing",
+      url: "https://www.nhs.uk/mental-health/self-help/guides-tools-and-activities/breathing-exercises-for-stress/",
+    },
+    breaks: {
+      name: "HSE · Work routine and breaks",
+      url: "https://www.hse.gov.uk/msd/dse/work-routine.htm",
+    },
+  };
+  // Durations include transitions. Short desk-break adaptations, not treatment prescriptions.
+  const EXERCISES = [
+    {
+      id: "neck-turn",
+      title: "Neck reset",
+      region: "Neck",
+      tags: ["neck"],
+      mode: "hold",
+      repetitions: 6,
+      hold: 5,
+      transition: 2,
+      alternate: true,
+      desc: "Sit tall. Turn your head gently to one side, then return. Keep shoulders still.",
+      cue: "Turn only as far as feels easy. No neck circles.",
+      source: "sitting",
+      seated: true,
+    },
+    {
+      id: "shoulder-roll",
+      title: "Shoulder rolls",
+      region: "Shoulders",
+      tags: ["shoulders", "neck"],
+      mode: "cycle",
+      repetitions: 5,
+      cycle: 6,
+      desc: "Slowly lift your shoulders, roll them back, and let them settle down.",
+      cue: "Keep your arms loose and breathe naturally.",
+      source: "shoulders",
+      seated: true,
+    },
+    {
+      id: "chest-opener",
+      title: "Open your chest",
+      region: "Chest & shoulders",
+      tags: ["shoulders", "back"],
+      mode: "hold",
+      repetitions: 5,
+      hold: 6,
+      transition: 2,
+      desc: "Open your arms low and wide. Ease your shoulders back and lift your chest.",
+      cue: "Stay tall; avoid arching your lower back.",
+      source: "sitting",
+      seated: true,
+    },
+    {
+      id: "seated-twist",
+      title: "Seated unwind",
+      region: "Upper back",
+      tags: ["back"],
+      mode: "hold",
+      repetitions: 6,
+      hold: 5,
+      transition: 2,
+      alternate: true,
+      desc: "Cross your arms over your chest. Turn your upper body; keep hips facing forward.",
+      cue: "Feet flat. Use a stable chair without wheels.",
+      source: "sitting",
+      seated: true,
+    },
+    {
+      id: "wrist-extensor",
+      title: "Wrist release",
+      region: "Wrists & forearms",
+      tags: ["wrists"],
+      mode: "hold",
+      repetitions: 2,
+      hold: 20,
+      transition: 3,
+      alternate: true,
+      desc: "Reach one arm forward, palm down. Ease the hand downward with your other hand.",
+      cue: "Apply light pressure. Relax your fingers; never pull into pain.",
+      source: "wrists",
+      seated: true,
+    },
+    {
+      id: "wrist-flexor",
+      title: "Forearm release",
+      region: "Wrists & forearms",
+      tags: ["wrists"],
+      mode: "hold",
+      repetitions: 2,
+      hold: 20,
+      transition: 3,
+      alternate: true,
+      desc: "Reach one arm forward, palm up. Let the hand bend down; support it gently with your other hand.",
+      cue: "Keep the elbow soft. Switch arms when the guide changes.",
+      source: "wrists",
+      seated: true,
+    },
+    {
+      id: "ankle-pumps",
+      title: "Ankle wake-up",
+      region: "Ankles & legs",
+      tags: ["legs"],
+      mode: "cycle",
+      repetitions: 10,
+      cycle: 4,
+      alternate: true,
+      sideEvery: 5,
+      desc: "Raise one foot. Slowly point your toes away, then draw them back. Change feet halfway.",
+      cue: "Hold the chair for balance. Keep the movement small.",
+      source: "sitting",
+      seated: true,
+    },
+    {
+      id: "side-bend",
+      title: "Standing side bend",
+      region: "Sides & back",
+      tags: ["back", "legs"],
+      mode: "hold",
+      repetitions: 6,
+      hold: 2,
+      transition: 2,
+      alternate: true,
+      desc: "Stand with feet hip-width apart. Slide one hand down your side; come back upright.",
+      cue: "Bend sideways without leaning forward. Stay within an easy range.",
+      source: "flexibility",
+      seated: false,
+    },
+    {
+      id: "reset-breath",
+      title: "A little breathing room",
+      region: "Breathing",
+      tags: ["breath"],
+      mode: "breath",
+      repetitions: 3,
+      cycle: 10,
+      desc: "Settle your feet. Breathe gently in through your nose and out through your mouth.",
+      cue: "Follow your own comfortable breath. This is a short pause, not the full NHS routine.",
+      source: "breathing",
+      seated: true,
+    },
+    {
+      id: "walk-break",
+      title: "Leave the desk",
+      region: "Whole body",
+      tags: ["legs"],
+      mode: "walk",
+      repetitions: 1,
+      cycle: 60,
+      desc: "If comfortable, stand up and take an easy walk. Look away from your screen.",
+      cue: "A minute is a starting point. Take a longer break when you can.",
+      source: "breaks",
+      seated: false,
+    },
+  ].map((ex) => ({
+    ...ex,
+    seconds:
+      ex.repetitions *
+      (ex.mode === "hold" ? ex.hold + 2 * ex.transition : ex.cycle),
+  }));
+  function getExerciseById(id) {
+    return EXERCISES.find((ex) => ex.id === id) || EXERCISES[0];
   }
-];
-
-/** Pick the next exercise. Avoids repeating the last one. */
-function pickExercise(lastId) {
-  const pool = EXERCISES.filter((e) => e.id !== lastId);
-  return pool[Math.floor(Math.random() * pool.length)];
-}
-
-function getExerciseById(id) {
-  return EXERCISES.find((e) => e.id === id) || EXERCISES[0];
-}
-
-if (typeof module !== 'undefined' && module.exports) {
-  module.exports = { EXERCISES, pickExercise, getExerciseById };
-}
-if (typeof window !== 'undefined') {
-  window.StretchExercises = { EXERCISES, pickExercise, getExerciseById };
-}
+  function pickExercise(
+    lastId,
+    focus = "all",
+    recent = [],
+    random = Math.random,
+  ) {
+    let pool = EXERCISES.filter(
+      (ex) => focus === "all" || ex.tags.includes(focus),
+    );
+    if (!pool.length) pool = EXERCISES;
+    const fresh = pool.filter(
+      (ex) =>
+        ex.id !== lastId && !recent.slice(-(pool.length - 1)).includes(ex.id),
+    );
+    const eligible = fresh.length
+      ? fresh
+      : pool.filter((ex) => ex.id !== lastId);
+    const choices = eligible.length ? eligible : pool;
+    return choices[
+      Math.min(choices.length - 1, Math.floor(random() * choices.length))
+    ];
+  }
+  const api = { EXERCISES, SOURCES, getExerciseById, pickExercise };
+  if (typeof module !== "undefined" && module.exports) module.exports = api;
+  if (root) root.StretchExercises = api;
+})(typeof window !== "undefined" ? window : null);

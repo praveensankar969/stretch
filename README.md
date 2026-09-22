@@ -1,112 +1,70 @@
-# Stretch
+# Stretch 2.0
 
-(https://stretchapp.in)
+A little room to move. A private, Mac-first stretch reminder with gentle illustrated movement, thoughtful reminders, and local daily progress.
 
-> A quiet menu bar / tray app for macOS and Windows that invites you to stretch for one minute, every so often. Local only. No account. No telemetry.
+## What's new
 
-![Stretch overlay — breath ring with a seated line-art figure demonstrating a Sky Reach stretch](./logo.png)
-
-## Install
-
-**macOS (Homebrew):**
-```bash
-brew tap praveensankar969/stretch
-brew install --cask stretch
-```
-
-**macOS (Manual Download):**
-- [Stretch-1.0.0-arm64.dmg](https://github.com/praveensankar969/stretch/releases/download/latest/Stretch-1.0.0-arm64.dmg)
-- [Stretch-1.0.0-x64.dmg](https://github.com/praveensankar969/stretch/releases/download/latest/Stretch-1.0.0-x64.dmg)
-
-> **macOS Security Note:** Stretch is ad-hoc signed to keep it free. Whether installed via Homebrew or DMG, Gatekeeper will show a "Damaged App / Move to Trash" or "Unidentified Developer" warning when you try to open it.
->
-> **How to fix this:**
-> 
-> **Option 1: The Settings Way (Recommended for most)**
-> 1. Open Stretch from your Applications folder.
-> 2. You will see the security warning. Click **Cancel**.
-> 3. Open your Mac's **System Settings** > **Privacy & Security**.
-> 4. Scroll down to the "Security" section and click **Open Anyway** next to Stretch.
-> 
-> **Option 2: The Terminal Way (Fastest)**
-> Run `xattr -cr /Applications/Stretch.app` in Terminal to remove the macOS quarantine flag.
-
-**Windows:** 
-- [Stretch-1.0.0.exe](https://github.com/praveensankar969/stretch/releases/download/latest/Stretch-1.0.0.exe) — signed NSIS installer, auto-updates via GitHub Releases.
-
-macOS 12+ (Monterey and later) and Windows 10/11 are supported.
-
-## What's inside
-
-- **Electron 30**, single-window menu bar / tray app with a preload-based `contextBridge` API.
-- **Morning Light** design system (Fraunces display + Instrument Sans body, warm-ink palette).
-- **Lottie-web** for the exercise line-art loops — one JSON file per exercise, generated from a compact keyframe spec via `scripts/build-lottie.mjs`.
-- **electron-updater** pointed at GitHub Releases (Windows; macOS pending signed build).
+- A redesigned dashboard, ten-movement library, body-area preferences, and a 1 minute 54 second desk reset.
+- An articulated SVG guide with fixed segment lengths, smooth transitions, timed holds, both-side cues, and pause/resume. It is illustrative guidance, not clinical motion capture.
+- Small reminders without keyboard focus; optional visibility over macOS fullscreen Spaces. Expand a player on its current display, then press Escape to return.
+- One reminder scheduler for cadence, quiet hours, snooze, idle, lock, and sleep. No catch-up storm on wake. Manual sessions work while reminders are paused.
+- Local counts, minutes, and a seven-day history. A completed routine counts as one break. Skips and previews do not earn credit.
+- An interactive, responsive website with movement sources and honest download/privacy information.
+- Electron 44.4.3, isolated renderers, validated settings, an allowlisted IPC bridge, and local assets.
 
 ## Develop
 
-```bash
-npm install      # fetches fonts, builds Lottie loops, copies lottie-web vendor
-npm start        # runs the app in dev (no login-item registration)
+Requires Node.js 22+ and npm. For Mac packaging, use macOS with Xcode command-line tools.
+
+```sh
+npm install
+# If npm's install-script policy withheld the Electron download:
+node node_modules/electron/install.js
+npm start
 ```
 
-Key scripts:
+Assets are generated locally by `npm run icons`; fonts ship in the repository. The app does not need a network connection. `npm run site:preview` serves the website at http://127.0.0.1:4173.
 
-- `npm run fonts` — downloads Fraunces + Instrument Sans woff2 files into `src/assets/fonts/`. Runs automatically on install.
-- `npm run lottie` — regenerates the ten exercise JSON files in `src/assets/lottie/` from `scripts/build-lottie.mjs`.
-- `npm run vendor` — copies `lottie-web`'s player bundle into `src/vendor/` so the app can load it under strict CSP.
-- `npm run icons` — generates `build/icon.ico`, `build/icon.icns`, and macOS template tray icons from `logo.png`.
+## Validate
 
-## File map
-
-```
-main.js                   Electron main (tray, scheduling, DND, updater)
-src/
-  preload.js              contextBridge API exposed as window.stretch
-  index.html / renderer.js settings screen
-  onboarding.html / onboarding.js first-run
-  overlay.html / overlay.css / overlay.js the reminder experience
-  shared/exercises.js     single source of truth (used by main + overlay)
-  assets/
-    tokens.css            Morning Light palette + type + motion tokens
-    fonts.css             self-hosted @font-face
-    fonts/                woff2 files (downloaded by scripts/fetch-fonts.mjs)
-    lottie/               ten exercise loops (generated)
-    grain.svg             3% grain overlay
-    icon.ico              Windows app icon (generated)
-    tray.png              Windows tray fallback (generated)
-    tray-Template.png     macOS menu bar icon 20px (generated)
-    tray-Template@2x.png  macOS menu bar icon 40px (generated)
-  vendor/                 lottie-web (copied from node_modules at postinstall)
-scripts/
-  fetch-fonts.mjs         Google Fonts → src/assets/fonts/
-  build-lottie.mjs        keyframe spec → src/assets/lottie/*.json
-  copy-vendor.mjs         node_modules/lottie-web → src/vendor/
-  build-icons.mjs         logo.png → build/icon.ico, build/icon.icns, tray templates
-website/
-  index.html / style.css  marketing site (static)
-  privacy.html            privacy note
-  favicon.svg
-build/
-  installer.nsh           NSIS post-install messaging (Windows)
-  icon.ico                generated by npm run icons
-  icon.icns               generated by npm run icons (macOS)
-PRIVACY.md, CHANGELOG.md, LICENSE
+```sh
+npm test
+npx playwright install chromium
+npm run test:ui
 ```
 
-## Releasing
+The UI suite launches a real Electron process using a fresh temporary data directory. It covers onboarding, settings persistence, manual breaks while paused, early-completion rejection, pause, lock/resume, immersive view, completion credit, snooze, and minimum window size. It also checks the website at desktop/mobile sizes, the interactive demo, reduced motion, privacy, and download pages. Screenshots go to `artifacts/screenshots/`.
 
-1. Bump `version` in `package.json`.
-2. Update `CHANGELOG.md`.
-3. Commit and tag: `git tag v1.1.0 && git push --tags`.
-4. **Windows:** `npm run release`. electron-builder signs the NSIS installer and uploads artefacts to the matching GitHub Release draft.
-5. **macOS:** `npm run release:mac`. Produces ad-hoc signed DMG and zip for arm64 + x64.
+The deterministic tests cover configuration migration, quiet-hour boundaries, idle return, overlapping sleep/lock states, cadence/snooze preservation, local-date streaks, frame-rate-independent timing, fixed limb lengths, and transition continuity.
 
-## Contributing
+## Build for Mac
 
-- Bugs: open an issue with the output of **Copy diagnostics** from the app footer.
-- Exercises: edit `src/shared/exercises.js` and cite a public source (NHS, ACE Fitness, Mayo Clinic) in the comment above your entry.
+```sh
+npm run build:mac -- --publish never
+```
 
-## Licence
+For a locally signed test build on your current Mac architecture, run `npm run build:mac:local`. That command disables hardened runtime for the ad-hoc build; the distribution build retains it.
 
-MIT. See [LICENSE](./LICENSE).
+The distribution build targets `dist/Stretch-2.0.0-arm64.dmg`, `dist/Stretch-2.0.0-x64.dmg`, and matching ZIPs. `npm run build:mac:dir` creates app bundles. The icon prebuild runs for Mac builds.
+
+Developer ID signing and notarization use electron-builder's standard Apple credential environment variables when supplied. Local builds without those credentials are not notarized distribution releases. Review release notes and signing status before publishing. Downloads on the website lead to published releases rather than assuming an unpublished 2.0 asset exists.
+
+Windows build configuration is retained (`npm run build:win`), but the 2.0 validation effort is Mac-first. Existing Windows releases remain available on GitHub. Stretch 2.0 uses manual updates, with no update polling.
+
+## Reminder behavior
+
+The default cadence is 30 minutes, configurable from 5 to 240 minutes. Quiet hours default to 18:00–09:00. More than five minutes of system idle defers automatic reminders. Returning from idle or unlocking/waking starts a fresh interval. Overlapping lock and sleep states must both clear.
+
+A small card does not take keyboard focus. “Show over fullscreen apps” controls macOS Space visibility, not meeting detection. Stretch does not detect other applications' fullscreen state, meetings, or macOS Focus. Pause or snooze when needed. The player can use the whole display without entering a new native fullscreen Space.
+
+The guide begins only after clicking “Let's begin.” Enter/Space can control it after focus. Escape leaves immersive view, or closes the compact player. Saving a completed break starts the next interval; snoozing replaces it with the selected delay. Changing unrelated preferences does not reset reminders.
+
+## Research and privacy
+
+Movement references and timing adaptations: [Exercise research](docs/EXERCISE-RESEARCH.md). Technical and manual release checks: [Release validation](docs/RELEASE-VALIDATION.md).
+
+Keep movement comfortable; stop if it hurts. Short routines complement longer screen breaks and physical activity. Ask a health professional if suitability is uncertain.
+
+Preferences and up to 365 entries of local daily progress live in `~/Library/Application Support/Stretch/config.json` on Mac. Version 1 history is migrated without deleting the original data. No telemetry, cloud syncing, or accounts. See [Privacy](PRIVACY.md).
+
+MIT licensed. [Source and published releases](https://github.com/praveensankar969/Stretch).

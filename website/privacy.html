@@ -1,167 +1,69 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <title>Privacy — Stretch</title>
-  <meta name="description" content="Stretch is a local-only app for macOS and Windows. It has no server, no analytics, no telemetry. Your settings live in a single JSON file on your machine — and nowhere else.">
-  <meta name="author" content="Stretch">
-  <meta name="color-scheme" content="light dark">
-  <meta name="theme-color" content="#F5EFE6" media="(prefers-color-scheme: light)">
-  <meta name="theme-color" content="#17130F" media="(prefers-color-scheme: dark)">
-  <meta name="robots" content="index, follow, max-snippet:-1">
-
-  <link rel="canonical" href="https://stretchapp.in/privacy.html">
-  <link rel="alternate" hreflang="en" href="https://stretchapp.in/privacy.html">
-  <link rel="alternate" hreflang="x-default" href="https://stretchapp.in/privacy.html">
-
-  <link rel="icon" href="favicon.svg" type="image/svg+xml">
-  <link rel="mask-icon" href="favicon.svg" color="#D9734A">
-  <link rel="apple-touch-icon" href="favicon.svg">
-  <link rel="manifest" href="site.webmanifest">
-
-  <meta property="og:type" content="article">
-  <meta property="og:site_name" content="Stretch">
-  <meta property="og:title" content="Privacy — Stretch">
-  <meta property="og:description" content="Stretch has no server, no analytics, no telemetry. Your data never leaves your machine.">
-  <meta property="og:url" content="https://stretchapp.in/privacy.html">
-  <meta property="og:locale" content="en_US">
-  <meta property="og:image" content="https://stretchapp.in/assets/og.png">
-  <meta property="og:image:width" content="1200">
-  <meta property="og:image:height" content="630">
-  <meta property="og:image:alt" content="Stretch — privacy-first desk stretch reminders for macOS and Windows.">
-
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Privacy — Stretch">
-  <meta name="twitter:description" content="No server. No analytics. No telemetry. Everything stays on your machine.">
-  <meta name="twitter:image" content="https://stretchapp.in/assets/og.png">
-
-  <link rel="stylesheet" href="../src/assets/tokens.css">
-  <link rel="stylesheet" href="../src/assets/fonts.css">
-  <link rel="stylesheet" href="style.css">
-
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "PrivacyPolicy",
-    "name": "Stretch Privacy Policy",
-    "headline": "We don't have any of your data, because we never collect it.",
-    "url": "https://stretchapp.in/privacy.html",
-    "inLanguage": "en",
-    "dateModified": "2026-04-23",
-    "isPartOf": {
-      "@type": "WebSite",
-      "name": "Stretch",
-      "url": "https://stretchapp.in/"
-    },
-    "publisher": {
-      "@type": "Organization",
-      "name": "Stretch",
-      "url": "https://stretchapp.in/"
-    }
-  }
-  </script>
-
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "BreadcrumbList",
-    "itemListElement": [
-      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://stretchapp.in/" },
-      { "@type": "ListItem", "position": 2, "name": "Privacy", "item": "https://stretchapp.in/privacy.html" }
-    ]
-  }
-  </script>
-</head>
-<body class="theme-paper">
-  <div class="grain" aria-hidden="true"></div>
-
-  <header class="nav">
-    <a class="brand" href="index.html">
-      <span class="brand-mark" aria-hidden="true"></span>
-      <span class="brand-word">Stretch</span>
-    </a>
-    <nav class="nav-links">
-      <a href="index.html">Home</a>
-      <a class="nav-cta" href="download/">Download</a>
-    </nav>
-  </header>
-
-  <main class="legal-shell">
-    <p class="eyebrow"><span class="eyebrow-dot"></span> Privacy — the short version</p>
-    <h1 class="legal-title">We don't have any of your data,<br>because we never collect it.</h1>
-
-    <section class="legal-section">
-      <h2>What Stretch stores</h2>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Privacy · Stretch</title>
+    <meta
+      name="description"
+      content="Your settings and progress stay on your device. No accounts, analytics, or telemetry."
+    />
+    <link rel="canonical" href="https://stretchapp.in/privacy.html" />
+    <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="../src/assets/fonts.css" />
+    <link rel="stylesheet" href="../src/assets/tokens.css" />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <header class="site-nav">
+      <a class="brand" href="./"
+        ><span class="brand-mark"></span
+        ><span class="brand-word">Stretch</span></a
+      ><a class="demo-link" href="./">Back to a little space ↗</a>
+    </header>
+    <main class="document">
+      <p class="eyebrow">PRIVACY · UPDATED SEPTEMBER 22, 2026</p>
+      <h1>Personal stays<br /><em>personal.</em></h1>
       <p>
-        A single JSON file on your computer:
+        Stretch 2.0 has no accounts, analytics, advertising, telemetry, or cloud
+        service. The app’s fonts, illustrations, and exercise instructions are
+        bundled locally.
       </p>
-      <ul>
-        <li><strong>Windows:</strong> <code>%APPDATA%/Stretch/config.json</code></li>
-        <li><strong>macOS:</strong> <code>~/Library/Application Support/Stretch/config.json</code></li>
-      </ul>
+      <h2>What stays on your device</h2>
       <p>
-        It contains: your chosen interval, daily goal, quiet-hours,
-        the number of stretches you've completed each day for the last few months,
-        and your current streak.
+        Your preferences, completed break counts, movement minutes, and recent
+        exercise IDs are saved in a local JSON file. Daily history is limited to
+        365 entries. On Mac, find it in
+        <code>~/Library/Application Support/Stretch/config.json</code>. On
+        Windows, it lives in <code>%APPDATA%/Stretch/config.json</code>.
+      </p>
+      <h2>When something opens online</h2>
+      <p>
+        Movement source links and the privacy link open in your browser only
+        when you choose them. Those websites have their own privacy policies.
+        Stretch 2.0 does not check for updates automatically; published
+        downloads are on GitHub.
+      </p>
+      <h2>This website</h2>
+      <p>
+        There are no analytics scripts, tracking cookies, remote fonts, or
+        accounts. The movement demo runs in your browser. Hosting and download
+        providers, including GitHub, may process ordinary request information
+        under their own policies.
+      </p>
+      <h2>Your data, your choice</h2>
+      <p>
+        Quit Stretch and delete its configuration file to reset your preferences
+        and progress. Uninstalling the app may leave this file behind. “Copy
+        diagnostics” copies the app version, platform, runtime version, and
+        reminder state to your clipboard; it does not send them anywhere or
+        include your exercise history.
       </p>
       <p>
-        That's it. It never leaves your device.
+        <a href="https://github.com/praveensankar969/Stretch"
+          >Read the source code ↗</a
+        >
       </p>
-    </section>
-
-    <section class="legal-section">
-      <h2>What Stretch transmits</h2>
-      <ul>
-        <li><strong>Update checks</strong> — Stretch asks GitHub for the latest release every six hours. GitHub sees your IP address (same as if you visited github.com in a browser). We don't operate any server that sees this.</li>
-        <li><strong>Nothing else.</strong> No analytics, no crash reporter, no telemetry, no remote feature flags, no A/B tests, no remote fonts or scripts, no images from a CDN.</li>
-      </ul>
-    </section>
-
-    <section class="legal-section">
-      <h2>The app NEVER</h2>
-      <ul>
-        <li>Reads your screen, keystrokes, or microphone.</li>
-        <li>Knows which app is in the foreground (it only asks "are you in a full-screen app" so it can stay silent).</li>
-        <li>Phones home with your stretch history or streak.</li>
-      </ul>
-    </section>
-
-    <section class="legal-section">
-      <h2>Removal</h2>
-      <p>
-        <strong>Windows:</strong> Uninstall Stretch from Windows Settings → Apps. To also erase your
-        settings and history, delete <code>%APPDATA%/Stretch/</code>.
-      </p>
-      <p>
-        <strong>macOS:</strong> Drag Stretch from Applications to Trash. To also erase your
-        settings and history, delete <code>~/Library/Application Support/Stretch/</code>.
-      </p>
-    </section>
-
-    <section class="legal-section">
-      <h2>Changes</h2>
-      <p>
-        If this ever stops being true we'll say so in the in-app update dialog
-        before shipping. This page is versioned with the source: see
-        <a href="https://github.com/praveensankar969/stretch/blob/master/PRIVACY.md">PRIVACY.md</a> in
-        the repo for history.
-      </p>
-    </section>
-
-    <p class="legal-meta">Last updated: 2026-04-23.</p>
-  </main>
-
-  <footer class="foot">
-    <div class="foot-left">
-      <span class="brand-mark small" aria-hidden="true"></span>
-      <span>Stretch &nbsp;·&nbsp; Designed with intention. Distributed under MIT.</span>
-    </div>
-    <div class="foot-right">
-      <a href="privacy.html">Privacy</a>
-      <a href="https://github.com/praveensankar969/stretch">GitHub</a>
-    </div>
-  </footer>
-</body>
+    </main>
+  </body>
 </html>
