@@ -6,6 +6,7 @@ A little room to move. A private, Mac-first stretch reminder with gentle illustr
 
 - A redesigned dashboard, ten-movement library, body-area preferences, and a 1 minute 54 second desk reset.
 - An articulated SVG guide with fixed segment lengths, smooth transitions, timed holds, both-side cues, and pause/resume. It is illustrative guidance, not clinical motion capture.
+- Exercise-specific camera angles, hand/forearm and ankle/foot close-ups, and Guide / Front / Side controls in the Mac player and website demo. Switching views preserves the movement and timer.
 - Small reminders without keyboard focus; optional visibility over macOS fullscreen Spaces. Expand a player on its current display, then press Escape to return.
 - One reminder scheduler for cadence, quiet hours, snooze, idle, lock, and sleep. No catch-up storm on wake. Manual sessions work while reminders are paused.
 - Local counts, minutes, and a seven-day history. A completed routine counts as one break. Skips and previews do not earn credit.
@@ -35,7 +36,24 @@ npm run test:ui
 
 The UI suite launches a real Electron process using a fresh temporary data directory. It covers onboarding, settings persistence, manual breaks while paused, early-completion rejection, pause, lock/resume, immersive view, completion credit, snooze, and minimum window size. It also checks the website at desktop/mobile sizes, the interactive demo, reduced motion, privacy, and download pages. Screenshots go to `artifacts/screenshots/`.
 
-The deterministic tests cover configuration migration, quiet-hour boundaries, idle return, overlapping sleep/lock states, cadence/snooze preservation, local-date streaks, frame-rate-independent timing, fixed limb lengths, and transition continuity.
+The deterministic tests cover configuration migration, quiet-hour boundaries, idle return, overlapping sleep/lock states, cadence/snooze preservation, local-date streaks, frame-rate-independent timing, fixed limb lengths, transition continuity, rigid camera transforms, and framing throughout every movement. The UI suite checks camera switching while paused and with reduced motion, and saves a comparison sheet of every movement in all three views.
+
+## Movement views
+
+Guide selects a fixed angle for each movement:
+
+| Movement                                   | Guide view         | Framing            |
+| ------------------------------------------ | ------------------ | ------------------ |
+| Neck turns, standing side bends, breathing | Front              | Whole body         |
+| Shoulder rolls                             | Three-quarter side | Whole body         |
+| Chest opener, seated twist                 | Three-quarter      | Whole body         |
+| Wrist and forearm releases                 | Side               | Hands and forearms |
+| Ankle pumps                                | Side               | Ankles and feet    |
+| Walking break                              | Side               | Whole body         |
+
+Front and Side let users inspect the same pose from another angle. Guide returns to the recommended view; each new movement starts in Guide. Close-ups keep a fixed frame across both sides, with the active limb emphasized. The camera never orbits or zooms during a repetition. Reduced motion uses a still demonstration and supports the same view controls.
+
+The renderer applies an orthonormal camera rotation to the original 3D joint positions before projecting them into SVG. A torso with depth, a projected chair, profile facial features, and limb depth ordering make side views readable without distorting the skeleton. Camera changes do not alter exercise timing, joint positions, or side cues. These are schematic illustrations; the camera and interpolation math do not establish clinical biomechanical accuracy.
 
 ## Build for Mac
 

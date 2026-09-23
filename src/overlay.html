@@ -45,7 +45,23 @@
         <div class="stage-circle" aria-hidden="true"></div>
         <div id="exercise-figure" class="figure"></div>
         <div class="stage-floor" aria-hidden="true"></div>
-        <span class="stage-caption">Move at your own comfortable pace</span>
+        <span class="stage-caption" id="camera-label"></span>
+        <div class="camera-controls" role="group" aria-label="Animation view">
+          <button
+            type="button"
+            data-view="guide"
+            aria-pressed="true"
+            title="Recommended angle for this movement"
+          >
+            Guide
+          </button>
+          <button type="button" data-view="front" aria-pressed="false">
+            Front
+          </button>
+          <button type="button" data-view="side" aria-pressed="false">
+            Side
+          </button>
+        </div>
       </div>
       <section class="player-copy">
         <div class="player-meta">

@@ -30,6 +30,7 @@
   const EXERCISES = [
     {
       id: "neck-turn",
+      view: { angle: "front", framing: "body" },
       title: "Neck reset",
       region: "Neck",
       tags: ["neck"],
@@ -45,6 +46,7 @@
     },
     {
       id: "shoulder-roll",
+      view: { angle: "three-quarter-side", framing: "body" },
       title: "Shoulder rolls",
       region: "Shoulders",
       tags: ["shoulders", "neck"],
@@ -58,6 +60,7 @@
     },
     {
       id: "chest-opener",
+      view: { angle: "three-quarter", framing: "body" },
       title: "Open your chest",
       region: "Chest & shoulders",
       tags: ["shoulders", "back"],
@@ -72,6 +75,7 @@
     },
     {
       id: "seated-twist",
+      view: { angle: "three-quarter", framing: "body" },
       title: "Seated unwind",
       region: "Upper back",
       tags: ["back"],
@@ -87,6 +91,7 @@
     },
     {
       id: "wrist-extensor",
+      view: { angle: "side", framing: "wrists" },
       title: "Wrist release",
       region: "Wrists & forearms",
       tags: ["wrists"],
@@ -102,6 +107,7 @@
     },
     {
       id: "wrist-flexor",
+      view: { angle: "side", framing: "wrists" },
       title: "Forearm release",
       region: "Wrists & forearms",
       tags: ["wrists"],
@@ -117,6 +123,7 @@
     },
     {
       id: "ankle-pumps",
+      view: { angle: "side", framing: "ankles" },
       title: "Ankle wake-up",
       region: "Ankles & legs",
       tags: ["legs"],
@@ -132,6 +139,7 @@
     },
     {
       id: "side-bend",
+      view: { angle: "front", framing: "body" },
       title: "Standing side bend",
       region: "Sides & back",
       tags: ["back", "legs"],
@@ -147,6 +155,7 @@
     },
     {
       id: "reset-breath",
+      view: { angle: "front", framing: "body" },
       title: "A little breathing room",
       region: "Breathing",
       tags: ["breath"],
@@ -160,6 +169,7 @@
     },
     {
       id: "walk-break",
+      view: { angle: "side", framing: "body" },
       title: "Leave the desk",
       region: "Whole body",
       tags: ["legs"],

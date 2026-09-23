@@ -1,7 +1,7 @@
 "use strict";
 const bridge = window.stretch;
 const { getExerciseById, SOURCES } = window.StretchExercises;
-const { Figure, sample } = window.StretchMotion;
+const { Figure, sample, getCamera } = window.StretchMotion;
 const { SessionClock } = window.StretchClock;
 const $ = (id) => document.getElementById(id);
 const figure = new Figure($("exercise-figure"));
@@ -15,9 +15,31 @@ let payload,
   immersive = false,
   prepareUntil = 0,
   frame,
-  sending = false;
+  sending = false,
+  cameraView = "guide",
+  movementElapsed = 0;
+function renderFigure() {
+  if (!payload) return;
+  figure.render(
+    exercises[index],
+    movementElapsed,
+    payload.reducedMotion || reducedQuery.matches,
+    cameraView,
+  );
+}
+function setCamera(view) {
+  cameraView = view;
+  document
+    .querySelectorAll("[data-view]")
+    .forEach((button) =>
+      button.setAttribute("aria-pressed", String(button.dataset.view === view)),
+    );
+  $("camera-label").textContent = getCamera(exercises[index], view).label;
+  renderFigure();
+}
 function setExercise(nextIndex) {
   index = nextIndex;
+  movementElapsed = 0;
   const ex = exercises[index];
   $("ex-title").textContent = ex.title;
   $("ex-desc").textContent = ex.desc;
@@ -31,7 +53,7 @@ function setExercise(nextIndex) {
         ? "PREVIEW · NOT RECORDED"
         : "A MOMENT FOR YOU";
   $("source-btn").textContent = SOURCES[ex.source].name + " ↗";
-  figure.render(ex, 0, payload.reducedMotion || reducedQuery.matches);
+  setCamera("guide");
 }
 function layout(expanded) {
   immersive = expanded;
@@ -104,11 +126,8 @@ function tick(now) {
       if (nextIndex !== index) setExercise(nextIndex);
       const ex = exercises[index],
         state = sample(ex, elapsed - offset);
-      figure.render(
-        ex,
-        elapsed - offset,
-        payload.reducedMotion || reducedQuery.matches,
-      );
+      movementElapsed = elapsed - offset;
+      renderFigure();
       if ($("phase-label").textContent !== state.phase)
         $("phase-label").textContent = state.phase;
       $("timer").textContent =
@@ -162,6 +181,12 @@ async function act(action) {
   }
 }
 $("play-btn").onclick = begin;
+document.querySelectorAll("[data-view]").forEach((button) => {
+  button.onclick = () => {
+    if (payload) setCamera(button.dataset.view);
+  };
+});
+reducedQuery.addEventListener("change", renderFigure);
 $("close-btn").onclick = () => act("skip");
 $("snooze-btn").onclick = () => act("snooze");
 $("expand-btn").onclick = async () => layout(await bridge.expandOverlay());

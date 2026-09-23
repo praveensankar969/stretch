@@ -1,6 +1,6 @@
 "use strict";
 const { getExerciseById, SOURCES } = window.StretchExercises;
-const { Figure, sample } = window.StretchMotion;
+const { Figure, sample, getCamera } = window.StretchMotion;
 const { SessionClock } = window.StretchClock;
 const $ = (id) => document.getElementById(id);
 const heroFigure = new Figure($("site-figure")),
@@ -11,13 +11,28 @@ let exercise,
   clock,
   heroVisible = true,
   demoVisible = false,
-  done = false;
+  done = false,
+  cameraView = "guide";
 const choices = [
   ["shoulder-roll", "Shoulders"],
   ["neck-turn", "Neck"],
   ["wrist-extensor", "Wrists"],
+  ["ankle-pumps", "Ankles"],
   ["reset-breath", "Breathe"],
 ];
+function renderDemo() {
+  demoFigure.render(exercise, clock.elapsed, reduced.matches, cameraView);
+}
+function setCamera(view) {
+  cameraView = view;
+  document
+    .querySelectorAll("[data-view]")
+    .forEach((button) =>
+      button.setAttribute("aria-pressed", String(button.dataset.view === view)),
+    );
+  $("demo-view-label").textContent = getCamera(exercise, view).label;
+  renderDemo();
+}
 function choose(id) {
   exercise = getExerciseById(id);
   clock = new SessionClock();
@@ -37,7 +52,7 @@ function choose(id) {
     .forEach((btn) =>
       btn.setAttribute("aria-pressed", String(btn.dataset.exercise === id)),
     );
-  demoFigure.render(exercise, 0, reduced.matches);
+  setCamera("guide");
 }
 for (const [id, label] of choices) {
   const btn = document.createElement("button");
@@ -61,6 +76,10 @@ $("demo-play").onclick = () => {
   }
 };
 choose("shoulder-roll");
+document.querySelectorAll("[data-view]").forEach((button) => {
+  button.onclick = () => setCamera(button.dataset.view);
+});
+reduced.addEventListener("change", renderDemo);
 const observer = new IntersectionObserver((entries) =>
   entries.forEach((entry) => {
     if (entry.target.id === "site-figure") heroVisible = entry.isIntersecting;
@@ -89,7 +108,7 @@ function tick(now) {
       $("demo-play").textContent = "Resume movement →";
       $("demo-phase").textContent = "Paused while you were away.";
     } else {
-      demoFigure.render(exercise, elapsed, reduced.matches);
+      renderDemo();
       $("demo-phase").textContent =
         state.phase +
         (state.side ? ` · ${state.side < 0 ? "Your right" : "Your left"}` : "");

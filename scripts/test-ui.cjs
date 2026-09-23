@@ -89,6 +89,10 @@ async function main() {
       monitor(overlay);
       await overlay.waitForSelector("#exercise-figure svg");
       assert.equal(
+        await overlay.locator("#exercise-figure").getAttribute("data-camera"),
+        "three-quarter-side",
+      );
+      assert.equal(
         await overlay.locator("#ex-title").textContent(),
         "Shoulder rolls",
       );
@@ -118,6 +122,30 @@ async function main() {
       await overlay.waitForTimeout(700);
       await overlay.locator("#play-btn").click();
       const paused = await overlay.locator("#timer").textContent();
+      const phase = await overlay.locator("#phase-label").textContent();
+      const progress = await overlay
+        .locator(".timeline")
+        .getAttribute("aria-valuenow");
+      for (const view of ["side", "front", "guide"]) {
+        await overlay.locator(`[data-view="${view}"]`).click();
+        assert.equal(
+          await overlay.locator("#exercise-figure").getAttribute("data-camera"),
+          view === "guide" ? "three-quarter-side" : view,
+        );
+        assert.equal(await overlay.locator("#timer").textContent(), paused);
+        assert.equal(
+          await overlay.locator("#phase-label").textContent(),
+          phase,
+        );
+        assert.equal(
+          await overlay.locator(".timeline").getAttribute("aria-valuenow"),
+          progress,
+        );
+        assert.equal(
+          await overlay.locator('[data-view][aria-pressed="true"]').count(),
+          1,
+        );
+      }
       await overlay.waitForTimeout(1200);
       assert.equal(
         await overlay.locator("#timer").textContent(),
@@ -214,9 +242,15 @@ async function main() {
         const wins = BrowserWindow.getAllWindows();
         return {
           fullscreen: wins.some((w) => w.isFullScreen()),
-          visible: wins.find(w=>w.webContents.getURL().endsWith('overlay.html')).isVisible(),
-          focused: wins.find(w=>w.webContents.getURL().endsWith('overlay.html')).isFocused(),
-          allSpaces: wins.find(w=>w.webContents.getURL().endsWith('overlay.html')).isVisibleOnAllWorkspaces(),
+          visible: wins
+            .find((w) => w.webContents.getURL().endsWith("overlay.html"))
+            .isVisible(),
+          focused: wins
+            .find((w) => w.webContents.getURL().endsWith("overlay.html"))
+            .isFocused(),
+          allSpaces: wins
+            .find((w) => w.webContents.getURL().endsWith("overlay.html"))
+            .isVisibleOnAllWorkspaces(),
         };
       });
       assert.equal(flags.fullscreen, true);
@@ -265,7 +299,26 @@ async function main() {
       "Pause movement",
     );
     await page.locator("#demo-play").click();
+    const pausedTime = await page.locator("#demo-time").textContent();
+    await page.locator('[data-view="side"]').click();
+    assert.equal(
+      await page.locator("#demo-figure").getAttribute("data-camera"),
+      "side",
+    );
+    assert.equal(await page.locator("#demo-time").textContent(), pausedTime);
+    assert.equal(
+      await page.locator("#demo-phase").textContent(),
+      "Paused. Take your time.",
+    );
     await page.getByRole("button", { name: "Wrists", exact: true }).click();
+    assert.equal(
+      await page.locator('[data-view="guide"]').getAttribute("aria-pressed"),
+      "true",
+    );
+    assert.equal(
+      await page.locator("#demo-figure").getAttribute("data-framing"),
+      "wrists",
+    );
     assert.equal(
       await page.locator("#demo-title").textContent(),
       "Wrist release",
@@ -287,6 +340,56 @@ async function main() {
       pose,
       "reduced motion still moves",
     );
+    await page.locator("#movements").scrollIntoViewIfNeeded();
+    for (const view of ["front", "side", "guide"]) {
+      await page.locator(`[data-view="${view}"]`).click();
+      assert.equal(
+        await page.locator("#demo-figure").getAttribute("data-camera"),
+        view === "guide" ? "three-quarter-side" : view,
+      );
+      const still = await page.locator("#demo-figure").innerHTML();
+      await page.waitForTimeout(100);
+      assert.equal(await page.locator("#demo-figure").innerHTML(), still);
+    }
+    await page.getByRole("button", { name: "Ankles", exact: true }).click();
+    assert.equal(
+      await page.locator("#demo-figure").getAttribute("data-camera"),
+      "side",
+    );
+    await page
+      .locator(".movement-demo")
+      .screenshot({ path: path.join(out, "ankles-mobile.png") });
+    await page.setViewportSize({ width: 1200, height: 1000 });
+    await page.evaluate(() => {
+      const sheet = document.createElement("div");
+      sheet.id = "camera-sheet";
+      sheet.style =
+        "position:absolute;inset:0 auto auto 0;width:1200px;z-index:9999;display:grid;grid-template-columns:repeat(3,1fr);background:#f8faf2";
+      for (const exercise of window.StretchExercises.EXERCISES)
+        for (const view of ["guide", "front", "side"]) {
+          const card = document.createElement("div");
+          card.style =
+            "height:340px;border:1px solid #c8d6bb;background:#e4ecda;padding:12px";
+          const label = document.createElement("p");
+          label.textContent = exercise.title + " · " + view;
+          label.style = "font-size:14px";
+          const figure = document.createElement("div");
+          figure.style = "height:300px";
+          card.append(label, figure);
+          sheet.append(card);
+          new window.StretchMotion.Figure(figure).render(
+            exercise,
+            0,
+            true,
+            view,
+          );
+          figure.querySelector("svg").style = "height:100%;width:100%";
+        }
+      document.body.append(sheet);
+    });
+    await page
+      .locator("#camera-sheet")
+      .screenshot({ path: path.join(out, "camera-views.png") });
     for (const route of ["/privacy.html", "/download/"]) {
       await page.goto(`http://127.0.0.1:${server.address().port}${route}`);
       await noOverflow(page);

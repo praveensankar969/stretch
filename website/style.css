@@ -368,7 +368,7 @@ em {
 }
 #demo-figure {
   position: absolute;
-  inset: 40px 10px 35px;
+  inset: 40px 10px 85px;
 }
 #demo-figure svg {
   width: 100%;
@@ -382,6 +382,37 @@ em {
   text-align: center;
   color: #52634b;
   font-size: 9px;
+}
+.demo-view-label {
+  position: absolute;
+  top: 57px;
+  left: 25px;
+  color: #52634b;
+  font-size: 10px;
+}
+.camera-controls {
+  position: absolute;
+  bottom: 49px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  padding: 3px;
+  gap: 2px;
+  border: 1px solid #b5c7a866;
+  border-radius: 100px;
+  background: #f8faf2d9;
+}
+.camera-controls button {
+  min-height: 32px;
+  padding: 6px 19px;
+  border-radius: 100px;
+  background: transparent;
+  color: #52634b;
+  font-size: 12px;
+}
+.camera-controls button[aria-pressed="true"] {
+  background: #355c4e;
+  color: #fff;
 }
 .movement-controls {
   padding: 35px 38px;
@@ -787,10 +818,10 @@ em {
     grid-template-columns: 1fr;
   }
   .movement-visual {
-    min-height: 330px;
+    min-height: 360px;
   }
   #demo-figure {
-    inset: 5px 10px 25px;
+    inset: 62px 10px 80px;
   }
   .movement-controls {
     padding: 25px;

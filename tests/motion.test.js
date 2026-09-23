@@ -9,10 +9,88 @@ const {
   solveIK,
   length,
   sub,
+  CAMERA_ANGLES,
+  cameraPoint,
+  project,
+  getCamera,
+  torsoOutline,
 } = require("../src/shared/motion");
 const { SessionClock } = require("../src/shared/session-clock");
 const near = (a, b, tolerance = 1e-6) =>
   assert.ok(Math.abs(a - b) < tolerance, `${a} ≈ ${b}`);
+test("camera rotations preserve 3D distances and front/side axes", () => {
+  for (const camera of Object.values(CAMERA_ANGLES)) {
+    const a = [18, 142, -35],
+      b = [-47, 209, 62];
+    near(
+      length(sub(cameraPoint(a, camera), cameraPoint(b, camera))),
+      length(sub(a, b)),
+    );
+  }
+  const start = [0, 200, 0],
+    forward = [0, 200, 60];
+  near(
+    length(
+      sub(
+        project(start, CAMERA_ANGLES.front),
+        project(forward, CAMERA_ANGLES.front),
+      ),
+    ),
+    0,
+  );
+  near(
+    length(
+      sub(
+        project(start, CAMERA_ANGLES.side),
+        project(forward, CAMERA_ANGLES.side),
+      ),
+    ),
+    60,
+  );
+});
+test("recommended views reveal the movement's primary plane", () => {
+  const views = Object.fromEntries(
+    EXERCISES.map((ex) => [ex.id, getCamera(ex)]),
+  );
+  assert.equal(views["neck-turn"].angle, "front");
+  assert.equal(views["side-bend"].angle, "front");
+  assert.equal(views["ankle-pumps"].angle, "side");
+  assert.equal(views["walk-break"].angle, "side");
+  assert.equal(views["wrist-extensor"].framing, "wrists");
+  assert.equal(views["ankle-pumps"].framing, "ankles");
+});
+test("all camera angles keep the demonstrated joints inside a fixed frame", () => {
+  for (const ex of EXERCISES)
+    for (const view of ["guide", "front", "side"]) {
+      const camera = getCamera(ex, view),
+        [x, y, w, h] = camera.frame;
+      for (let t = 0; t <= ex.seconds; t += 0.25) {
+        const p = pose(ex, sample(ex, t));
+        for (const [name, point] of Object.entries(p.joints)) {
+          if (camera.framing === "wrists" && !/elbow|wrist|hand/.test(name))
+            continue;
+          if (camera.framing === "ankles" && !/knee|ankle|foot/.test(name))
+            continue;
+          const [a, b] = project(point, camera);
+          const margin = name === "head" ? 28 : 13;
+          assert.ok(
+            a >= x + margin &&
+              a <= x + w - margin &&
+              b >= y + margin &&
+              b <= y + h - margin,
+            `${ex.id} ${view}: clipped ${name} at ${t}`,
+          );
+        }
+        // An exact profile still needs a solid torso, not a collapsed plane.
+        const outline = torsoOutline(p, camera);
+        assert.ok(
+          Math.max(...outline.map((p) => p[0])) -
+            Math.min(...outline.map((p) => p[0])) >
+            30,
+        );
+      }
+    }
+});
 test("minimum-jerk curve has zero endpoint velocity and acceleration", () => {
   near(ease(0), 0);
   near(ease(1), 1);
