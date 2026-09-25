@@ -1,7 +1,7 @@
 {
   "name": "Stretch",
   "short_name": "Stretch",
-  "description": "A little room to move. Private, thoughtful stretch breaks for Mac.",
+  "description": "A little room to move. Private, thoughtful stretch breaks for Mac and Windows.",
   "start_url": "/",
   "scope": "/",
   "display": "browser",
@@ -10,12 +10,7 @@
   "dir": "ltr",
   "theme_color": "#f6f7f2",
   "background_color": "#f6f7f2",
-  "categories": [
-    "health",
-    "productivity",
-    "lifestyle",
-    "utilities"
-  ],
+  "categories": ["health", "productivity", "lifestyle", "utilities"],
   "icons": [
     {
       "src": "favicon.svg",

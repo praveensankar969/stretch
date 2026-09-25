@@ -1,7 +1,8 @@
 # Stretch 2.0
-A free, open-source, local-only stretch reminder. Version 2.0 focuses on macOS.
+A free, open-source, local-only stretch reminder. Version 2.0 is available for Mac and Windows.
 Ten illustrated movements, local daily progress, quiet hours, snooze, and a guided player.
 Movement cues are short adaptations of NHS, Mayo Clinic, and HSE guidance; no clinical endorsement.
 The app does not detect meetings or macOS Focus. Sources open only on user action.
 Published releases: https://github.com/praveensankar969/Stretch/releases
+Mac (Apple Silicon), Mac (Intel), and Windows (64-bit) downloads: https://stretchapp.in/download/
 Privacy: https://stretchapp.in/privacy.html

@@ -162,11 +162,17 @@ em {
   right: -30px;
   transform: rotate(5deg);
   color: #52634b;
+  display: flex;
+  align-items: center;
+  gap: 9px;
 }
-.note-top > span {
-  font-size: 22px;
-  vertical-align: middle;
-  margin-right: 9px;
+.spark-icon {
+  display: block;
+  flex-shrink: 0;
+}
+.note-top .spark-icon {
+  width: 22px;
+  height: 22px;
 }
 .note-bottom {
   bottom: 83px;
@@ -201,10 +207,14 @@ em {
   color: #52634b;
   font-size: 11px;
 }
-.principles-strip span:before {
-  content: "✳";
-  color: #52634b;
-  margin-right: 12px;
+.principles-strip > span {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.principles-strip .spark-icon {
+  width: 14px;
+  height: 14px;
 }
 .intro-section {
   max-width: 1240px;
@@ -663,6 +673,16 @@ em {
 .download-box p {
   font-size: 13px;
 }
+.download-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin: 20px 0;
+}
+.download-actions .btn {
+  margin: 0;
+  font-size: 13px;
+}
 .document code {
   font-size: 12px;
   overflow-wrap: anywhere;
@@ -774,8 +794,8 @@ em {
     padding: 22px 24px;
     gap: 17px;
   }
-  .principles-strip span:before {
-    margin-right: 6px;
+  .principles-strip > span {
+    gap: 6px;
   }
   .intro-section {
     padding: 67px 24px;
