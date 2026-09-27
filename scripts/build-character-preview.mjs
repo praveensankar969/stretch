@@ -1,0 +1,10 @@
+import {build} from 'esbuild';
+import {mkdir,copyFile,cp} from 'node:fs/promises';
+await mkdir('artifacts/character-preview',{recursive:true});
+await build({entryPoints:['prototypes/character/viewer.mjs'],outfile:'artifacts/character-preview/viewer.js',bundle:true,minify:true,format:'iife',target:['chrome120','safari17'],legalComments:'none',banner:{js:'/* Three.js MIT license: /three-LICENSE.txt */'}});
+await copyFile('prototypes/character/index.html','artifacts/character-preview/index.html');
+await copyFile('prototypes/character/style.css','artifacts/character-preview/style.css');
+await copyFile('src/assets/fonts.css','artifacts/character-preview/fonts.css');
+await cp('src/assets/fonts','artifacts/character-preview/fonts',{recursive:true});
+await copyFile('node_modules/three/LICENSE','artifacts/character-preview/three-LICENSE.txt');
+console.log('Built standalone character preview.');

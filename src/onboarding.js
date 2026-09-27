@@ -1,6 +1,6 @@
 "use strict";
 const bridge = window.stretch;
-const figure = new window.StretchMotion.Figure(
+const figure = window.StretchGuide.create(
   document.getElementById("welcome-figure"),
 );
 const ex = window.StretchExercises.getExerciseById("shoulder-roll");

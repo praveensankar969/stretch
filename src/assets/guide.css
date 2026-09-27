@@ -1,0 +1,42 @@
+/* The 3D guide canvas sits over the SVG figure and crossfades in once it is ready. */
+.figure[data-renderer] {
+  isolation: isolate;
+}
+.exercise-art .figure,
+.welcome-art .figure {
+  position: relative;
+}
+.figure > .guide-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  opacity: 0;
+  transition: opacity 0.5s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+.figure > svg {
+  transition: opacity 0.35s ease;
+}
+.figure.guide-ready > .guide-canvas {
+  opacity: 1;
+}
+.figure.guide-ready > svg {
+  opacity: 0;
+}
+.figure.guide-cut > .guide-canvas {
+  opacity: 0;
+  transition: none;
+}
+.figure > .guide-still {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+@media (prefers-reduced-motion: reduce) {
+  .figure > .guide-canvas,
+  .figure > svg {
+    transition: none;
+  }
+}

@@ -5,19 +5,27 @@
   "main": "main.js",
   "scripts": {
     "start": "electron .",
+    "prestart": "npm run guide:build",
     "test": "node --test tests/*.test.js",
     "test:ui": "node scripts/test-ui.cjs",
-    "postinstall": "node scripts/build-icons.mjs",
+    "pretest:ui": "npm run guide:build",
+    "postinstall": "node scripts/build-icons.mjs && node scripts/build-guide.mjs",
     "icons": "node scripts/build-icons.mjs",
-    "prebuild": "npm run icons",
+    "guide:build": "node scripts/build-guide.mjs",
+    "prebuild": "npm run icons && npm run guide:build",
     "build": "electron-builder --mac",
-    "prebuild:mac": "npm run icons",
+    "prebuild:mac": "npm run icons && npm run guide:build",
     "build:mac": "electron-builder --mac",
-    "build:mac:dir": "npm run icons && electron-builder --mac --dir",
-    "build:win": "npm run icons && electron-builder --win",
+    "build:mac:dir": "npm run icons && npm run guide:build && electron-builder --mac --dir",
+    "build:win": "npm run icons && npm run guide:build && electron-builder --win",
     "site:preview": "node scripts/serve-site.cjs",
-    "prebuild:mac:local": "npm run icons",
-    "build:mac:local": "electron-builder --mac dmg --publish never -c.mac.identity=- -c.mac.hardenedRuntime=false"
+    "prebuild:mac:local": "npm run icons && npm run guide:build",
+    "build:mac:local": "electron-builder --mac dmg --publish never -c.mac.identity=- -c.mac.hardenedRuntime=false",
+    "character:build": "node scripts/build-character-preview.mjs",
+    "character:preview": "node scripts/serve-character.cjs",
+    "precharacter:preview": "npm run character:build",
+    "character:test": "node scripts/test-character.cjs",
+    "precharacter:test": "npm run character:build"
   },
   "author": {
     "name": "Stretch",
@@ -27,10 +35,12 @@
   "devDependencies": {
     "electron": "44.4.3",
     "electron-builder": "^26.15.3",
+    "esbuild": "0.28.2",
     "playwright": "^1.62.1",
     "png-to-ico": "^2.1.8",
     "png2icons": "^2.0.1",
-    "sharp": "^0.35.4"
+    "sharp": "^0.35.4",
+    "three": "0.186.1"
   },
   "build": {
     "appId": "com.stretchapp.in",
@@ -45,6 +55,7 @@
       "src/**/*",
       "!src/vendor/**",
       "!src/assets/lottie/**",
+      "!src/guide/*.mjs",
       "!src/**/*.map"
     ],
     "extraResources": [
@@ -110,7 +121,7 @@
       "hardenedRuntime": true,
       "extendInfo": {
         "LSUIElement": true,
-        "NSHumanReadableCopyright": "MIT \u2014 Stretch"
+        "NSHumanReadableCopyright": "MIT — Stretch"
       }
     },
     "dmg": {

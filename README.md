@@ -5,7 +5,7 @@ A little room to move. A private, Mac-first stretch reminder with gentle illustr
 ## What's new
 
 - A redesigned dashboard, ten-movement library, body-area preferences, and a 1 minute 54 second desk reset.
-- An articulated SVG guide with fixed segment lengths, smooth transitions, timed holds, both-side cues, and pause/resume. It is illustrative guidance, not clinical motion capture.
+- A 3D guide rendered on your device with Three.js: a sculpted character whose hands and feet hold their contacts, with overlapping, eased motion, breathing, and blinks, timed by the same clock as the cues. It falls back to the articulated SVG figure when WebGL is unavailable. It is illustrative guidance, not clinical motion capture.
 - Exercise-specific camera angles, hand/forearm and ankle/foot close-ups, and Guide / Front / Side controls in the Mac player and website demo. Switching views preserves the movement and timer.
 - Small reminders without keyboard focus; optional visibility over macOS fullscreen Spaces. Expand a player on its current display, then press Escape to return.
 - One reminder scheduler for cadence, quiet hours, snooze, idle, lock, and sleep. No catch-up storm on wake. Manual sessions work while reminders are paused.
@@ -24,7 +24,7 @@ node node_modules/electron/install.js
 npm start
 ```
 
-Assets are generated locally by `npm run icons`; fonts ship in the repository. The app does not need a network connection. `npm run site:preview` serves the website at http://127.0.0.1:4173.
+Assets are generated locally by `npm run icons`; fonts ship in the repository. The 3D guide is bundled from `src/guide/*.mjs` into `src/guide/guide.js` by `npm run guide:build`, which runs automatically after install, before `npm start`, before the UI tests, and before every build. `npm run character:preview` opens a standalone studio with a scrubber for reviewing the choreography. The app does not need a network connection. `npm run site:preview` serves the website at http://127.0.0.1:4173.
 
 ## Validate
 
@@ -47,13 +47,13 @@ Guide selects a fixed angle for each movement:
 | Neck turns, standing side bends, breathing | Front              | Whole body         |
 | Shoulder rolls                             | Three-quarter side | Whole body         |
 | Chest opener, seated twist                 | Three-quarter      | Whole body         |
-| Wrist and forearm releases                 | Side               | Hands and forearms |
-| Ankle pumps                                | Side               | Ankles and feet    |
+| Wrist and forearm releases                 | Working-arm side   | Hands and forearms |
+| Ankle pumps                                | Three-quarter side | Ankles and feet    |
 | Walking break                              | Side               | Whole body         |
 
-Front and Side let users inspect the same pose from another angle. Guide returns to the recommended view; each new movement starts in Guide. Close-ups keep a fixed frame across both sides, with the active limb emphasized. The camera never orbits or zooms during a repetition. Reduced motion uses a still demonstration and supports the same view controls.
+Front and Side let users inspect the same pose from another angle; the camera glides between views. Guide returns to the recommended view; each new movement starts in Guide and fades in. The camera never orbits or zooms during a repetition. The one exception is the wrist close-up: it re-aims to the working arm's side between sides, while the arms are relaxed. Reduced motion uses a still demonstration and supports the same view controls.
 
-The renderer applies an orthonormal camera rotation to the original 3D joint positions before projecting them into SVG. A torso with depth, a projected chair, profile facial features, and limb depth ordering make side views readable without distorting the skeleton. Camera changes do not alter exercise timing, joint positions, or side cues. These are schematic illustrations; the camera and interpolation math do not establish clinical biomechanical accuracy.
+The pose is a pure function of the session clock (`src/guide/choreography.mjs`), so pausing, resuming, and changing views never alter the pose, timer, or side cues. The library cards are stills rendered once by the same guide. These are illustrations; the solver and easing math do not establish clinical biomechanical accuracy.
 
 ## Build for Mac
 

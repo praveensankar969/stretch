@@ -1,10 +1,10 @@
 "use strict";
 const bridge = window.stretch;
 const { getExerciseById, SOURCES } = window.StretchExercises;
-const { Figure, sample, getCamera } = window.StretchMotion;
+const { sample, getCamera } = window.StretchMotion;
 const { SessionClock } = window.StretchClock;
 const $ = (id) => document.getElementById(id);
-const figure = new Figure($("exercise-figure"));
+const figure = window.StretchGuide.create($("exercise-figure"));
 const clock = new SessionClock();
 const reducedQuery = matchMedia("(prefers-reduced-motion: reduce)");
 let payload,

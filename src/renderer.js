@@ -6,8 +6,13 @@ const $ = (id) => document.getElementById(id);
 let config,
   settingsDirty = false,
   currentPage = "today",
+  libraryFilter = "all",
   heroExercise = EXERCISES[1];
-const heroFigure = new Figure($("hero-figure"));
+const heroFigure = window.StretchGuide.create($("hero-figure"));
+const stills = new Map();
+heroFigure.ready.then((upgraded) => {
+  if (upgraded && currentPage === "library") renderLibrary(libraryFilter);
+});
 const reducedQuery = matchMedia("(prefers-reduced-motion: reduce)");
 let animationFrame,
   animationOrigin = performance.now();
@@ -174,7 +179,31 @@ function applyConfig(next) {
   )
     renderWeek();
 }
+// Library cards show a still of each movement, rendered once by the hero's 3D guide.
+function renderArt(ex, art) {
+  const width = art.clientWidth,
+    height = art.clientHeight,
+    key = `${ex.id}:${width}x${height}`;
+  if (!stills.has(key)) {
+    const url = heroFigure.snapshot(ex, width, height);
+    if (url) stills.set(key, url);
+  }
+  if (stills.has(key)) {
+    const img = document.createElement("img");
+    img.className = "guide-still";
+    img.alt = "";
+    img.src = stills.get(key);
+    art.replaceChildren(img);
+    return;
+  }
+  new Figure(art).render(
+    ex,
+    ex.transition ? ex.transition + 0.5 : ex.cycle / 2,
+    true,
+  );
+}
 function renderLibrary(filter) {
+  libraryFilter = filter;
   $("library-filters").replaceChildren();
   for (const [id, label] of [
     ["all", "All movements"],
@@ -198,15 +227,11 @@ function renderLibrary(filter) {
     const card = document.createElement("article");
     card.className = "exercise-card";
     card.innerHTML = `<div class="exercise-art"><div class="figure"></div><span class="tag">${ex.seated ? "Seated" : "Standing"}</span></div><div class="exercise-copy"><h3>${ex.title}</h3><p>${ex.region} · ${ex.seconds} sec</p><button class="btn ghost">Start movement <span aria-hidden="true">↗</span></button><button class="source-button">${SOURCES[ex.source].name} ↗</button></div>`;
-    new Figure(card.querySelector(".figure")).render(
-      ex,
-      ex.transition ? ex.transition + 0.5 : ex.cycle / 2,
-      true,
-    );
     card.querySelector(".btn").onclick = () => bridge.startSession([ex.id]);
     card.querySelector(".source-button").onclick = () =>
       bridge.openSource(ex.source);
     $("exercise-grid").append(card);
+    renderArt(ex, card.querySelector(".figure"));
   }
 }
 async function save(event) {

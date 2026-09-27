@@ -33,7 +33,8 @@ async function main() {
     try {
       const page = await electron.firstWindow();
       monitor(page);
-      await page.waitForSelector("#welcome-figure svg");
+      await page.waitForSelector("#welcome-figure.guide-ready canvas");
+      await page.waitForTimeout(700);
       await page.screenshot({ path: path.join(out, "onboarding.png") });
       assert.equal(
         (await page.evaluate(() => window.stretch.getConfig())).reminderState,
@@ -41,7 +42,8 @@ async function main() {
       );
       await page.locator("#quiet-enabled").uncheck();
       await page.locator("#finish-btn").click();
-      await page.waitForSelector("#hero-figure svg");
+      await page.waitForSelector("#hero-figure.guide-ready canvas");
+      await page.waitForTimeout(700);
       assert.equal(await page.locator("#snooze-select option").count(), 4);
       assert.equal(await page.locator("#focus-select option").count(), 6);
       await page.screenshot({ path: path.join(out, "dashboard.png") });
@@ -74,6 +76,9 @@ async function main() {
       });
       await page.locator("[data-page=library]").click();
       assert.equal(await page.locator(".exercise-card").count(), 10);
+      await page.waitForFunction(
+        () => document.querySelectorAll(".exercise-card .guide-still").length === 10,
+      );
       await page.screenshot({
         path: path.join(out, "library.png"),
         fullPage: true,
@@ -87,7 +92,8 @@ async function main() {
       await page.evaluate(() => window.stretch.startSession(["shoulder-roll"]));
       let overlay = await overlayPromise;
       monitor(overlay);
-      await overlay.waitForSelector("#exercise-figure svg");
+      await overlay.waitForSelector("#exercise-figure.guide-ready canvas");
+      await overlay.waitForTimeout(700);
       assert.equal(
         await overlay.locator("#exercise-figure").getAttribute("data-camera"),
         "three-quarter-side",
@@ -187,7 +193,8 @@ async function main() {
       const snoozePromise = electron.waitForEvent("window");
       await page.evaluate(() => window.stretch.startSession(["neck-turn"]));
       overlay = await snoozePromise;
-      await overlay.waitForSelector("#exercise-figure svg");
+      await overlay.waitForSelector("#exercise-figure.guide-ready canvas");
+      await overlay.waitForTimeout(700);
       await overlay.locator("#snooze-btn").click();
       await page.waitForFunction(
         async () =>
@@ -233,7 +240,8 @@ async function main() {
         powerMonitor.getSystemIdleTime = () => 0;
       });
       overlay = await automaticWindow;
-      await overlay.waitForSelector("#exercise-figure svg");
+      await overlay.waitForSelector("#exercise-figure.guide-ready canvas");
+      await overlay.waitForTimeout(700);
       assert.equal(
         (await overlay.evaluate(() => window.stretch.getOverlay())).automatic,
         true,

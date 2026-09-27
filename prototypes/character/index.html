@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Stretch — Motion study</title>
+<link rel="stylesheet" href="fonts.css">
+<link rel="stylesheet" href="style.css">
+<script src="viewer.js" defer></script>
+</head>
+<body>
+<header>
+  <a class="brand" href="#"><span class="brand-mark" aria-hidden="true"></span><span class="brand-word">Stretch</span></a>
+  <span class="eyebrow muted">Motion study · 02</span>
+</header>
+<main>
+  <aside class="library" aria-label="Exercise library">
+    <p class="eyebrow accent">The library</p>
+    <h1>Small movements,<br>done well.</h1>
+    <ol id="library"></ol>
+  </aside>
+  <section class="player" aria-label="Exercise guide">
+    <div class="stage">
+      <div id="viewport" tabindex="0" aria-label="3D exercise guide. Drag to look around; scroll to zoom."></div>
+      <div class="hud hud-top">
+        <div>
+          <p class="eyebrow" id="region">Neck</p>
+          <h2 id="title">Neck reset</h2>
+        </div>
+        <div class="pills">
+          <span class="pill" id="posture">Seated</span>
+          <span class="pill side" id="side" hidden>Right side</span>
+        </div>
+      </div>
+      <div class="hud hud-cue" aria-live="polite">
+        <p id="phase">Ease into position</p>
+        <p id="count" class="count">2</p>
+      </div>
+      <div class="hud hud-views" role="group" aria-label="Camera">
+        <button data-view="guide" aria-pressed="true">Guide</button>
+        <button data-view="front" aria-pressed="false">Front</button>
+        <button data-view="three-quarter" aria-pressed="false">¾</button>
+        <button data-view="side" aria-pressed="false">Side</button>
+      </div>
+      <div id="loading" role="status">Setting the stage…</div>
+    </div>
+    <div class="transport">
+      <button id="play" class="round" aria-label="Pause guide" aria-pressed="true"><svg viewBox="0 0 20 20" aria-hidden="true"><path class="i-pause" d="M6 4h2.6v12H6zM11.4 4H14v12h-2.6z"/><path class="i-play" d="M6.5 4.2v11.6L15.8 10z"/></svg></button>
+      <button id="restart" class="round ghost" aria-label="Restart exercise"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 4a6 6 0 1 1-5.66 4H2.5l3-3.5 3 3.5H6.5A4 4 0 1 0 10 6z"/></svg></button>
+      <div class="scrub">
+        <div class="reps" id="reps" aria-hidden="true"></div>
+        <input id="scrubber" type="range" min="0" max="30" step="0.01" value="0" aria-label="Exercise timeline">
+      </div>
+      <span class="time"><span id="rep">Rep 1 of 6</span><span id="time">0:00 / 0:30</span></span>
+    </div>
+    <div class="details">
+      <p id="desc"></p>
+      <p class="cue"><span aria-hidden="true">✳</span><span id="cue"></span></p>
+      <p class="source"><a id="source" href="#" target="_blank" rel="noreferrer"></a><span>Stop if anything hurts.</span></p>
+    </div>
+  </section>
+</main>
+<footer><span>Every body, garment and movement is generated in code and rendered on your device.</span><span>No downloaded models or motion clips.</span></footer>
+</body>
+</html>

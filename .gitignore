@@ -4,3 +4,4 @@ build
 SKILLS.md
 artifacts/
 _site/
+src/guide/guide.js
