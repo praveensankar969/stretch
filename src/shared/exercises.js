@@ -91,7 +91,7 @@
     },
     {
       id: "wrist-extensor",
-      view: { angle: "side", framing: "wrists" },
+      view: { angle: "three-quarter-side", framing: "wrists" },
       title: "Wrist release",
       region: "Wrists & forearms",
       tags: ["wrists"],
@@ -107,7 +107,7 @@
     },
     {
       id: "wrist-flexor",
-      view: { angle: "side", framing: "wrists" },
+      view: { angle: "three-quarter-side", framing: "wrists" },
       title: "Forearm release",
       region: "Wrists & forearms",
       tags: ["wrists"],
@@ -123,7 +123,7 @@
     },
     {
       id: "ankle-pumps",
-      view: { angle: "side", framing: "ankles" },
+      view: { angle: "three-quarter-side", framing: "ankles" },
       title: "Ankle wake-up",
       region: "Ankles & legs",
       tags: ["legs"],

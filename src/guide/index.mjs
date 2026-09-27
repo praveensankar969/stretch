@@ -1,38 +1,51 @@
 import { Guide, supportsWebGL } from './stage.mjs';
 
-// Shows the SVG figure immediately, then crossfades to the 3D guide once it is built.
-// Falls back to the SVG figure for good if WebGL is unavailable or the GPU context is lost.
+// The 3D guide fades in once it is built. The SVG figure is only a fallback, used when WebGL is
+// unavailable, the guide cannot be built, or the GPU context is lost.
 class StageFigure {
   constructor(container) {
     this.container = container;
     this.guide = null;
+    this.svg = null;
     this.args = null;
-    this.svg = new window.StretchMotion.Figure(container);
-    container.dataset.renderer = 'svg';
+    this.pending = supportsWebGL();
+    if (!this.pending) { this.fallback(); this.ready = Promise.resolve(false); return; }
+    container.dataset.renderer = 'pending';
     this.ready = new Promise((resolve) => {
-      if (!supportsWebGL()) { resolve(false); return; }
-      // Building the character takes a moment; let the window paint first.
-      requestAnimationFrame(() => setTimeout(() => resolve(this.upgrade()), 0));
+      // Building the character takes a moment: wait until the figure is near the viewport and the page is idle.
+      const idle = window.requestIdleCallback || ((fn) => setTimeout(fn, 0));
+      const observer = new IntersectionObserver((entries) => {
+        if (entries.some((e) => e.isIntersecting)) this.load();
+      }, { rootMargin: '300px' });
+      this.load = () => {
+        if (this.loading) return;
+        this.loading = true;
+        observer.disconnect();
+        requestAnimationFrame(() => idle(() => resolve(this.upgrade()), { timeout: 300 }));
+      };
+      observer.observe(container);
     });
   }
 
+  load() {}
+
   upgrade() {
+    this.pending = false;
     let guide;
-    try { guide = new Guide(this.container); } catch (error) { console.warn('3D guide unavailable', error); return false; }
-    guide.onLost = () => this.downgrade();
+    try { guide = new Guide(this.container); } catch (error) {
+      console.warn('3D guide unavailable', error);
+      this.fallback();
+      return false;
+    }
+    guide.onLost = () => { this.guide = null; guide.destroy(); this.fallback(); };
     this.guide = guide;
     if (this.args) guide.render(...this.args);
     this.container.dataset.renderer = 'webgl';
-    const svg = this.container.querySelector(':scope > svg');
     requestAnimationFrame(() => this.container.classList.add('guide-ready'));
-    setTimeout(() => { if (this.guide === guide) svg?.remove(); }, 600);
     return true;
   }
 
-  downgrade() {
-    const guide = this.guide;
-    this.guide = null;
-    guide?.destroy();
+  fallback() {
     this.container.classList.remove('guide-ready');
     this.svg = new window.StretchMotion.Figure(this.container);
     this.container.dataset.renderer = 'svg';
@@ -41,7 +54,7 @@ class StageFigure {
 
   render(...args) {
     this.args = args;
-    (this.guide || this.svg).render(...args);
+    (this.guide || this.svg)?.render(...args);
   }
 
   snapshot(ex, width, height, view) {

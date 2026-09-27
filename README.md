@@ -47,7 +47,7 @@ Guide selects a fixed angle for each movement:
 | Neck turns, standing side bends, breathing | Front              | Whole body         |
 | Shoulder rolls                             | Three-quarter side | Whole body         |
 | Chest opener, seated twist                 | Three-quarter      | Whole body         |
-| Wrist and forearm releases                 | Working-arm side   | Hands and forearms |
+| Wrist and forearm releases                 | Three-quarter side | Hands and forearms |
 | Ankle pumps                                | Three-quarter side | Ankles and feet    |
 | Walking break                              | Side               | Whole body         |
 

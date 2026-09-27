@@ -12,6 +12,8 @@ const errors = [];
 function monitor(page) {
   page.on("pageerror", (error) => errors.push(error.message));
 }
+const pixels = async (page, selector) =>
+  (await page.locator(selector).screenshot({ caret: "initial" })).toString("base64");
 async function noOverflow(page) {
   assert.equal(
     await page.evaluate(
@@ -92,6 +94,16 @@ async function main() {
       await page.evaluate(() => window.stretch.startSession(["shoulder-roll"]));
       let overlay = await overlayPromise;
       monitor(overlay);
+      await overlay.waitForSelector("#exercise-figure[data-renderer]");
+      assert.equal(
+        await overlay.locator("#exercise-figure svg").count(),
+        0,
+        "the 2D fallback flashed before the 3D guide",
+      );
+      assert.notEqual(
+        await overlay.locator("#exercise-figure").getAttribute("data-renderer"),
+        "svg",
+      );
       await overlay.waitForSelector("#exercise-figure.guide-ready canvas");
       await overlay.waitForTimeout(700);
       assert.equal(
@@ -293,13 +305,15 @@ async function main() {
     });
     monitor(page);
     await page.goto(`http://127.0.0.1:${server.address().port}/`);
-    await page.waitForSelector("#site-figure svg");
+    await page.waitForSelector("#site-figure.guide-ready canvas");
+    await page.waitForTimeout(700);
     await page.screenshot({
       path: path.join(out, "website-desktop.png"),
       fullPage: true,
     });
     await noOverflow(page);
     await page.locator("#movements").scrollIntoViewIfNeeded();
+    await page.waitForSelector("#demo-figure.guide-ready canvas");
     await page.locator("#demo-play").click();
     await page.waitForTimeout(300);
     assert.equal(
@@ -340,29 +354,32 @@ async function main() {
     });
     await page.emulateMedia({ reducedMotion: "reduce" });
     await page.reload();
-    await page.waitForSelector("#site-figure svg");
-    const pose = await page.locator("#site-figure").innerHTML();
+    await page.waitForSelector("#site-figure.guide-ready canvas");
+    await page.waitForTimeout(700);
+    const pose = await pixels(page, "#site-figure");
     await page.waitForTimeout(300);
     assert.equal(
-      await page.locator("#site-figure").innerHTML(),
+      await pixels(page, "#site-figure"),
       pose,
       "reduced motion still moves",
     );
     await page.locator("#movements").scrollIntoViewIfNeeded();
+    await page.waitForSelector("#demo-figure.guide-ready canvas");
+    await page.waitForTimeout(700);
     for (const view of ["front", "side", "guide"]) {
       await page.locator(`[data-view="${view}"]`).click();
       assert.equal(
         await page.locator("#demo-figure").getAttribute("data-camera"),
         view === "guide" ? "three-quarter-side" : view,
       );
-      const still = await page.locator("#demo-figure").innerHTML();
+      const still = await pixels(page, "#demo-figure");
       await page.waitForTimeout(100);
-      assert.equal(await page.locator("#demo-figure").innerHTML(), still);
+      assert.equal(await pixels(page, "#demo-figure"), still);
     }
     await page.getByRole("button", { name: "Ankles", exact: true }).click();
     assert.equal(
       await page.locator("#demo-figure").getAttribute("data-camera"),
-      "side",
+      "three-quarter-side",
     );
     await page
       .locator(".movement-demo")

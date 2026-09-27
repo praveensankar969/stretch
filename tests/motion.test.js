@@ -54,7 +54,7 @@ test("recommended views reveal the movement's primary plane", () => {
   );
   assert.equal(views["neck-turn"].angle, "front");
   assert.equal(views["side-bend"].angle, "front");
-  assert.equal(views["ankle-pumps"].angle, "side");
+  assert.equal(views["ankle-pumps"].angle, "three-quarter-side");
   assert.equal(views["walk-break"].angle, "side");
   assert.equal(views["wrist-extensor"].framing, "wrists");
   assert.equal(views["ankle-pumps"].framing, "ankles");

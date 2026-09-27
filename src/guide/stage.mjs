@@ -18,8 +18,8 @@ function shot(ex, view, side = 0) {
   const framing = framingOf(ex) === 'body' && !ex.seated ? 'standing' : framingOf(ex);
   let [yaw, elevation] = ANGLES[cameraAngle(ex, view)];
   // The wrist close-up watches from the working arm's side, so the supporting arm never hides the bend.
-  if (view === 'guide' && framing === 'wrists') { yaw = (side || -1) * 1.05; elevation = .14; }
-  if (view === 'guide' && framing === 'ankles') { yaw = 1.02; elevation = .14; }
+  if (view === 'guide' && framing === 'wrists') { yaw *= side || -1; elevation = .14; }
+  if (view === 'guide' && framing === 'ankles') elevation = .14;
   const s = { ...FRAMES[framing], yaw, elevation };
   if (framing === 'wrists') s.target = [(side || -1) * .06, .98, .48];
   return s;

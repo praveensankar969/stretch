@@ -130,6 +130,9 @@ em {
   width: 100%;
   height: 100%;
 }
+.hero-person > .guide-canvas {
+  clip-path: inset(0 25px);
+}
 .scene-orbit {
   position: absolute;
   width: 310px;
@@ -397,8 +400,11 @@ em {
   position: absolute;
   top: 57px;
   left: 25px;
+  max-width: 140px;
+  z-index: 1;
   color: #52634b;
   font-size: 10px;
+  line-height: 1.4;
 }
 .camera-controls {
   position: absolute;

@@ -1,10 +1,10 @@
 "use strict";
 const { getExerciseById, SOURCES } = window.StretchExercises;
-const { Figure, sample, getCamera } = window.StretchMotion;
+const { sample, getCamera } = window.StretchMotion;
 const { SessionClock } = window.StretchClock;
 const $ = (id) => document.getElementById(id);
-const heroFigure = new Figure($("site-figure")),
-  demoFigure = new Figure($("demo-figure"));
+const heroFigure = window.StretchGuide.create($("site-figure")),
+  demoFigure = window.StretchGuide.create($("demo-figure"));
 const heroExercise = getExerciseById("shoulder-roll");
 const reduced = matchMedia("(prefers-reduced-motion: reduce)");
 let exercise,

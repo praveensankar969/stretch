@@ -10,8 +10,8 @@ let config,
   heroExercise = EXERCISES[1];
 const heroFigure = window.StretchGuide.create($("hero-figure"));
 const stills = new Map();
-heroFigure.ready.then((upgraded) => {
-  if (upgraded && currentPage === "library") renderLibrary(libraryFilter);
+heroFigure.ready.then(() => {
+  if (currentPage === "library") renderLibrary(libraryFilter);
 });
 const reducedQuery = matchMedia("(prefers-reduced-motion: reduce)");
 let animationFrame,
@@ -194,6 +194,10 @@ function renderArt(ex, art) {
     img.alt = "";
     img.src = stills.get(key);
     art.replaceChildren(img);
+    return;
+  }
+  if (heroFigure.pending) {
+    heroFigure.load();
     return;
   }
   new Figure(art).render(
